@@ -9,38 +9,115 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PlanchasPresidencialesRouteImport } from './routes/planchas-presidenciales'
+import { Route as MiembroMesaRouteImport } from './routes/miembro-mesa'
+import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CandidatoIdRouteImport } from './routes/candidato.$id'
 
+const PlanchasPresidencialesRoute = PlanchasPresidencialesRouteImport.update({
+  id: '/planchas-presidenciales',
+  path: '/planchas-presidenciales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MiembroMesaRoute = MiembroMesaRouteImport.update({
+  id: '/miembro-mesa',
+  path: '/miembro-mesa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompararRoute = CompararRouteImport.update({
+  id: '/comparar',
+  path: '/comparar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CandidatoIdRoute = CandidatoIdRouteImport.update({
+  id: '/candidato/$id',
+  path: '/candidato/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/comparar': typeof CompararRoute
+  '/miembro-mesa': typeof MiembroMesaRoute
+  '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
+  '/candidato/$id': typeof CandidatoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/comparar': typeof CompararRoute
+  '/miembro-mesa': typeof MiembroMesaRoute
+  '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
+  '/candidato/$id': typeof CandidatoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/comparar': typeof CompararRoute
+  '/miembro-mesa': typeof MiembroMesaRoute
+  '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
+  '/candidato/$id': typeof CandidatoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/comparar'
+    | '/miembro-mesa'
+    | '/planchas-presidenciales'
+    | '/candidato/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/comparar'
+    | '/miembro-mesa'
+    | '/planchas-presidenciales'
+    | '/candidato/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/comparar'
+    | '/miembro-mesa'
+    | '/planchas-presidenciales'
+    | '/candidato/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CompararRoute: typeof CompararRoute
+  MiembroMesaRoute: typeof MiembroMesaRoute
+  PlanchasPresidencialesRoute: typeof PlanchasPresidencialesRoute
+  CandidatoIdRoute: typeof CandidatoIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/planchas-presidenciales': {
+      id: '/planchas-presidenciales'
+      path: '/planchas-presidenciales'
+      fullPath: '/planchas-presidenciales'
+      preLoaderRoute: typeof PlanchasPresidencialesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/miembro-mesa': {
+      id: '/miembro-mesa'
+      path: '/miembro-mesa'
+      fullPath: '/miembro-mesa'
+      preLoaderRoute: typeof MiembroMesaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparar': {
+      id: '/comparar'
+      path: '/comparar'
+      fullPath: '/comparar'
+      preLoaderRoute: typeof CompararRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +125,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/candidato/$id': {
+      id: '/candidato/$id'
+      path: '/candidato/$id'
+      fullPath: '/candidato/$id'
+      preLoaderRoute: typeof CandidatoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CompararRoute: CompararRoute,
+  MiembroMesaRoute: MiembroMesaRoute,
+  PlanchasPresidencialesRoute: PlanchasPresidencialesRoute,
+  CandidatoIdRoute: CandidatoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
