@@ -9,8 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MiembroMesaRouteImport } from './routes/miembro-mesa'
 import { Route as IndexRouteImport } from './routes/index'
 
+const MiembroMesaRoute = MiembroMesaRouteImport.update({
+  id: '/miembro-mesa',
+  path: '/miembro-mesa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +25,39 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/miembro-mesa': typeof MiembroMesaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/miembro-mesa': typeof MiembroMesaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/miembro-mesa': typeof MiembroMesaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/miembro-mesa'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/miembro-mesa'
+  id: '__root__' | '/' | '/miembro-mesa'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MiembroMesaRoute: typeof MiembroMesaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/miembro-mesa': {
+      id: '/miembro-mesa'
+      path: '/miembro-mesa'
+      fullPath: '/miembro-mesa'
+      preLoaderRoute: typeof MiembroMesaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +70,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MiembroMesaRoute: MiembroMesaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
