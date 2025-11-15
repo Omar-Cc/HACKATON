@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PlanchasPresidencialesRouteImport } from './routes/planchas-presidenciales'
+import { Route as MiembroMesaRouteImport } from './routes/miembro-mesa'
 import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CandidatoIdRouteImport } from './routes/candidato.$id'
@@ -17,6 +18,11 @@ import { Route as CandidatoIdRouteImport } from './routes/candidato.$id'
 const PlanchasPresidencialesRoute = PlanchasPresidencialesRouteImport.update({
   id: '/planchas-presidenciales',
   path: '/planchas-presidenciales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MiembroMesaRoute = MiembroMesaRouteImport.update({
+  id: '/miembro-mesa',
+  path: '/miembro-mesa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompararRoute = CompararRouteImport.update({
@@ -38,12 +44,14 @@ const CandidatoIdRoute = CandidatoIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/comparar': typeof CompararRoute
+  '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/candidato/$id': typeof CandidatoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/comparar': typeof CompararRoute
+  '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/candidato/$id': typeof CandidatoIdRoute
 }
@@ -51,18 +59,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/comparar': typeof CompararRoute
+  '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/candidato/$id': typeof CandidatoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/comparar' | '/planchas-presidenciales' | '/candidato/$id'
+  fullPaths:
+    | '/'
+    | '/comparar'
+    | '/miembro-mesa'
+    | '/planchas-presidenciales'
+    | '/candidato/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/comparar' | '/planchas-presidenciales' | '/candidato/$id'
+  to:
+    | '/'
+    | '/comparar'
+    | '/miembro-mesa'
+    | '/planchas-presidenciales'
+    | '/candidato/$id'
   id:
     | '__root__'
     | '/'
     | '/comparar'
+    | '/miembro-mesa'
     | '/planchas-presidenciales'
     | '/candidato/$id'
   fileRoutesById: FileRoutesById
@@ -70,6 +90,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompararRoute: typeof CompararRoute
+  MiembroMesaRoute: typeof MiembroMesaRoute
   PlanchasPresidencialesRoute: typeof PlanchasPresidencialesRoute
   CandidatoIdRoute: typeof CandidatoIdRoute
 }
@@ -81,6 +102,13 @@ declare module '@tanstack/react-router' {
       path: '/planchas-presidenciales'
       fullPath: '/planchas-presidenciales'
       preLoaderRoute: typeof PlanchasPresidencialesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/miembro-mesa': {
+      id: '/miembro-mesa'
+      path: '/miembro-mesa'
+      fullPath: '/miembro-mesa'
+      preLoaderRoute: typeof MiembroMesaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comparar': {
@@ -110,6 +138,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompararRoute: CompararRoute,
+  MiembroMesaRoute: MiembroMesaRoute,
   PlanchasPresidencialesRoute: PlanchasPresidencialesRoute,
   CandidatoIdRoute: CandidatoIdRoute,
 }
