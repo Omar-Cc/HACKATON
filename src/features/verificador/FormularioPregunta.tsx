@@ -43,7 +43,7 @@ export function FormularioPregunta({
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-6">
+    <div className="mx-auto w-full max-w-3xl space-y-6 px-4">
       {/* Formulario principal */}
       <Card className="border-2">
         <CardHeader>
@@ -88,9 +88,9 @@ export function FormularioPregunta({
         <div className="flex flex-wrap gap-2">
           {PREGUNTAS_SUGERIDAS.map((sugerencia, index) => (
             <Badge
-              key={index}
+              key={`${sugerencia}-${index}`}
               variant="secondary"
-              className="hover:bg-primary hover:text-primary-foreground cursor-pointer px-4 py-2 text-sm transition-colors"
+              className="hover:bg-primary hover:text-primary-foreground cursor-pointer px-4 py-2 text-sm whitespace-normal! transition-colors"
               onClick={() => handleSugerencia(sugerencia)}
             >
               {sugerencia}
