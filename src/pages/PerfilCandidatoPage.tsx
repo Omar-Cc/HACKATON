@@ -1,14 +1,11 @@
-import { useState } from 'react'
 import { useParams } from '@tanstack/react-router'
 import {
   ExternalLink,
-  Plus,
   FileText,
   Scale,
   TrendingUp,
   Calendar,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -166,7 +163,6 @@ export default function PerfilCandidatoPage() {
   const routeId = params?.id
   const candidatoReal: Candidato =
     (routeId ? getCandidatoById(routeId) : null) ?? MOCK_CANDIDATO
-  const [enComparacion, setEnComparacion] = useState(false)
   const partidoColor = getPartidoColor(candidatoReal.partido.color)
 
   const getBadgeTexto = () => {
@@ -242,19 +238,6 @@ export default function PerfilCandidatoPage() {
                     {getBadgeTexto()}
                   </Badge>
                 </div>
-
-                <Button
-                  size="lg"
-                  onClick={() => setEnComparacion(!enComparacion)}
-                  className={
-                    enComparacion ? 'bg-green-600 hover:bg-green-700' : ''
-                  }
-                >
-                  <Plus className="mr-2 h-5 w-5" />
-                  {enComparacion
-                    ? 'Agregado a comparación'
-                    : 'Comparar con otros'}
-                </Button>
               </div>
             </div>
           </div>
@@ -288,7 +271,7 @@ export default function PerfilCandidatoPage() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="experiencia" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="mb-14 grid w-full grid-cols-1 gap-2 md:mb-0 md:grid-cols-3 md:gap-0">
               <TabsTrigger value="experiencia">
                 Experiencia y Formación
               </TabsTrigger>

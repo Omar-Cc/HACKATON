@@ -26,7 +26,11 @@ export const opcionesMenuElector: OpcionMenu[] = [
   { icono: Search, texto: 'Verificador de Info', path: '/elector/verificar' },
 
   //Investiga
-  { icono: Users, texto: 'Candidatos y Partidos', path: '/elector/candidatos' },
+  {
+    icono: Users,
+    texto: 'Candidatos y Partidos',
+    path: '/planchas-presidenciales',
+  },
   { icono: Sparkles, texto: 'Match Electoral', path: '/elector/match' },
   { icono: BarChart2, texto: 'Intención de voto', path: '/elector/intencion' },
 

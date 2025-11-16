@@ -62,7 +62,7 @@ export function ResultadosMatch({ resultados, onReset }: ResultadosMatchProps) {
               </AvatarFallback>
             </Avatar>
 
-            <div className="flex-1 space-y-3">
+            <div className="w-full flex-1 space-y-3">
               <div>
                 <h2 className="text-2xl font-bold">
                   {mejorMatch.nombreCandidato}
@@ -74,7 +74,7 @@ export function ResultadosMatch({ resultados, onReset }: ResultadosMatchProps) {
                 <p className="text-sm font-medium">
                   Coincidencias por categoría:
                 </p>
-                <div className="grid gap-2 sm:grid-cols-2">
+                <div className="grid w-full gap-2 sm:grid-cols-2">
                   {mejorMatch.coincidencias.map((coincidencia) => {
                     const categoria = getCategoriaLabel(coincidencia.categoria)
                     return (

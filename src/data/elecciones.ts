@@ -36,6 +36,7 @@ export const PLANCHAS: PlanchaType[] = [
       ],
       seguridad: [
         'Mayor presencia policial en barrios',
+        'Guerra contra la extorsión',
         'Cámaras de seguridad inteligentes',
         'Programas de prevención juvenil',
       ],
