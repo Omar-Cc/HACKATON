@@ -28,6 +28,7 @@ import {
   NavigationMenuList,
 } from '@/components/ui/navigation-menu'
 import { Link, useLocation } from '@tanstack/react-router'
+import LogoPrincipal from '@/assets/LogoTuElijesApp - Principal.png'
 
 export function Navbar() {
   const location = useLocation()
@@ -56,13 +57,17 @@ export function Navbar() {
             {/* 1. Izquierda - Logo/Nombre */}
             <Link
               to="/"
-              className="flex items-center gap-2 transition-opacity hover:opacity-80"
+              className="flex items-center gap-1.5 px-3 py-1 transition-opacity hover:opacity-80"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-blue-600 to-purple-600">
-                <span className="text-lg text-white">🗳️</span>
+              <div className="flex h-8 w-8 items-center justify-center">
+                <img
+                  src={LogoPrincipal}
+                  alt="Logo Principal"
+                  className="h-40 w-40 object-contain"
+                />
               </div>
-              <span className="hidden text-xl text-slate-900 sm:block">
-                ElecInfo 2026
+              <span className="hidden text-xl font-bold text-blue-600 sm:block">
+                TúEliges <span className="text-gray-900">2026</span>
               </span>
             </Link>
 
