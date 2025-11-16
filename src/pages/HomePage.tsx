@@ -1,6 +1,6 @@
 // 1. Importar useState y useEffect
 import { useState, useEffect } from 'react'
-import LogoPrincipal from '../assets/LogoTuElijesApp - Principal.png'
+import LogoPrincipal from '../assets/LOGO - Principal.png'
 import {
   ArrowRight,
   HeartHandshake,
@@ -162,8 +162,8 @@ export default function Principal() {
                 onClick={goToInicio}
                 className="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-blue-600 focus:outline-none"
               >
-                <span className="rounded-xl bg-white/90 px-3 py-1 text-sm font-bold text-blue-900 shadow-sm">
-                  TuElijesApp <span className="text-gray-900">2026</span>
+                <span className="rounded-2xl bg-white/90 px-5 py-2 text-lg font-extrabold text-blue-900 shadow-md">
+                  TúEliges <span className="text-gray-900">2026</span>
                 </span>
               </button>
 
@@ -309,7 +309,7 @@ export default function Principal() {
                   decidir
                 </span>{' '}
                 <span className="hero-title-word hero-title-word-8 text-yellow-300">
-                  mejor.
+                  mejor TU VOTO!
                 </span>
               </h2>
 
@@ -326,7 +326,7 @@ export default function Principal() {
                   to="/planchas-presidenciales"
                   className="group inline-flex transform items-center justify-center rounded-xl bg-white px-8 py-4 font-semibold text-blue-700 shadow-lg transition-transform duration-300 hover:scale-105"
                 >
-                  Explorar App TuElijes 2026 ahora
+                  Explorar TúEliges 2026 ahora
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </div>
@@ -388,14 +388,14 @@ export default function Principal() {
             <div className="mx-auto max-w-7xl px-6">
               <h2 className="text-center text-4xl font-extrabold">
                 ¿Qué puedo hacer en{' '}
-                <span className="text-blue-600">TuElijesApp 2026?</span>
+                <span className="text-blue-600">TúEliges 2026?</span>
               </h2>
               <p className="mx-auto mt-3 max-w-2xl text-center font-medium text-gray-600">
                 Un conjunto de{' '}
                 <span className="font-bold">funciones claves</span> para tomar
                 decisiones informadas,{' '}
                 <span className="font-bold">
-                  pensando en todos los peruanos.
+                  pensando siempre en todos los peruanos.
                 </span>
               </p>
 
@@ -596,7 +596,9 @@ export default function Principal() {
             <div className="mx-auto max-w-7xl px-6">
               <h2 className="text-center text-4xl font-extrabold">
                 Tu votación,{' '}
-                <span className="text-blue-600">más fácil y divertida</span>
+                <span className="text-blue-600">
+                  AHORA más fácil y divertida
+                </span>
               </h2>
               <p className="mx-auto mt-3 max-w-3xl text-center font-medium text-gray-600">
                 Contamos con guías específicas según{' '}
@@ -659,8 +661,7 @@ export default function Principal() {
         {/* FOOTER */}
         <footer className="bg-gray-800 py-6">
           <p className="text-center text-sm font-normal text-gray-400">
-            © 2025 — TuElijes App - El Comercio· Hackathon UTP · Innovative
-            Minds
+            © 2025 — TúEliges · Hackathon UTP - El Comercio · Innovative Minds
           </p>
         </footer>
       </div>
