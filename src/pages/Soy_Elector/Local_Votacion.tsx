@@ -22,12 +22,9 @@ type Resultado = {
 
 // --- Componente de Contenido ---
 const ContenidoPagina: React.FC = () => {
-  // ✅ CORRECCIÓN: Eliminamos el estado 'isLoading'.
-  // Ahora, 'resultado' siendo 'null' significa que está cargando.
   const [resultado, setResultado] = useState<Resultado | null>(null)
 
   useEffect(() => {
-    // ✅ CORRECCIÓN: Ya no llamamos a 'setIsLoading(true)' aquí.
     setTimeout(() => {
       setResultado({
         nombre: 'Juan Alberto Pérez Rodríguez',
@@ -37,14 +34,11 @@ const ContenidoPagina: React.FC = () => {
         mesa: '042536',
         horario: '8:00 AM - 4:00 PM',
       })
-      // Ya no llamamos a setIsLoading(false)
     }, 1500)
   }, [])
 
   return (
     <>
-      {/* ✅ CORRECCIÓN: Ahora comprobamos si 'resultado' es 'null' */}
-      {/* ESTADO DE CARGA */}
       {resultado === null && (
         <div className="bg-card border-border flex items-center justify-center rounded-lg border p-12 shadow-md">
           <Loader className="text-primary mr-4 animate-spin text-2xl" />
@@ -54,8 +48,6 @@ const ContenidoPagina: React.FC = () => {
         </div>
       )}
 
-      {/* ESTADO DE ÉXITO */}
-      {/* (El estado de error ya no es posible en esta simulación) */}
       {resultado && (
         <div className="mt-0 space-y-8">
           {/* Encabezado del Elector */}
@@ -229,10 +221,11 @@ const PaginaLocalVotacion: React.FC = () => {
       {/* --- UI DE MÓVIL --- */}
       <div className="bg-background min-h-screen md:hidden">
         <header className="bg-primary text-primary-foreground flex items-center gap-4 rounded-b-[20px] p-4 shadow-lg">
+          {/* ✅ CORRECCIÓN: Cambiado de '/elector/local' a '/elector' */}
           <Link
-            to="/elector/local"
+            to="/elector" // ← ¡AQUÍ ESTÁ LA CORRECCIÓN!
             className="rounded-full p-2 hover:bg-white/10"
-            aria-label="Volver"
+            aria-label="Volver al menú principal"
           >
             <ArrowLeft size={20} />
           </Link>
