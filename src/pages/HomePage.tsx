@@ -1,5 +1,6 @@
 // 1. Importar useState y useEffect
 import { useState, useEffect } from 'react'
+import LogoPrincipal from '../assets/LOGO - Principal.png'
 import {
   ArrowRight,
   HeartHandshake,
@@ -41,11 +42,37 @@ export default function Principal() {
   useScrollReveal()
 
   // Estado para el enlace activo del navbar
-  const [activeLink, setActiveLink] = useState('#match')
+  const [activeLink, setActiveLink] = useState('#inicio')
 
-  // Scroll-spy para cambiar el estado según la sección visible
+  // 🔥 Nueva función INICIO (reinicia animaciones + sube al top)
+  const goToInicio = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    const elements = document.querySelectorAll('.reveal')
+    elements.forEach((el) => el.classList.remove('reveal-show'))
+
+    setActiveLink('#inicio')
+  }
+
+  // Al cargar la página, obligamos a que vuelva a INICIO
   useEffect(() => {
-    const sectionIds = ['#match', '#candidatos', '#calendario', '#roles']
+    // Solo subimos la página al inicio
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    // Reiniciamos animaciones sin tocar estados
+    const elements = document.querySelectorAll('.reveal')
+    elements.forEach((el) => el.classList.remove('reveal-show'))
+  }, [])
+
+  // Scroll-spy actualizado con #inicio
+  useEffect(() => {
+    const sectionIds = [
+      '#inicio',
+      '#match',
+      '#candidatos',
+      '#calendario',
+      '#roles',
+    ]
     const sections = sectionIds.map((id) => document.querySelector(id))
 
     const observer = new IntersectionObserver(
@@ -69,12 +96,6 @@ export default function Principal() {
       })
     }
   }, [])
-
-  // Click en el logo: volver al inicio (hero)
-  const handleLogoClick = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-    setActiveLink('#match') // dejamos “Funciones” activo por defecto
-  }
 
   return (
     <>
@@ -135,20 +156,62 @@ export default function Principal() {
         <header className="sticky top-0 z-50 bg-white/90 shadow-md backdrop-blur-md">
           <nav className="mx-auto max-w-7xl px-5">
             <div className="flex h-16 items-center justify-between">
-              {/* Logo / Marca: vuelve al inicio */}
+              {/* LOGO */}
               <button
                 type="button"
-                onClick={handleLogoClick}
+                onClick={goToInicio}
                 className="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-blue-600 focus:outline-none"
               >
-                <span className="rounded-xl bg-white/90 px-3 py-1 text-sm font-bold text-blue-600 shadow-sm">
-                  VotoContigo
+                <span className="rounded-2xl bg-white/90 px-5 py-2 text-lg font-extrabold text-blue-900 shadow-md">
+                  TúEliges <span className="text-gray-900">2026</span>
                 </span>
-                <span className="text-gray-900">2026</span>
               </button>
 
-              {/* “Sidebar” superior */}
-              <div className="hidden items-center space-x-8 text-sm font-medium md:flex">
+              {/* MENU MÓVIL */}
+              <div className="text-right md:hidden">
+                {activeLink === '#inicio' && (
+                  <span className="text-base font-semibold text-blue-600">
+                    Inicio
+                  </span>
+                )}
+                {activeLink === '#match' && (
+                  <span className="text-base font-semibold text-blue-600">
+                    Funciones
+                  </span>
+                )}
+                {activeLink === '#candidatos' && (
+                  <span className="text-base font-semibold text-blue-600">
+                    Herramientas
+                  </span>
+                )}
+                {activeLink === '#calendario' && (
+                  <span className="text-base font-semibold text-blue-600">
+                    Calendario
+                  </span>
+                )}
+                {activeLink === '#roles' && (
+                  <span className="text-base font-semibold text-blue-600">
+                    Guías
+                  </span>
+                )}
+              </div>
+
+              {/* MENU PC */}
+              <div className="hidden items-center space-x-6 text-xs font-medium sm:text-sm md:flex">
+                {/* 🔥 NUEVO: INICIO */}
+                <a
+                  href="#inicio"
+                  onClick={goToInicio}
+                  className={`border-b-2 py-5 transition-all duration-300 ${
+                    activeLink === '#inicio'
+                      ? 'border-blue-600 font-semibold text-blue-600'
+                      : 'border-transparent text-gray-900 hover:border-blue-600 hover:text-blue-600'
+                  }`}
+                >
+                  <span className="text-lg font-bold">Inicio</span>
+                </a>
+
+                {/* Funciones */}
                 <a
                   href="#match"
                   onClick={() => setActiveLink('#match')}
@@ -158,8 +221,10 @@ export default function Principal() {
                       : 'border-transparent text-gray-900 hover:border-blue-600 hover:text-blue-600'
                   }`}
                 >
-                  Funciones
+                  <span className="text-lg font-bold">Funciones</span>
                 </a>
+
+                {/* Herramientas */}
                 <a
                   href="#candidatos"
                   onClick={() => setActiveLink('#candidatos')}
@@ -169,8 +234,10 @@ export default function Principal() {
                       : 'border-transparent text-gray-900 hover:border-blue-600 hover:text-blue-600'
                   }`}
                 >
-                  Herramientas
+                  <span className="text-lg font-bold">Herramientas</span>
                 </a>
+
+                {/* Calendario */}
                 <a
                   href="#calendario"
                   onClick={() => setActiveLink('#calendario')}
@@ -180,8 +247,10 @@ export default function Principal() {
                       : 'border-transparent text-gray-900 hover:border-blue-600 hover:text-blue-600'
                   }`}
                 >
-                  Calendario
+                  <span className="text-lg font-bold">Calendario</span>
                 </a>
+
+                {/* Guías */}
                 <a
                   href="#roles"
                   onClick={() => setActiveLink('#roles')}
@@ -191,78 +260,42 @@ export default function Principal() {
                       : 'border-transparent text-gray-900 hover:border-blue-600 hover:text-blue-600'
                   }`}
                 >
-                  Guías
+                  <span className="text-lg font-bold">Guías</span>
                 </a>
               </div>
             </div>
           </nav>
         </header>
 
-        {/* Contenido principal */}
+        {/* CONTENIDO PRINCIPAL */}
         <main>
-          {/* HERO */}
+          {/* HERO = INICIO */}
           <section
-            id="hero"
+            id="inicio"
             className="reveal relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 text-white"
           >
-            {/* Imagen de persona votando de fondo, muy suave */}
+            {/* Imagen de fondo */}
             <div className="pointer-events-none absolute inset-0 select-none">
               <img
-                src="https://images.unsplash.com/photo-1605840214719-0e34effb8452?auto=format&fit=crop&w=1600&q=80"
+                src="https:"
                 alt="Persona votando"
                 className="h-full w-full object-cover opacity-15 mix-blend-soft-light"
               />
             </div>
 
             <div className="relative mx-auto max-w-7xl px-6 py-24 text-center">
-              {/* Icono: urna con Perú dentro */}
+              {/* Logo */}
               <div className="mb-8 flex justify-center">
-                <div className="rounded-3xl bg-white p-6 shadow-2xl">
-                  <svg
-                    viewBox="0 0 64 64"
-                    className="h-14 w-14 text-blue-600"
-                    aria-hidden="true"
-                  >
-                    {/* Urna */}
-                    <rect
-                      x="8"
-                      y="24"
-                      width="48"
-                      height="30"
-                      rx="4"
-                      fill="currentColor"
-                      opacity="0.12"
-                    />
-                    <rect
-                      x="12"
-                      y="20"
-                      width="40"
-                      height="24"
-                      rx="4"
-                      fill="#ffffff"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    {/* Ranura */}
-                    <rect
-                      x="22"
-                      y="18"
-                      width="20"
-                      height="4"
-                      rx="2"
-                      fill="currentColor"
-                    />
-                    {/* Silueta simple de Perú */}
-                    <path
-                      d="M30 28 L34 24 L38 26 L37 30 L39 33 L35 37 L33 36 L31 38 L29 35 L30 32 Z"
-                      fill="currentColor"
-                      opacity="0.9"
-                    />
-                  </svg>
+                <div className="flex items-center justify-center rounded-3xl bg-white p-6 shadow-2xl">
+                  <img
+                    src={LogoPrincipal}
+                    alt="Logo Principal"
+                    className="-ml-2.5 h-40 w-40 object-contain"
+                  />
                 </div>
               </div>
 
-              {/* Título con animación palabra por palabra */}
+              {/* Título */}
               <h2 className="text-5xl leading-tight font-extrabold">
                 <span className="hero-title-word hero-title-word-1">La</span>{' '}
                 <span className="hero-title-word hero-title-word-2">
@@ -276,22 +309,24 @@ export default function Principal() {
                   decidir
                 </span>{' '}
                 <span className="hero-title-word hero-title-word-8 text-yellow-300">
-                  mejor.
+                  mejor TU VOTO!
                 </span>
               </h2>
 
               <p className="mx-auto mt-5 max-w-3xl text-lg font-medium text-blue-100">
                 Accede a información verificada, comparador de candidatos, hojas
-                de vida y todo lo esencial para el proceso electoral 2026.
+                de vida y todo lo esencial para llevar tu experiencia
+                <span className="font-semibold"> al siguiente nivel</span> en el
+                proceso electoral 2026.
               </p>
 
-              {/* Botón CTA */}
+              {/* CTA */}
               <div className="mt-10 flex justify-center">
                 <Link
                   to="/planchas-presidenciales"
                   className="group inline-flex transform items-center justify-center rounded-xl bg-white px-8 py-4 font-semibold text-blue-700 shadow-lg transition-transform duration-300 hover:scale-105"
                 >
-                  Explorar VotoContigo 2026
+                  Explorar TúEliges 2026 ahora
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </div>
@@ -353,14 +388,14 @@ export default function Principal() {
             <div className="mx-auto max-w-7xl px-6">
               <h2 className="text-center text-4xl font-extrabold">
                 ¿Qué puedo hacer en{' '}
-                <span className="text-blue-600">VotoContigo 2026?</span>
+                <span className="text-blue-600">TúEliges 2026?</span>
               </h2>
               <p className="mx-auto mt-3 max-w-2xl text-center font-medium text-gray-600">
                 Un conjunto de{' '}
                 <span className="font-bold">funciones claves</span> para tomar
                 decisiones informadas,{' '}
                 <span className="font-bold">
-                  pensando en todos los peruanos.
+                  pensando siempre en todos los peruanos.
                 </span>
               </p>
 
@@ -561,7 +596,9 @@ export default function Principal() {
             <div className="mx-auto max-w-7xl px-6">
               <h2 className="text-center text-4xl font-extrabold">
                 Tu votación,{' '}
-                <span className="text-blue-600">más fácil y divertida</span>
+                <span className="text-blue-600">
+                  AHORA más fácil y divertida
+                </span>
               </h2>
               <p className="mx-auto mt-3 max-w-3xl text-center font-medium text-gray-600">
                 Contamos con guías específicas según{' '}
@@ -624,7 +661,7 @@ export default function Principal() {
         {/* FOOTER */}
         <footer className="bg-gray-800 py-6">
           <p className="text-center text-sm font-normal text-gray-400">
-            © 2026 — ElecInfo · Hackathon UTP · Innovative Minds
+            © 2025 — TúEliges · Hackathon UTP - El Comercio · Innovative Minds
           </p>
         </footer>
       </div>

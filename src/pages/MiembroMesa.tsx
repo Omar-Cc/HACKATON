@@ -45,6 +45,9 @@ export default function MiembroMesa() {
   const [codigoValidado, setCodigoValidado] = useState(false)
   const [dniError, setDniError] = useState('')
 
+  // Estados para el fondo con transición
+  const [currentBgIndex, setCurrentBgIndex] = useState(0)
+
   const CODIGO_ONPE = 'ONPE2026'
   const CODIGO_VOLUNTARIO = 'VOL2026'
 
@@ -61,6 +64,22 @@ export default function MiembroMesa() {
   const fechaGeneral = new Date('2025-11-15T07:00:00')
   // calcularemos "disponible" después de identificar usuario
   const [disponible, setDisponible] = useState(false)
+
+  // Array de imágenes de fondo
+  const backgroundImages = [
+    'src/images/Fondo_1.jpeg',
+    'src/images/Fondo_2.jpg',
+    'src/images/Fondo_3.jpg',
+  ]
+
+  // Efecto para la transición automática de fondos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBgIndex((prev) => (prev + 1) % backgroundImages.length)
+    }, 5000) // Cambia cada 5 segundos
+
+    return () => clearInterval(interval)
+  }, [backgroundImages.length])
 
   const startTour = () => {
     const tour = driver({
@@ -283,15 +302,25 @@ export default function MiembroMesa() {
   const isInValidationScreen = isMember !== true && !volunteerValidated
 
   return (
-    <div
-      className={`min-h-screen p-4 ${
-        isInValidationScreen
-          ? 'flex items-center justify-center bg-gray-100'
-          : 'space-y-8'
-      }`}
-    >
+    <div className="relative min-h-screen">
+      {/* Fondo con transición */}
+      <div className="fixed inset-0 z-0">
+        {backgroundImages.map((image, index) => (
+          <div
+            key={image}
+            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
+              index === currentBgIndex ? 'opacity-40' : 'opacity-0'
+            }`}
+            style={{ backgroundImage: `url(${image})` }}
+          />
+        ))}
+      </div>
+
+      {/* Contenido principal */}
       <div
-        className={`${isInValidationScreen ? 'w-full max-w-md' : 'mx-auto w-full max-w-3xl space-y-4 lg:space-y-8'}`}
+        className={`relative z-10 min-h-screen ${
+          isInValidationScreen ? 'overflow-hidden' : 'overflow-auto'
+        }`}
       >
         {/* MODAL */}
         <AlertDialog open={showModal} onOpenChange={setShowModal}>
@@ -313,570 +342,587 @@ export default function MiembroMesa() {
           </AlertDialogContent>
         </AlertDialog>
 
-        {/** VALIDACIÓN */}
-        {isInValidationScreen && (
-          <Card className="rounded-lg p-4 shadow-md transition-all lg:rounded-xl lg:p-6 lg:shadow-lg">
-            <h2 className="mb-2 text-lg font-bold">
-              Validación de Miembro de Mesa
-            </h2>
+        <div
+          className={`${
+            isInValidationScreen
+              ? 'flex min-h-screen items-center justify-center p-4'
+              : 'mx-auto w-full max-w-3xl space-y-4 p-4 lg:space-y-8'
+          }`}
+        >
+          {/** VALIDACIÓN - Centrado vertical y horizontalmente */}
+          {isInValidationScreen && (
+            <div className="w-full max-w-md">
+              <Card className="w-full rounded-lg bg-white/90 p-4 shadow-md backdrop-blur-sm transition-all lg:rounded-xl lg:p-6 lg:shadow-lg">
+                <h2 className="mb-2 text-lg font-bold">
+                  Validación de Miembro de Mesa
+                </h2>
 
-            <Input
-              id="dni-input"
-              placeholder="Ingresa tu DNI"
-              value={dni}
-              onChange={(e) => {
-                setDni(e.target.value)
-                setDniError('') // limpiar error al escribir
-              }}
-            />
-
-            {dniError && (
-              <p className="mt-1 text-sm text-red-600">{dniError}</p>
-            )}
-
-            <Button onClick={verifyDni} className="mt-2 w-full">
-              Validar
-            </Button>
-
-            {isMember === false && (
-              <>
-                <p className="mt-4 font-medium text-gray-700">
-                  No eres miembro de mesa.
-                </p>
-
-                {/* BOTÓN VOLUNTARIO */}
-                <Button
-                  onClick={() => {
-                    if (!disponible) {
-                      // Mostrar mensaje informativo en modal
-                      setModalMessage(
-                        'Aún no puedes registrarte como voluntario. ' +
-                          'El registro estará habilitado el 15/11/2026 a las 7:00 AM.'
-                      )
-                      setShowModal(true)
-                    } else {
-                      // Si ya es día de elecciones, recién permitir ingreso como voluntario
-                      setIsVolunteer(true)
-                    }
+                <Input
+                  id="dni-input"
+                  placeholder="Ingresa tu DNI"
+                  value={dni}
+                  onChange={(e) => {
+                    setDni(e.target.value)
+                    setDniError('')
                   }}
-                  className="mt-2 w-full"
-                >
-                  Ingresar como voluntario
+                />
+
+                {dniError && (
+                  <p className="mt-1 text-sm text-red-600">{dniError}</p>
+                )}
+
+                <Button onClick={verifyDni} className="mt-2 w-full">
+                  Validar
                 </Button>
 
-                {/* SOLO MOSTRAR INPUT DE CÓDIGO SI LA FECHA ESTÁ HABILITADA */}
-                {isVolunteer && disponible && (
-                  <div className="mt-3 space-y-2">
-                    <Input
-                      placeholder="Código ONPE para voluntarios"
-                      value={volunteerCode}
-                      onChange={(e) => setVolunteerCode(e.target.value)}
-                    />
+                {isMember === false && (
+                  <div className="mt-4">
+                    <p className="font-medium text-gray-700">
+                      No eres miembro de mesa.
+                    </p>
+
                     <Button
-                      onClick={validarCodigoVoluntario}
-                      className="w-full"
+                      onClick={() => {
+                        if (!disponible) {
+                          setModalMessage(
+                            'Aún no puedes registrarte como voluntario. ' +
+                              'El registro estará habilitado el 15/11/2026 a las 7:00 AM.'
+                          )
+                          setShowModal(true)
+                        } else {
+                          setIsVolunteer(true)
+                        }
+                      }}
+                      className="mt-2 w-full"
                     >
-                      Validar Código
+                      Ingresar como voluntario
                     </Button>
+
+                    {isVolunteer && disponible && (
+                      <div className="mt-3 space-y-2">
+                        <Input
+                          placeholder="Código ONPE para voluntarios"
+                          value={volunteerCode}
+                          onChange={(e) => setVolunteerCode(e.target.value)}
+                        />
+                        <Button
+                          onClick={validarCodigoVoluntario}
+                          className="w-full"
+                        >
+                          Validar Código
+                        </Button>
+                      </div>
+                    )}
+
+                    {!disponible && (
+                      <p className="mt-3 text-sm text-blue-600">
+                        Este apartado estará disponible el 15/11/2026 desde las
+                        7:00 AM.
+                      </p>
+                    )}
                   </div>
                 )}
-
-                {/* MENSAJE INFORMATIVO CUANDO NO ES FECHA */}
-                {!disponible && (
-                  <p className="mt-3 text-sm text-blue-600">
-                    Este apartado estará disponible el 15/11/2026 desde las 7:00
-                    AM.
-                  </p>
-                )}
-              </>
-            )}
-          </Card>
-        )}
-
-        {/** BLOQUEO POR FECHA */}
-        {isMember && !disponible && (
-          <div className="flex min-h-screen items-center justify-center">
-            <Card className="max-w-md rounded-lg p-6 text-center shadow-md lg:rounded-xl lg:p-8 lg:shadow-lg">
-              {fromVolunteer ? (
-                <>
-                  <h2 className="mb-3 text-xl font-bold">
-                    Aún no puedes ingresar
-                  </h2>
-
-                  <p className="mb-4 leading-relaxed text-gray-700">
-                    La plataforma estará disponible el{' '}
-                    <strong>15/11/2026 a las 7:00 AM</strong>.
-                  </p>
-
-                  <p className="mb-5 text-sm leading-relaxed text-blue-600">
-                    Si el día de las elecciones faltan los miembros titulares o
-                    suplentes, podrás apoyar como <strong>voluntario</strong>{' '}
-                    siguiendo las indicaciones del Coordinador ONPE.
-                  </p>
-                </>
-              ) : (
-                <>
-                  <h2 className="mb-3 text-xl font-bold">
-                    Aún no puedes ingresar
-                  </h2>
-
-                  <p className="mb-3 leading-relaxed text-gray-700">
-                    Has sido seleccionado como <strong>miembro de mesa</strong>.
-                  </p>
-
-                  <p className="mb-3 leading-relaxed text-gray-700">
-                    La jornada electoral inicia el{' '}
-                    <strong>15/11/2026 a las 7:00 AM</strong>.
-                  </p>
-
-                  <p className="mb-5 text-sm leading-relaxed font-medium text-red-600">
-                    Si no te presentas puntualmente, podrías recibir una
-                    <strong>
-                      {' '}
-                      multa establecida por el Jurado Nacional de
-                      Elecciones{' '}
-                    </strong>
-                    .
-                  </p>
-                </>
-              )}
-
-              <Button
-                className="w-full"
-                variant="outline"
-                onClick={() => {
-                  setIsMember(null)
-                  setRole(null)
-                  setMemberInfo(null)
-                  setFromVolunteer(false)
-                }}
-              >
-                Volver
-              </Button>
-            </Card>
-          </div>
-        )}
-
-        {/** CONTENIDO PRINCIPAL */}
-        {isMember && disponible && (
-          <>
-            {/** INFORMACIÓN */}
-            {memberInfo && (
-              <Card className="flex flex-col gap-3 rounded-lg p-4 shadow-md transition-all lg:rounded-xl lg:p-6 lg:shadow-lg">
-                <div>
-                  <h3 className="mb-2 text-lg font-bold">
-                    Información de tu Mesa
-                  </h3>
-                  <p>
-                    <strong>🧑 Nombre:</strong> {memberInfo.nombre}
-                  </p>
-                  <p>
-                    <strong>📍 Local:</strong> {memberInfo.local}
-                  </p>
-                  <p>
-                    <strong>🪑 Mesa:</strong> {memberInfo.mesa}
-                  </p>
-                </div>
-
-                {/* BOTÓN PARA REINICIAR EL TUTORIAL */}
-                <Button
-                  variant="outline"
-                  className="flex w-full items-center justify-center gap-2 rounded-full border border-blue-500 text-blue-600 shadow-sm transition-all duration-300 hover:bg-blue-50 hover:text-blue-700"
-                  onClick={() => {
-                    setHasSeenTutorial(false) // habilita otra vez
-                    setTimeout(() => startTour(), 300) // pequeño delay para suavidad
-                  }}
-                >
-                  Ver tutorial otra vez
-                </Button>
               </Card>
-            )}
+            </div>
+          )}
 
-            {/** ASISTENCIA */}
-
-            {!attendanceMarked && (
-              <Card
-                className="rounded-lg p-4 shadow-md transition-all lg:rounded-xl lg:p-6 lg:shadow-lg"
-                id="attendance-btn"
-              >
-                <h3 className="font-semibold">Asistencia</h3>
-
-                {!codigoValidado ? (
+          {/** BLOQUEO POR FECHA */}
+          {isMember && !disponible && (
+            <div className="flex min-h-screen items-center justify-center">
+              <Card className="max-w-md rounded-lg bg-white/90 p-6 text-center shadow-md backdrop-blur-sm lg:rounded-xl lg:p-8 lg:shadow-lg">
+                {fromVolunteer ? (
                   <>
-                    <p className="mb-2 text-sm text-gray-600">
-                      Ingresa el código proporcionado por la ONPE.
+                    <h2 className="mb-3 text-xl font-bold">
+                      Aún no puedes ingresar
+                    </h2>
+
+                    <p className="mb-4 leading-relaxed text-gray-700">
+                      La plataforma estará disponible el{' '}
+                      <strong>15/11/2026 a las 7:00 AM</strong>.
                     </p>
-                    <Input
-                      placeholder="Código ONPE"
-                      value={ingresoCodigo}
-                      onChange={(e) => setIngresoCodigo(e.target.value)}
-                    />
-                    <Button
-                      className="mt-2 w-full"
-                      onClick={validarCodigoAsistencia}
-                    >
-                      Validar código
-                    </Button>
+
+                    <p className="mb-5 text-sm leading-relaxed text-blue-600">
+                      Si el día de las elecciones faltan los miembros titulares
+                      o suplentes, podrás apoyar como{' '}
+                      <strong>voluntario</strong> siguiendo las indicaciones del
+                      Coordinador ONPE.
+                    </p>
                   </>
                 ) : (
                   <>
-                    {timeExpired ? (
-                      <p className="text-red-500">
-                        No marcaste asistencia. Multa: 200 soles.
-                      </p>
-                    ) : (
-                      <Button
-                        onClick={() => {
-                          const hora = new Date().toLocaleTimeString('es-PE', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit',
-                          })
+                    <h2 className="mb-3 text-xl font-bold">
+                      Aún no puedes ingresar
+                    </h2>
 
-                          setAttendanceMarked(true)
+                    <p className="mb-3 leading-relaxed text-gray-700">
+                      Has sido seleccionado como{' '}
+                      <strong>miembro de mesa</strong>.
+                    </p>
 
-                          if (role) {
-                            setMiembrosData((prev) => {
-                              const actualizado = {
-                                ...prev,
-                                [role]: {
-                                  ...prev[role],
-                                  presente: true,
-                                  horaIngreso: hora, // ⏰ Guardamos hora exacta
-                                },
-                              }
+                    <p className="mb-3 leading-relaxed text-gray-700">
+                      La jornada electoral inicia el{' '}
+                      <strong>15/11/2026 a las 7:00 AM</strong>.
+                    </p>
 
-                              // Reflejar también en la info principal del usuario
-                              setMemberInfo(actualizado[role])
-
-                              return actualizado
-                            })
-                          }
-                        }}
-                        disabled={attendanceMarked}
-                        className="w-full"
-                      >
-                        {attendanceMarked
-                          ? 'Asistencia marcada'
-                          : 'Marcar asistencia'}
-                      </Button>
-                    )}
+                    <p className="mb-5 text-sm leading-relaxed font-medium text-red-600">
+                      Si no te presentas puntualmente, podrías recibir una
+                      <strong>
+                        {' '}
+                        multa establecida por el Jurado Nacional de
+                        Elecciones{' '}
+                      </strong>
+                      .
+                    </p>
                   </>
                 )}
+
+                <Button
+                  className="w-full"
+                  variant="outline"
+                  onClick={() => {
+                    setIsMember(null)
+                    setRole(null)
+                    setMemberInfo(null)
+                    setFromVolunteer(false)
+                  }}
+                >
+                  Volver
+                </Button>
               </Card>
-            )}
+            </div>
+          )}
 
-            {/** FUNCIONES */}
-            {role && (
-              <Card className="rounded-lg p-4 shadow-md transition-all lg:rounded-xl lg:p-6 lg:shadow-lg">
-                <h3 className="mb-4 text-lg font-semibold">
-                  Funciones del Rol ({role})
-                </h3>
+          {/** CONTENIDO PRINCIPAL */}
+          {isMember && disponible && (
+            <>
+              {/** INFORMACIÓN */}
+              {memberInfo && (
+                <Card className="flex flex-col gap-3 rounded-lg bg-white/90 p-4 shadow-md backdrop-blur-sm transition-all lg:rounded-xl lg:p-6 lg:shadow-lg">
+                  <div>
+                    <h3 className="mb-2 text-lg font-bold">
+                      Información de tu Mesa
+                    </h3>
+                    <p>
+                      <strong>🧑 Nombre:</strong> {memberInfo.nombre}
+                    </p>
+                    <p>
+                      <strong>📍 Local:</strong> {memberInfo.local}
+                    </p>
+                    <p>
+                      <strong>🪑 Mesa:</strong> {memberInfo.mesa}
+                    </p>
+                  </div>
 
+                  {/* BOTÓN PARA REINICIAR EL TUTORIAL */}
+                  <Button
+                    variant="outline"
+                    className="flex w-full items-center justify-center gap-2 rounded-full border border-blue-500 text-blue-600 shadow-sm transition-all duration-300 hover:bg-blue-50 hover:text-blue-700"
+                    onClick={() => {
+                      setHasSeenTutorial(false) // habilita otra vez
+                      setTimeout(() => startTour(), 300) // pequeño delay para suavidad
+                    }}
+                  >
+                    Ver tutorial otra vez
+                  </Button>
+                </Card>
+              )}
+
+              {/** ASISTENCIA */}
+
+              {!attendanceMarked && (
+                <Card
+                  className="rounded-lg bg-white/90 p-4 shadow-md backdrop-blur-sm transition-all lg:rounded-xl lg:p-6 lg:shadow-lg"
+                  id="attendance-btn"
+                >
+                  <h3 className="font-semibold">Asistencia</h3>
+
+                  {!codigoValidado ? (
+                    <>
+                      <p className="mb-2 text-sm text-gray-600">
+                        Ingresa el código proporcionado por la ONPE.
+                      </p>
+                      <Input
+                        placeholder="Código ONPE"
+                        value={ingresoCodigo}
+                        onChange={(e) => setIngresoCodigo(e.target.value)}
+                      />
+                      <Button
+                        className="mt-2 w-full"
+                        onClick={validarCodigoAsistencia}
+                      >
+                        Validar código
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      {timeExpired ? (
+                        <p className="text-red-500">
+                          No marcaste asistencia. Multa: 200 soles.
+                        </p>
+                      ) : (
+                        <Button
+                          onClick={() => {
+                            const hora = new Date().toLocaleTimeString(
+                              'es-PE',
+                              {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                              }
+                            )
+
+                            setAttendanceMarked(true)
+
+                            if (role) {
+                              setMiembrosData((prev) => {
+                                const actualizado = {
+                                  ...prev,
+                                  [role]: {
+                                    ...prev[role],
+                                    presente: true,
+                                    horaIngreso: hora, // ⏰ Guardamos hora exacta
+                                  },
+                                }
+
+                                // Reflejar también en la info principal del usuario
+                                setMemberInfo(actualizado[role])
+
+                                return actualizado
+                              })
+                            }
+                          }}
+                          disabled={attendanceMarked}
+                          className="w-full"
+                        >
+                          {attendanceMarked
+                            ? 'Asistencia marcada'
+                            : 'Marcar asistencia'}
+                        </Button>
+                      )}
+                    </>
+                  )}
+                </Card>
+              )}
+
+              {/** FUNCIONES */}
+              {role && (
+                <Card className="rounded-lg bg-white/90 p-4 shadow-md backdrop-blur-sm transition-all lg:rounded-xl lg:p-6 lg:shadow-lg">
+                  <h3 className="mb-4 text-lg font-semibold">
+                    Funciones del Rol ({role})
+                  </h3>
+
+                  <Accordion type="single" collapsible>
+                    {Object.entries(rolesFunciones[role]).map(
+                      ([sec, tareas]) => (
+                        <AccordionItem key={sec} value={sec}>
+                          <AccordionTrigger className="text-blue-600">
+                            {sec}
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            {tareas.length ? (
+                              tareas.map((t: string) => (
+                                <p key={t} className="py-1 text-sm">
+                                  {t}
+                                </p>
+                              ))
+                            ) : (
+                              <p className="text-gray-500 italic">
+                                El suplente no tiene funciones asignadas.
+                              </p>
+                            )}
+                          </AccordionContent>
+                        </AccordionItem>
+                      )
+                    )}
+                  </Accordion>
+                </Card>
+              )}
+
+              {/* MIEMBROS DE LA MESA */}
+              <Card className="rounded-lg bg-white/90 p-4 shadow-md backdrop-blur-sm lg:rounded-xl lg:p-6 lg:shadow-lg">
                 <Accordion type="single" collapsible>
-                  {Object.entries(rolesFunciones[role]).map(([sec, tareas]) => (
-                    <AccordionItem key={sec} value={sec}>
-                      <AccordionTrigger className="text-blue-600">
-                        {sec}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        {tareas.length ? (
-                          tareas.map((t: string) => (
-                            <p key={t} className="py-1 text-sm">
-                              {t}
-                            </p>
-                          ))
-                        ) : (
-                          <p className="text-gray-500 italic">
-                            El suplente no tiene funciones asignadas.
-                          </p>
-                        )}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
+                  <AccordionItem value="mesa-general">
+                    <AccordionTrigger className="text-lg font-semibold">
+                      Miembros de la mesa
+                    </AccordionTrigger>
+
+                    <AccordionContent>
+                      <Accordion type="multiple" className="mt-3 space-y-2">
+                        {Object.entries(miembrosData).map(([rolKey, data]) => {
+                          const estadoEsPresente = data.presente
+
+                          return (
+                            <AccordionItem key={rolKey} value={rolKey}>
+                              {/* Header con Avatar + Rol + Nombre + Estado */}
+                              <AccordionTrigger className="flex items-center justify-between capitalize">
+                                <div className="flex items-center gap-3">
+                                  {/* FOTO DEL MIEMBRO */}
+                                  <Avatar className="h-10 w-10">
+                                    <AvatarImage
+                                      src={data.foto}
+                                      alt={data.nombre}
+                                    />
+                                    <AvatarFallback>
+                                      {data.nombre
+                                        .split(' ')
+                                        .map((n) => n[0])
+                                        .join('')
+                                        .slice(0, 2)}
+                                    </AvatarFallback>
+                                  </Avatar>
+
+                                  <span>
+                                    {rolKey} — {data.nombre}
+                                  </span>
+                                </div>
+
+                                {/* ESTADO */}
+                                <Badge
+                                  className={
+                                    estadoEsPresente
+                                      ? 'bg-green-600 text-white'
+                                      : 'bg-red-600 text-white'
+                                  }
+                                >
+                                  {estadoEsPresente ? 'Presente' : 'Ausente'}
+                                </Badge>
+                              </AccordionTrigger>
+
+                              {/* Contenido interno */}
+                              <AccordionContent>
+                                <div className="ml-2 space-y-2 text-sm">
+                                  <p>
+                                    <strong>🪪 DNI:</strong> {data.dni}
+                                  </p>
+
+                                  <p>
+                                    <strong>📍 Local:</strong> {data.local}
+                                  </p>
+
+                                  <p>
+                                    <strong>🪑 Mesa:</strong> {data.mesa}
+                                  </p>
+
+                                  <p className="flex items-center gap-2">
+                                    <strong>Estado:</strong>
+                                    <Badge
+                                      className={
+                                        estadoEsPresente
+                                          ? 'bg-green-600 hover:bg-green-700'
+                                          : 'bg-red-600 hover:bg-red-700'
+                                      }
+                                    >
+                                      {estadoEsPresente
+                                        ? 'Presente'
+                                        : 'Ausente'}
+                                    </Badge>
+                                  </p>
+                                  {data.horaIngreso && (
+                                    <p>
+                                      <strong>⏰ Hora de ingreso:</strong>{' '}
+                                      {data.horaIngreso}
+                                    </p>
+                                  )}
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          )
+                        })}
+                      </Accordion>
+                    </AccordionContent>
+                  </AccordionItem>
                 </Accordion>
               </Card>
-            )}
 
-            {/* MIEMBROS DE LA MESA */}
-            <Card className="rounded-lg p-4 shadow-md lg:rounded-xl lg:p-6 lg:shadow-lg">
-              <Accordion type="single" collapsible>
-                <AccordionItem value="mesa-general">
-                  <AccordionTrigger className="text-lg font-semibold">
-                    Miembros de la mesa
-                  </AccordionTrigger>
+              {/** CHECKLIST */}
+              {role && (
+                <Card
+                  className="rounded-lg bg-white/90 p-4 shadow-md backdrop-blur-sm transition-all lg:rounded-xl lg:p-6 lg:shadow-lg"
+                  id="checklist-box"
+                >
+                  <h3 className="font-semibold">
+                    Tareas por realizar como ({role})
+                  </h3>
+                  {rolesChecklist[role].map((task) => (
+                    <div key={task} className="flex items-center gap-3 py-3">
+                      <Checkbox
+                        className="checkbox-strong"
+                        checked={!!checklist[task]}
+                        onCheckedChange={(v) =>
+                          setChecklist((prev) => ({ ...prev, [task]: !!v }))
+                        }
+                      />
+                      <span className="font-medium text-gray-700">{task}</span>
+                    </div>
+                  ))}
+                </Card>
+              )}
 
-                  <AccordionContent>
-                    <Accordion type="multiple" className="mt-3 space-y-2">
-                      {Object.entries(miembrosData).map(([rolKey, data]) => {
-                        const estadoEsPresente = data.presente
+              {/* PREGUNTAS FRECUENTES */}
+              <Card className="rounded-lg bg-white/90 p-4 shadow-md backdrop-blur-sm lg:rounded-xl lg:p-6 lg:shadow-lg">
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="faq-general">
+                    <AccordionTrigger className="text-lg font-semibold">
+                      Preguntas Frecuentes (FAQ)
+                    </AccordionTrigger>
 
-                        return (
-                          <AccordionItem key={rolKey} value={rolKey}>
-                            {/* Header con Avatar + Rol + Nombre + Estado */}
-                            <AccordionTrigger className="flex items-center justify-between capitalize">
-                              <div className="flex items-center gap-3">
-                                {/* FOTO DEL MIEMBRO */}
-                                <Avatar className="h-10 w-10">
-                                  <AvatarImage
-                                    src={data.foto}
-                                    alt={data.nombre}
-                                  />
-                                  <AvatarFallback>
-                                    {data.nombre
-                                      .split(' ')
-                                      .map((n) => n[0])
-                                      .join('')
-                                      .slice(0, 2)}
-                                  </AvatarFallback>
-                                </Avatar>
+                    <AccordionContent>
+                      {/* Acordeones internos */}
+                      <Accordion
+                        type="single"
+                        collapsible
+                        className="mt-4 space-y-2"
+                      >
+                        <AccordionItem value="faq1">
+                          <AccordionTrigger>
+                            ¿Qué hago si un miembro de mesa titular no llega a
+                            tiempo?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            Si un miembro titular no llega antes de la hora
+                            límite, debe ser reemplazado por un suplente. Si no
+                            hay suplentes, se debe convocar a un elector
+                            voluntario con apoyo del coordinador ONPE.
+                          </AccordionContent>
+                        </AccordionItem>
 
-                                <span>
-                                  {rolKey} — {data.nombre}
-                                </span>
-                              </div>
+                        <AccordionItem value="faq2">
+                          <AccordionTrigger>
+                            No puedo marcar asistencia, ¿qué hago?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            Verifica que el código ONPE sea correcto. Si el
+                            problema persiste, registra tu asistencia
+                            manualmente con el secretario y comunícalo al
+                            coordinador ONPE.
+                          </AccordionContent>
+                        </AccordionItem>
 
-                              {/* ESTADO */}
-                              <Badge
-                                className={
-                                  estadoEsPresente
-                                    ? 'bg-green-600 text-white'
-                                    : 'bg-red-600 text-white'
-                                }
-                              >
-                                {estadoEsPresente ? 'Presente' : 'Ausente'}
-                              </Badge>
-                            </AccordionTrigger>
+                        <AccordionItem value="faq3">
+                          <AccordionTrigger>
+                            ¿Cómo debo firmar las cédulas?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            Firma en el reverso de cada cédula con lapicero azul
+                            antes de entregarla al elector. Una cédula sin firma
+                            debe ser considerada no válida durante el
+                            escrutinio.
+                          </AccordionContent>
+                        </AccordionItem>
 
-                            {/* Contenido interno */}
-                            <AccordionContent>
-                              <div className="ml-2 space-y-2 text-sm">
-                                <p>
-                                  <strong>🪪 DNI:</strong> {data.dni}
-                                </p>
+                        <AccordionItem value="faq4">
+                          <AccordionTrigger>
+                            ¿Puede votar alguien que perdió su DNI?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            Solo pueden votar con DNI azul, DNI electrónico o
+                            DNI vencido. No se aceptan copias, fotos ni
+                            documentos distintos al DNI.
+                          </AccordionContent>
+                        </AccordionItem>
 
-                                <p>
-                                  <strong>📍 Local:</strong> {data.local}
-                                </p>
+                        <AccordionItem value="faq5">
+                          <AccordionTrigger>
+                            El elector aparece como "ya votó", pero dice que no.
+                            ¿Qué hago?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            Registra la incidencia y permite votar como "elector
+                            observado", siguiendo el procedimiento ONPE.
+                          </AccordionContent>
+                        </AccordionItem>
 
-                                <p>
-                                  <strong>🪑 Mesa:</strong> {data.mesa}
-                                </p>
+                        <AccordionItem value="faq6">
+                          <AccordionTrigger>
+                            ¿Qué hago si falta material electoral?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            Debes comunicarte inmediatamente con el coordinador
+                            ONPE. No se deben improvisar materiales no
+                            oficiales.
+                          </AccordionContent>
+                        </AccordionItem>
 
-                                <p className="flex items-center gap-2">
-                                  <strong>Estado:</strong>
-                                  <Badge
-                                    className={
-                                      estadoEsPresente
-                                        ? 'bg-green-600 hover:bg-green-700'
-                                        : 'bg-red-600 hover:bg-red-700'
-                                    }
-                                  >
-                                    {estadoEsPresente ? 'Presente' : 'Ausente'}
-                                  </Badge>
-                                </p>
-                                {data.horaIngreso && (
-                                  <p>
-                                    <strong>⏰ Hora de ingreso:</strong>{' '}
-                                    {data.horaIngreso}
-                                  </p>
-                                )}
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        )
-                      })}
-                    </Accordion>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </Card>
+                        <AccordionItem value="faq7">
+                          <AccordionTrigger>
+                            ¿Los adultos mayores, embarazadas o personas con
+                            discapacidad tienen prioridad?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            Sí, tienen derecho a pasar directamente sin hacer
+                            fila. El registro del voto es el mismo.
+                          </AccordionContent>
+                        </AccordionItem>
 
-            {/** CHECKLIST */}
-            {role && (
-              <Card
-                className="rounded-lg p-4 shadow-md transition-all lg:rounded-xl lg:p-6 lg:shadow-lg"
-                id="checklist-box"
-              >
-                <h3 className="font-semibold">
-                  Tareas por realizar como ({role})
-                </h3>
-                {rolesChecklist[role].map((task) => (
-                  <div key={task} className="flex items-center gap-3 py-3">
-                    <Checkbox
-                      className="checkbox-strong"
-                      checked={!!checklist[task]}
-                      onCheckedChange={(v) =>
-                        setChecklist((prev) => ({ ...prev, [task]: !!v }))
-                      }
-                    />
-                    <span className="font-medium text-gray-700">{task}</span>
-                  </div>
-                ))}
+                        <AccordionItem value="faq8">
+                          <AccordionTrigger>
+                            La cámara secreta está dañada, ¿qué hago?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            Asegura privacidad colocando un panel improvisado.
+                            Nunca permitas que alguien vea el voto.
+                          </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="faq9">
+                          <AccordionTrigger>
+                            ¿Qué pasa si el elector marca dos opciones?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            Si marca dos candidatos de la misma elección, el
+                            voto es nulo. Si la intención del voto es clara,
+                            puede ser válido.
+                          </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="faq10">
+                          <AccordionTrigger>
+                            ¿Qué hago si alguien graba o causa disturbios?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            Pide que se retire, no confrontes y avisa al
+                            coordinador o a la policía. Está prohibido grabar
+                            dentro del aula.
+                          </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="faq11">
+                          <AccordionTrigger>
+                            ¿Qué hago si llega un voluntario sin capacitación?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            El presidente debe asignarle un rol vacío,
+                            explicarle sus tareas y registrarlo.
+                          </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="faq12">
+                          <AccordionTrigger>
+                            ¿Cuándo debo usar el Acta de Incidencias?
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            Debe llenarse en casos de errores de padrón,
+                            incidentes de seguridad, fallas de material o
+                            eventos relevantes.
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </Card>
-            )}
 
-            {/* PREGUNTAS FRECUENTES */}
-            <Card className="rounded-lg p-4 shadow-md lg:rounded-xl lg:p-6 lg:shadow-lg">
-              <Accordion type="single" collapsible>
-                <AccordionItem value="faq-general">
-                  <AccordionTrigger className="text-lg font-semibold">
-                    Preguntas Frecuentes (FAQ)
-                  </AccordionTrigger>
-
-                  <AccordionContent>
-                    {/* Acordeones internos */}
-                    <Accordion
-                      type="single"
-                      collapsible
-                      className="mt-4 space-y-2"
-                    >
-                      <AccordionItem value="faq1">
-                        <AccordionTrigger>
-                          ¿Qué hago si un miembro de mesa titular no llega a
-                          tiempo?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          Si un miembro titular no llega antes de la hora
-                          límite, debe ser reemplazado por un suplente. Si no
-                          hay suplentes, se debe convocar a un elector
-                          voluntario con apoyo del coordinador ONPE.
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="faq2">
-                        <AccordionTrigger>
-                          No puedo marcar asistencia, ¿qué hago?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          Verifica que el código ONPE sea correcto. Si el
-                          problema persiste, registra tu asistencia manualmente
-                          con el secretario y comunícalo al coordinador ONPE.
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="faq3">
-                        <AccordionTrigger>
-                          ¿Cómo debo firmar las cédulas?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          Firma en el reverso de cada cédula con lapicero azul
-                          antes de entregarla al elector. Una cédula sin firma
-                          debe ser considerada no válida durante el escrutinio.
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="faq4">
-                        <AccordionTrigger>
-                          ¿Puede votar alguien que perdió su DNI?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          Solo pueden votar con DNI azul, DNI electrónico o DNI
-                          vencido. No se aceptan copias, fotos ni documentos
-                          distintos al DNI.
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="faq5">
-                        <AccordionTrigger>
-                          El elector aparece como “ya votó”, pero dice que no.
-                          ¿Qué hago?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          Registra la incidencia y permite votar como “elector
-                          observado”, siguiendo el procedimiento ONPE.
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="faq6">
-                        <AccordionTrigger>
-                          ¿Qué hago si falta material electoral?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          Debes comunicarte inmediatamente con el coordinador
-                          ONPE. No se deben improvisar materiales no oficiales.
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="faq7">
-                        <AccordionTrigger>
-                          ¿Los adultos mayores, embarazadas o personas con
-                          discapacidad tienen prioridad?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          Sí, tienen derecho a pasar directamente sin hacer
-                          fila. El registro del voto es el mismo.
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="faq8">
-                        <AccordionTrigger>
-                          La cámara secreta está dañada, ¿qué hago?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          Asegura privacidad colocando un panel improvisado.
-                          Nunca permitas que alguien vea el voto.
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="faq9">
-                        <AccordionTrigger>
-                          ¿Qué pasa si el elector marca dos opciones?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          Si marca dos candidatos de la misma elección, el voto
-                          es nulo. Si la intención del voto es clara, puede ser
-                          válido.
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="faq10">
-                        <AccordionTrigger>
-                          ¿Qué hago si alguien graba o causa disturbios?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          Pide que se retire, no confrontes y avisa al
-                          coordinador o a la policía. Está prohibido grabar
-                          dentro del aula.
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="faq11">
-                        <AccordionTrigger>
-                          ¿Qué hago si llega un voluntario sin capacitación?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          El presidente debe asignarle un rol vacío, explicarle
-                          sus tareas y registrarlo.
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="faq12">
-                        <AccordionTrigger>
-                          ¿Cuándo debo usar el Acta de Incidencias?
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          Debe llenarse en casos de errores de padrón,
-                          incidentes de seguridad, fallas de material o eventos
-                          relevantes.
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </Card>
-
-            {/** APERTURA */}
-            <Button
-              id="open-btn"
-              disabled={!attendanceMarked || !checklistCompleted()}
-              className="w-full bg-green-600 text-white"
-            >
-              Aperturar Mesa
-            </Button>
-          </>
-        )}
+              {/** APERTURA */}
+              <Button
+                id="open-btn"
+                disabled={!attendanceMarked || !checklistCompleted()}
+                className="w-full bg-green-600 text-white"
+              >
+                Aperturar Mesa
+              </Button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

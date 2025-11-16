@@ -175,3 +175,217 @@ html {
   stroke-width: 3px !important;
   color: white !important;
 }
+/* ===== DARK MODE FIXES - SIN TRANSPARENCIAS NI BLUR ===== */
+.dark {
+  color-scheme: dark;
+}
+
+/* Fondos - Quitar transparencias y blur */
+.dark .bg-white {
+  background-color: hsl(220 8% 12%) !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-100,
+.dark .bg-slate-50,
+.dark .bg-slate-100 {
+  background-color: hsl(220 8% 15%) !important;
+}
+
+/* QUITAR TRANSPARENCIAS Y BLUR COMPLETAMENTE */
+.dark .bg-white\/90,
+.dark .bg-white\/95,
+.dark .bg-white\/80,
+.dark .bg-white\/70 {
+  background-color: hsl(220 8% 12%) !important;
+}
+
+.dark .backdrop-blur-sm,
+.dark .backdrop-blur-md,
+.dark .backdrop-blur-lg,
+.dark .backdrop-blur-xl {
+  backdrop-filter: none !important;
+  background-color: hsl(220 8% 12%) !important;
+}
+
+/* Ajustes específicos para el componente de validación */
+.dark .bg-white\/90.backdrop-blur-sm {
+  background-color: hsl(220 8% 12%) !important;
+  backdrop-filter: none !important;
+}
+
+/* ===== TEXTOS ===== */
+.dark .text-black,
+.dark .text-gray-800,
+.dark .text-slate-800,
+.dark .text-slate-900 {
+  color: hsl(0 0% 90%) !important;
+}
+
+.dark .text-gray-700,
+.dark .text-slate-700 {
+  color: hsl(0 0% 85%) !important;
+}
+
+.dark .text-gray-600,
+.dark .text-slate-600 {
+  color: hsl(0 0% 80%) !important;
+}
+
+/* ===== HOVERS ===== */
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-gray-100:hover,
+.dark .hover\:bg-slate-100:hover,
+.dark .hover\:bg-blue-50:hover {
+  background-color: hsl(220 8% 18%) !important;
+}
+
+.dark .hover\:text-gray-900:hover,
+.dark .hover\:text-slate-900:hover {
+  color: hsl(0 0% 95%) !important;
+}
+
+/* ===== BOTONES ===== */
+.dark button.bg-white,
+.dark .bg-white {
+  background-color: hsl(220 8% 15%) !important;
+  color: hsl(0 0% 90%) !important;
+  border-color: hsl(220 8% 25%) !important;
+}
+
+.dark button.border {
+  background-color: hsl(220 8% 15%) !important;
+  color: hsl(0 0% 90%) !important;
+  border-color: hsl(220 8% 25%) !important;
+}
+
+.dark button.bg-white:hover,
+.dark .bg-white:hover,
+.dark button.border:hover {
+  background-color: hsl(220 8% 20%) !important;
+  color: hsl(0 0% 95%) !important;
+}
+
+/* ===== ELEMENTOS AZULES ===== */
+.dark .bg-blue-50,
+.dark .bg-blue-100,
+.dark .bg-blue-200 {
+  background-color: hsl(220 8% 15%) !important;
+}
+
+.dark .border-blue-200,
+.dark .border-blue-300 {
+  border-color: hsl(220 8% 25%) !important;
+}
+
+/* ===== ELEMENTOS ESPECÍFICOS ===== */
+.dark button.bg-transparent {
+  background-color: hsl(220 8% 12%) !important;
+  color: hsl(0 0% 85%) !important;
+  border-color: hsl(220 8% 25%) !important;
+}
+
+.dark button.bg-transparent:hover {
+  background-color: hsl(220 8% 18%) !important;
+  color: hsl(0 0% 95%) !important;
+}
+
+/* Botones primarios mantienen azul */
+.dark .bg-primary {
+  background-color: hsl(217 91% 60%) !important;
+  color: white !important;
+}
+
+/* Borders */
+.dark .border-gray-200,
+.dark .border-slate-200 {
+  border-color: hsl(220 8% 20%) !important;
+}
+
+/* Colores semánticos */
+.dark .text-blue-600 {
+  color: hsl(217 91% 65%) !important;
+}
+
+.dark .text-red-600 {
+  color: hsl(0 84% 70%) !important;
+}
+
+.dark .text-green-600 {
+  color: hsl(142 76% 65%) !important;
+}
+
+.dark .bg-green-600 {
+  background-color: hsl(142 76% 45%) !important;
+}
+
+.dark .bg-red-600 {
+  background-color: hsl(0 84% 50%) !important;
+}
+
+/* Badges y estados */
+.dark .bg-green-600.text-white {
+  background-color: hsl(142 76% 45%) !important;
+  color: white !important;
+}
+
+.dark .bg-red-600.text-white {
+  background-color: hsl(0 84% 50%) !important;
+  color: white !important;
+}
+
+/* Inputs y formularios */
+.dark input::placeholder {
+  color: hsl(0 0% 60%) !important;
+}
+
+.dark input {
+  background-color: hsl(220 8% 15%) !important;
+  color: hsl(0 0% 85%) !important;
+  border-color: hsl(220 8% 25%) !important;
+}
+
+/* Cards con sombras oscuras */
+.dark .shadow-md,
+.dark .shadow-lg {
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.4),
+    0 2px 4px -2px rgb(0 0 0 / 0.4) !important;
+}
+
+/* Fix para el navbar en dark mode */
+.dark .bg-white {
+  background-color: hsl(220 8% 12%) !important;
+}
+
+.dark .text-slate-600 {
+  color: hsl(0 0% 80%) !important;
+}
+
+.dark .hover\:bg-slate-100:hover {
+  background-color: hsl(220 8% 18%) !important;
+}
+
+.dark .hover\:text-slate-900:hover {
+  color: hsl(0 0% 95%) !important;
+}
+
+/* CHATBOT - Sin transparencias */
+.dark .fixed.bottom-4.right-4 {
+  background-color: hsl(220 8% 15%) !important;
+  border: 1px solid hsl(220 8% 25%) !important;
+  color: hsl(0 0% 85%) !important;
+}
+
+/* Overlays y modales */
+.dark .bg-black\/50,
+.dark .bg-black\/80,
+.dark .bg-gray-900\/80 {
+  background-color: hsl(0 0% 0% / 0.8) !important;
+}
+
+/* Eliminar cualquier backdrop-filter residual */
+.dark * {
+  backdrop-filter: none !important;
+}
