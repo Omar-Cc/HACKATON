@@ -106,9 +106,9 @@ export function Navbar() {
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
                       <Link
-                        to="/guia-elector"
+                        to="/elector"
                         className={`group inline-flex h-10 w-max items-center justify-center rounded-md bg-white px-4 py-2 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 focus:text-slate-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 ${
-                          location.pathname === '/guia-elector'
+                          location.pathname === '/elector'
                             ? 'bg-slate-100 text-slate-900'
                             : 'text-slate-600'
                         }`}
@@ -235,7 +235,7 @@ export function Navbar() {
                         <AccordionContent className="pt-2 pb-0">
                           <div className="flex flex-col space-y-2 pl-4">
                             <Link
-                              to="/guia-elector"
+                              to="/elector"
                               onClick={() => setMobileMenuOpen(false)}
                               className="flex items-center gap-3 rounded-lg px-4 py-2 text-slate-700 transition-colors hover:bg-slate-100"
                             >

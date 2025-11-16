@@ -22,7 +22,7 @@ function CandidatosLayout() {
       {/* ========================================================== */}
       <div className="hidden min-h-full flex-col md:flex">
         {/* --- ÁREA DEL TÍTULO (PC) --- */}
-        <div className="flex-shrink-0 p-6 md:p-8">
+        <div className="shrink-0 p-6 md:p-8">
           {isComparePage ? (
             // --- Header "Comparar" (PC) ---
             <div className="flex items-center gap-4">

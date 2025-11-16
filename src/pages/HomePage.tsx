@@ -15,6 +15,7 @@ import {
   MapPin,
   ClipboardCheck,
 } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 
 function useScrollReveal() {
   useEffect(() => {
@@ -286,13 +287,13 @@ export default function Principal() {
 
               {/* Botón CTA */}
               <div className="mt-10 flex justify-center">
-                <a
-                  href="#match"
-                  className="group inline-flex items-center justify-center rounded-xl bg-white px-10 py-4 text-lg font-bold text-blue-800 shadow-xl transition-transform duration-300 hover:scale-105"
+                <Link
+                  to="/planchas-presidenciales"
+                  className="group inline-flex transform items-center justify-center rounded-xl bg-white px-8 py-4 font-semibold text-blue-700 shadow-lg transition-transform duration-300 hover:scale-105"
                 >
                   Explorar VotoContigo 2026
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
+                </Link>
               </div>
             </div>
           </section>

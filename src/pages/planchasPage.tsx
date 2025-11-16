@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import { ImageWithFallback } from '@/components/imageWithFallback'
+import { PLANCHAS } from '@/data/elecciones'
 import { Badge } from '@/components/ui/badge'
 import {
   Sheet,
@@ -51,416 +52,7 @@ export interface Plancha {
   }
 }
 
-const planchas: Plancha[] = [
-  {
-    id: 1,
-    numero: '1',
-    presidente: {
-      nombre: 'María González',
-      foto: 'woman president candidate',
-    },
-    vicepresidente1: {
-      nombre: 'Carlos Rodríguez',
-      foto: 'man vice president candidate',
-    },
-    vicepresidente2: {
-      nombre: 'Ana Silva',
-      foto: 'woman vice president candidate',
-    },
-    partido: {
-      id: 'ppn',
-      nombre: 'Partido Progresista Nacional',
-      siglas: 'PPN',
-      logo: 'logo_ppn.png',
-      color: '#3B82F6',
-    },
-    zona: ['lima', 'cusco', 'arequipa'],
-    propuestas: {
-      educacion: [
-        'Educación universitaria gratuita',
-        'Becas para estudiantes de bajos recursos',
-        'Modernización de infraestructura educativa',
-      ],
-      salud: [
-        'Cobertura universal de salud',
-        'Hospitales nuevos en zonas rurales',
-        'Telemedicina para zonas alejadas',
-      ],
-      seguridad: [
-        'Mayor presencia policial en barrios',
-        'Cámaras de seguridad inteligentes',
-        'Programas de prevención juvenil',
-      ],
-      economia: [
-        'Reducción del IVA en productos básicos',
-        'Apoyo a pequeñas empresas',
-        'Creación de 500,000 empleos',
-      ],
-      medio_ambiente: [
-        'Energía solar en edificios públicos',
-        'Reforestación de áreas urbanas',
-        'Prohibición de plásticos de un solo uso',
-      ],
-    },
-  },
-  {
-    id: 2,
-    numero: '2',
-    presidente: {
-      nombre: 'Carlos Mendoza',
-      foto: 'man president candidate suit',
-    },
-    vicepresidente1: {
-      nombre: 'Ana Silva',
-      foto: 'woman vice president candidate',
-    },
-    vicepresidente2: {
-      nombre: 'Jorge Morales',
-      foto: 'man vice president candidate professional',
-    },
-    partido: {
-      id: 'fd',
-      nombre: 'Frente Democrático',
-      siglas: 'FD',
-      logo: 'logo_fd.png',
-      color: '#10B981',
-    },
-    zona: ['la_libertad', 'piura', 'lambayeque'],
-    propuestas: {
-      educacion: [
-        'Vouchers educativos para familias',
-        'Inglés obligatorio desde primaria',
-        'Alianzas con universidades internacionales',
-      ],
-      salud: [
-        'Seguros de salud privados accesibles',
-        'Incentivos fiscales para clínicas',
-        'Reducción de listas de espera',
-      ],
-      seguridad: [
-        'Mano dura contra el crimen',
-        'Aumento del pie de fuerza',
-        'Penas más severas para delincuentes',
-      ],
-      economia: [
-        'Reducción de impuestos a empresas',
-        'Atracción de inversión extranjera',
-        'Zona franca en todas las regiones',
-      ],
-      medio_ambiente: [
-        'Incentivos para vehículos eléctricos',
-        'Parques industriales ecológicos',
-        'Reciclaje obligatorio empresarial',
-      ],
-    },
-  },
-  {
-    id: 3,
-    numero: '3',
-    presidente: {
-      nombre: 'Ana Flores',
-      foto: 'woman president candidate professional',
-    },
-    vicepresidente1: {
-      nombre: 'Jorge Morales',
-      foto: 'man vice president candidate professional',
-    },
-    vicepresidente2: {
-      nombre: 'Luis Hernández',
-      foto: 'man president candidate leader',
-    },
-    partido: {
-      id: 'uc',
-      nombre: 'Unión por el Cambio',
-      siglas: 'UC',
-      logo: 'logo_uc.png',
-      color: '#8B5CF6',
-    },
-    zona: ['cusco', 'puno', 'junin'],
-    propuestas: {
-      educacion: [
-        'Educación ambiental obligatoria',
-        'Escuelas sostenibles certificadas',
-        'Huertos escolares en todas las escuelas',
-      ],
-      salud: [
-        'Medicina preventiva como prioridad',
-        'Alimentación saludable en hospitales',
-        'Centros de salud mental gratuitos',
-      ],
-      seguridad: [
-        'Policía comunitaria cercana',
-        'Justicia restaurativa',
-        'Iluminación LED en calles',
-      ],
-      economia: [
-        'Economía circular y reciclaje',
-        'Agricultura orgánica subsidiada',
-        'Turismo ecológico como motor',
-      ],
-      medio_ambiente: [
-        '100% energías renovables para 2030',
-        'Protección de reservas naturales',
-        'Transporte público eléctrico',
-      ],
-    },
-  },
-  {
-    id: 4,
-    numero: '4',
-    presidente: {
-      nombre: 'Luis Hernández',
-      foto: 'man president candidate leader',
-    },
-    vicepresidente1: {
-      nombre: 'Carmen López',
-      foto: 'woman vice president candidate leader',
-    },
-    vicepresidente2: {
-      nombre: 'Rosa Valdivia',
-      foto: 'woman president candidate confident',
-    },
-    partido: {
-      id: 'ap',
-      nombre: 'Alianza Popular',
-      siglas: 'AP',
-      logo: 'logo_ap.png',
-      color: '#F59E0B',
-    },
-    zona: ['cajamarca', 'ancash', 'ayacucho'],
-    propuestas: {
-      educacion: [
-        'Desayuno y almuerzo escolar gratis',
-        'Útiles escolares gratuitos',
-        'Transporte escolar subsidiado',
-      ],
-      salud: [
-        'Medicamentos genéricos gratuitos',
-        'Clínicas populares en cada barrio',
-        'Dentista y oftalmología gratuita',
-      ],
-      seguridad: [
-        'Iluminación en barrios populares',
-        'Patrullaje a pie constante',
-        'Deportes y cultura para jóvenes',
-      ],
-      economia: [
-        'Salario mínimo de S/1,500 mensuales',
-        'Vivienda social para familias',
-        'Cooperativas de trabajadores',
-      ],
-      medio_ambiente: [
-        'Limpieza de ríos y playas',
-        'Contenedores de basura por cuadra',
-        'Compostaje comunitario',
-      ],
-    },
-  },
-  {
-    id: 5,
-    numero: '5',
-    presidente: {
-      nombre: 'Rosa Valdivia',
-      foto: 'woman president candidate confident',
-    },
-    vicepresidente1: {
-      nombre: 'Pedro Castillo',
-      foto: 'man vice president candidate',
-    },
-    vicepresidente2: {
-      nombre: 'Jorge Salinas',
-      foto: 'man president candidate business',
-    },
-    partido: {
-      id: 'fr',
-      nombre: 'Fuerza Renovadora',
-      siglas: 'FR',
-      logo: 'logo_fr.png',
-      color: '#EF4444',
-    },
-    zona: ['lima', 'callao', 'ica'],
-    propuestas: {
-      educacion: [
-        'Reforma educativa integral',
-        'Capacitación docente constante',
-        'Infraestructura moderna en colegios',
-      ],
-      salud: [
-        'Aumento del presupuesto en salud',
-        'Contratación de más médicos',
-        'Equipamiento de hospitales',
-      ],
-      seguridad: [
-        'Plan nacional de seguridad ciudadana',
-        'Tecnología para combatir el crimen',
-        'Prevención del delito juvenil',
-      ],
-      economia: [
-        'Reactivación económica post-pandemia',
-        'Apoyo a la pequeña empresa',
-        'Generación de empleo formal',
-      ],
-      medio_ambiente: [
-        'Protección de ecosistemas',
-        'Energías limpias',
-        'Gestión de residuos sólidos',
-      ],
-    },
-  },
-  {
-    id: 6,
-    numero: '6',
-    presidente: {
-      nombre: 'Jorge Salinas',
-      foto: 'man president candidate business',
-    },
-    vicepresidente1: {
-      nombre: 'María Torres',
-      foto: 'woman vice president smart',
-    },
-    vicepresidente2: {
-      nombre: 'Patricia Ugarte',
-      foto: 'woman president candidate strong',
-    },
-    partido: {
-      id: 'md',
-      nombre: 'Movimiento Democrático',
-      siglas: 'MD',
-      logo: 'logo_md.png',
-      color: '#06B6D4',
-    },
-    zona: ['arequipa', 'moquegua', 'tacna'],
-    propuestas: {
-      educacion: [
-        'Educación técnica de calidad',
-        'Alianzas público-privadas',
-        'Becas al extranjero',
-      ],
-      salud: [
-        'Salud digital',
-        'Hospitales regionales de nivel III',
-        'Programas de prevención',
-      ],
-      seguridad: [
-        'Lucha contra la corrupción',
-        'Modernización policial',
-        'Inteligencia criminal',
-      ],
-      economia: [
-        'Inversión en infraestructura',
-        'Desarrollo de regiones',
-        'Comercio exterior',
-      ],
-      medio_ambiente: [
-        'Reforestación nacional',
-        'Agua potable para todos',
-        'Control de la contaminación',
-      ],
-    },
-  },
-  {
-    id: 7,
-    numero: '7',
-    presidente: {
-      nombre: 'Patricia Ugarte',
-      foto: 'woman president candidate strong',
-    },
-    vicepresidente1: {
-      nombre: 'Ricardo Palma',
-      foto: 'man vice president confident',
-    },
-    vicepresidente2: {
-      nombre: 'Fernando Belaunde',
-      foto: 'man president candidate experienced',
-    },
-    partido: {
-      id: 'pn',
-      nombre: 'Partido Nacionalista',
-      siglas: 'PN',
-      logo: 'logo_pn.png',
-      color: '#DC2626',
-    },
-    zona: ['puno', 'apurimac', 'cusco'],
-    propuestas: {
-      educacion: [
-        'Educación intercultural bilingüe',
-        'Prioridad a zonas rurales',
-        'Internet para todos los colegios',
-      ],
-      salud: [
-        'Brigadas médicas itinerantes',
-        'Medicina tradicional y moderna',
-        'Salud materno-infantil',
-      ],
-      seguridad: [
-        'Seguridad fronteriza',
-        'Combate al narcotráfico',
-        'Protección de comunidades',
-      ],
-      economia: [
-        'Industrialización nacional',
-        'Soberanía alimentaria',
-        'Minería responsable',
-      ],
-      medio_ambiente: [
-        'Conservación de la biodiversidad',
-        'Protección de glaciares',
-        'Agricultura sostenible',
-      ],
-    },
-  },
-  {
-    id: 8,
-    numero: '8',
-    presidente: {
-      nombre: 'Fernando Belaunde',
-      foto: 'man president candidate experienced',
-    },
-    vicepresidente1: {
-      nombre: 'Susana Vilca',
-      foto: 'woman vice president experienced',
-    },
-    vicepresidente2: {
-      nombre: 'Ana Flores',
-      foto: 'woman president candidate professional',
-    },
-    partido: {
-      id: 'ar',
-      nombre: 'Acción Republicana',
-      siglas: 'AR',
-      logo: 'logo_ar.png',
-      color: '#EA580C',
-    },
-    zona: ['loreto', 'ucayali', 'san_martin'],
-    propuestas: {
-      educacion: [
-        'Educación amazónica especializada',
-        'Universidades en la selva',
-        'Becas para jóvenes amazónicos',
-      ],
-      salud: [
-        'Hospitales fluviales',
-        'Atención en comunidades nativas',
-        'Enfermedades tropicales',
-      ],
-      seguridad: [
-        'Presencia del Estado en la selva',
-        'Protección de comunidades indígenas',
-        'Lucha contra la tala ilegal',
-      ],
-      economia: [
-        'Desarrollo amazónico sostenible',
-        'Turismo de naturaleza',
-        'Productos de la biodiversidad',
-      ],
-      medio_ambiente: [
-        'Protección de la Amazonía',
-        'Reforestación masiva',
-        'Conservación de especies',
-      ],
-    },
-  },
-]
+const planchas = PLANCHAS
 
 const zonas = [
   { id: 'lima', label: 'Lima' },
@@ -877,13 +469,49 @@ export function PlanchasPage() {
                   return (
                     <div
                       key={plancha.id}
-                      className={`group overflow-hidden rounded-2xl border-2 transition-all hover:shadow-xl ${
+                      className={`group relative overflow-hidden rounded-2xl border-2 transition-all hover:shadow-xl ${
                         selectedForComparison.includes(plancha.id)
                           ? 'scale-105 border-gray-500 shadow-lg'
                           : 'border-slate-200 hover:border-slate-300'
                       }`}
                       style={{ backgroundColor: 'var(--card)' }}
                     >
+                      {/* Marca de agua: usar logo (imagen) cuando exista, fallback a siglas debajo */}
+                      <div
+                        className="pointer-events-none absolute inset-0 flex items-center justify-center"
+                        style={{ zIndex: 0 }}
+                        aria-hidden
+                      >
+                        {/* Siglas como fallback (debajo) */}
+                        <span
+                          className="text-9xl font-black"
+                          style={{
+                            color: plancha.partido.color,
+                            opacity: 0.06,
+                          }}
+                        >
+                          {plancha.partido?.siglas}
+                        </span>
+
+                        {/* Logo grande centrado si existe; si falla, se oculta y se ve la sigla */}
+                        {plancha.partido?.logo && (
+                          <img
+                            src={
+                              plancha.partido.logo.startsWith('http')
+                                ? plancha.partido.logo
+                                : `/assets/${plancha.partido.logo}`
+                            }
+                            alt={`${plancha.partido?.nombre} logo`}
+                            className="absolute max-h-[60%] max-w-[60%] object-contain"
+                            style={{ opacity: 0.18 }}
+                            onError={(e) => {
+                              ;(
+                                e.currentTarget as HTMLImageElement
+                              ).style.display = 'none'
+                            }}
+                          />
+                        )}
+                      </div>
                       {/* Header con color de partido */}
                       <div
                         className="h-2"
@@ -891,36 +519,14 @@ export function PlanchasPage() {
                       />
 
                       <div className="p-5">
-                        {/* Logo del Partido */}
-                        <div className="mb-4 flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="relative h-10 w-10">
-                              {/* Fallback: siglas con color de partido (siempre visible debajo) */}
-                              <div
-                                className="absolute inset-0 flex items-center justify-center rounded-lg text-sm font-semibold text-white"
-                                style={{
-                                  backgroundColor: plancha.partido.color,
-                                }}
-                              >
-                                {plancha.partido?.siglas}
-                              </div>
-                              {/* Logo: se muestra encima si existe; si falla, onError oculta la imagen y se ve el fallback */}
-                              {plancha.partido?.logo && (
-                                <img
-                                  src={
-                                    plancha.partido.logo.startsWith('http')
-                                      ? plancha.partido.logo
-                                      : `/assets/${plancha.partido.logo}`
-                                  }
-                                  alt={`${plancha.partido?.nombre} logo`}
-                                  className="absolute inset-0 h-10 w-10 rounded-lg object-cover"
-                                  onError={(e) => {
-                                    ;(
-                                      e.currentTarget as HTMLImageElement
-                                    ).style.display = 'none'
-                                  }}
-                                />
-                              )}
+                        {/* Header: nombre del partido (la marca de agua grande ya está en el fondo) */}
+                        <div className="relative z-10 mb-4 flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div
+                              className="flex h-10 w-10 items-center justify-center rounded-lg font-semibold text-white"
+                              style={{ backgroundColor: plancha.partido.color }}
+                            >
+                              {plancha.partido?.siglas}
                             </div>
                             <div>
                               <p className="text-xs font-medium text-slate-900">

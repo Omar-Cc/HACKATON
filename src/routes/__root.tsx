@@ -7,24 +7,27 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { Calendar } from 'lucide-react'
+import ChatbotProvider, { FloatingChatbot } from '@/components/FloatingChatbot'
 
 const RootLayout = () => {
   const location = useLocation()
+  const isHome = location.pathname === '/'
 
   return (
-    <>
-      <Navbar />
+    <ChatbotProvider>
+      {!isHome && <Navbar />}
       <main>
         <Outlet />
       </main>
-      {/* Floating Calendar Button - fixed bottom-right (bigger & more visible) */}
+
+      {/* Floating Calendar Button - fixed bottom-right */}
       {location.pathname !== '/calendario' && (
         <div className="pointer-events-none">
           <Link
             to="/calendario"
             aria-label="Ir al calendario"
             title="Ir al Calendario"
-            className="pointer-events-auto fixed right-6 bottom-6 z-50 transform overflow-hidden rounded-full bg-linear-to-br from-blue-600 to-indigo-600 p-4 shadow-2xl transition-transform duration-200 hover:scale-105 focus:ring-4 focus:ring-blue-300 focus:outline-none md:p-5"
+            className="pointer-events-auto fixed right-6 bottom-28 z-50 transform overflow-hidden rounded-full bg-linear-to-br from-blue-600 to-indigo-600 p-4 shadow-2xl transition-transform duration-200 hover:scale-105 focus:ring-4 focus:ring-blue-300 focus:outline-none md:p-5"
           >
             {/* decorative blurred layer to make it more vistoso */}
             <span
@@ -35,12 +38,14 @@ const RootLayout = () => {
           </Link>
         </div>
       )}
+      <FloatingChatbot />
+
       <TanStackRouterDevtools
         position="bottom-right"
         initialIsOpen={false}
         toggleButtonProps={{ style: { display: 'none' } }}
       />
-    </>
+    </ChatbotProvider>
   )
 }
 

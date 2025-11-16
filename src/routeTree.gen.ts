@@ -11,13 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PlanchasPresidencialesRouteImport } from './routes/planchas-presidenciales'
 import { Route as MiembroMesaRouteImport } from './routes/miembro-mesa'
-import { Route as GuiaElectorRouteImport } from './routes/guia-elector'
 import { Route as ElectorRouteImport } from './routes/elector'
-import { Route as CongresoRouteImport } from './routes/congreso'
 import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ElectorIndexRouteImport } from './routes/elector.index'
+import { Route as CongresoIndexRouteImport } from './routes/congreso/index'
 import { Route as ElectorSimuladorRouteImport } from './routes/elector.simulador'
 import { Route as ElectorSeguridadRouteImport } from './routes/elector.seguridad'
 import { Route as ElectorLocalRouteImport } from './routes/elector.local'
@@ -27,7 +26,7 @@ import { Route as ElectorComoVotarRouteImport } from './routes/elector.como-vota
 import { Route as ElectorCandidatosRouteImport } from './routes/elector.candidatos'
 import { Route as ElectorAjustesRouteImport } from './routes/elector.ajustes'
 import { Route as CandidatoIdRouteImport } from './routes/candidato.$id'
-import { Route as ElectorCandidatosIndexRouteImport } from './routes/elector/candidatos/index'
+import { Route as ElectorCandidatosIndexRouteImport } from './routes/elector.candidatos.index'
 import { Route as ElectorCandidatosCompararRouteImport } from './routes/elector.candidatos.comparar'
 
 const PlanchasPresidencialesRoute = PlanchasPresidencialesRouteImport.update({
@@ -40,19 +39,9 @@ const MiembroMesaRoute = MiembroMesaRouteImport.update({
   path: '/miembro-mesa',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GuiaElectorRoute = GuiaElectorRouteImport.update({
-  id: '/guia-elector',
-  path: '/guia-elector',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ElectorRoute = ElectorRouteImport.update({
   id: '/elector',
   path: '/elector',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CongresoRoute = CongresoRouteImport.update({
-  id: '/congreso',
-  path: '/congreso',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompararRoute = CompararRouteImport.update({
@@ -74,6 +63,11 @@ const ElectorIndexRoute = ElectorIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ElectorRoute,
+} as any)
+const CongresoIndexRoute = CongresoIndexRouteImport.update({
+  id: '/congreso/',
+  path: '/congreso/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ElectorSimuladorRoute = ElectorSimuladorRouteImport.update({
   id: '/simulador',
@@ -136,9 +130,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/calendario': typeof CalendarioRoute
   '/comparar': typeof CompararRoute
-  '/congreso': typeof CongresoRoute
   '/elector': typeof ElectorRouteWithChildren
-  '/guia-elector': typeof GuiaElectorRoute
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/candidato/$id': typeof CandidatoIdRoute
@@ -150,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/elector/local': typeof ElectorLocalRoute
   '/elector/seguridad': typeof ElectorSeguridadRoute
   '/elector/simulador': typeof ElectorSimuladorRoute
+  '/congreso': typeof CongresoIndexRoute
   '/elector/': typeof ElectorIndexRoute
   '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
   '/elector/candidatos/': typeof ElectorCandidatosIndexRoute
@@ -158,8 +151,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/calendario': typeof CalendarioRoute
   '/comparar': typeof CompararRoute
-  '/congreso': typeof CongresoRoute
-  '/guia-elector': typeof GuiaElectorRoute
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/candidato/$id': typeof CandidatoIdRoute
@@ -170,6 +161,7 @@ export interface FileRoutesByTo {
   '/elector/local': typeof ElectorLocalRoute
   '/elector/seguridad': typeof ElectorSeguridadRoute
   '/elector/simulador': typeof ElectorSimuladorRoute
+  '/congreso': typeof CongresoIndexRoute
   '/elector': typeof ElectorIndexRoute
   '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
   '/elector/candidatos': typeof ElectorCandidatosIndexRoute
@@ -179,9 +171,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/calendario': typeof CalendarioRoute
   '/comparar': typeof CompararRoute
-  '/congreso': typeof CongresoRoute
   '/elector': typeof ElectorRouteWithChildren
-  '/guia-elector': typeof GuiaElectorRoute
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/candidato/$id': typeof CandidatoIdRoute
@@ -193,6 +183,7 @@ export interface FileRoutesById {
   '/elector/local': typeof ElectorLocalRoute
   '/elector/seguridad': typeof ElectorSeguridadRoute
   '/elector/simulador': typeof ElectorSimuladorRoute
+  '/congreso/': typeof CongresoIndexRoute
   '/elector/': typeof ElectorIndexRoute
   '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
   '/elector/candidatos/': typeof ElectorCandidatosIndexRoute
@@ -203,9 +194,7 @@ export interface FileRouteTypes {
     | '/'
     | '/calendario'
     | '/comparar'
-    | '/congreso'
     | '/elector'
-    | '/guia-elector'
     | '/miembro-mesa'
     | '/planchas-presidenciales'
     | '/candidato/$id'
@@ -217,6 +206,7 @@ export interface FileRouteTypes {
     | '/elector/local'
     | '/elector/seguridad'
     | '/elector/simulador'
+    | '/congreso'
     | '/elector/'
     | '/elector/candidatos/comparar'
     | '/elector/candidatos/'
@@ -225,8 +215,6 @@ export interface FileRouteTypes {
     | '/'
     | '/calendario'
     | '/comparar'
-    | '/congreso'
-    | '/guia-elector'
     | '/miembro-mesa'
     | '/planchas-presidenciales'
     | '/candidato/$id'
@@ -237,6 +225,7 @@ export interface FileRouteTypes {
     | '/elector/local'
     | '/elector/seguridad'
     | '/elector/simulador'
+    | '/congreso'
     | '/elector'
     | '/elector/candidatos/comparar'
     | '/elector/candidatos'
@@ -245,9 +234,7 @@ export interface FileRouteTypes {
     | '/'
     | '/calendario'
     | '/comparar'
-    | '/congreso'
     | '/elector'
-    | '/guia-elector'
     | '/miembro-mesa'
     | '/planchas-presidenciales'
     | '/candidato/$id'
@@ -259,6 +246,7 @@ export interface FileRouteTypes {
     | '/elector/local'
     | '/elector/seguridad'
     | '/elector/simulador'
+    | '/congreso/'
     | '/elector/'
     | '/elector/candidatos/comparar'
     | '/elector/candidatos/'
@@ -268,12 +256,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CalendarioRoute: typeof CalendarioRoute
   CompararRoute: typeof CompararRoute
-  CongresoRoute: typeof CongresoRoute
   ElectorRoute: typeof ElectorRouteWithChildren
-  GuiaElectorRoute: typeof GuiaElectorRoute
   MiembroMesaRoute: typeof MiembroMesaRoute
   PlanchasPresidencialesRoute: typeof PlanchasPresidencialesRoute
   CandidatoIdRoute: typeof CandidatoIdRoute
+  CongresoIndexRoute: typeof CongresoIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -292,25 +279,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MiembroMesaRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/guia-elector': {
-      id: '/guia-elector'
-      path: '/guia-elector'
-      fullPath: '/guia-elector'
-      preLoaderRoute: typeof GuiaElectorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/elector': {
       id: '/elector'
       path: '/elector'
       fullPath: '/elector'
       preLoaderRoute: typeof ElectorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/congreso': {
-      id: '/congreso'
-      path: '/congreso'
-      fullPath: '/congreso'
-      preLoaderRoute: typeof CongresoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comparar': {
@@ -340,6 +313,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/elector/'
       preLoaderRoute: typeof ElectorIndexRouteImport
       parentRoute: typeof ElectorRoute
+    }
+    '/congreso/': {
+      id: '/congreso/'
+      path: '/congreso'
+      fullPath: '/congreso'
+      preLoaderRoute: typeof CongresoIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/elector/simulador': {
       id: '/elector/simulador'
@@ -465,12 +445,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CalendarioRoute: CalendarioRoute,
   CompararRoute: CompararRoute,
-  CongresoRoute: CongresoRoute,
   ElectorRoute: ElectorRouteWithChildren,
-  GuiaElectorRoute: GuiaElectorRoute,
   MiembroMesaRoute: MiembroMesaRoute,
   PlanchasPresidencialesRoute: PlanchasPresidencialesRoute,
   CandidatoIdRoute: CandidatoIdRoute,
+  CongresoIndexRoute: CongresoIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
