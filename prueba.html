@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElecInfo 2026 - Voto Informado</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de la fuente Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Aplicamos la fuente Inter a todo el cuerpo */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Pequeño ajuste para el ancla de la sección */
+        section[id] {
+            scroll-margin-top: 80px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Barra de Navegación -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-2xl font-bold text-blue-600">ElecInfo 2026</span>
+                </div>
+                <!-- Menú de Navegación (Desktop) -->
+                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                    <a href="#calendario" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Calendario</a>
+                    <a href="#candidatos" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Candidatos</a>
+                    <a href="#elector" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Soy Elector</a>
+                    <a href="#miembro" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Soy Miembro de Mesa</a>
+                </div>
+                <!-- Menú Hamburguesa (Móvil) - Se puede implementar con JS -->
+                <div class="sm:hidden flex items-center">
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-expanded="false">
+                        <span class="sr-only">Abrir menú</span>
+                        <!-- Icono Hamburguesa -->
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Sección Principal (Hero) -->
+    <main>
+        <div class="relative bg-blue-600 text-white overflow-hidden">
+            <div class="max-w-7xl mx-auto">
+                <div class="relative z-10 py-16 sm:py-24 px-4 sm:px-6 lg:px-8 text-center">
+                    <!-- Icono (tomado de tu mockup) -->
+                    <div class="flex justify-center mb-4">
+                        <div class="bg-white p-4 rounded-xl shadow-lg">
+                            <svg class="h-12 w-12 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <!-- Título y Subtítulo (tomado de tu mockup) -->
+                    <h1 class="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+                        ElecInfo 2026
+                    </h1>
+                    <p class="mt-6 max-w-md mx-auto text-lg sm:text-xl text-blue-100">
+                        Información clara para un voto informado.
+                    </p>
+                    
+                    <!-- Segmentación (tomado de tu mockup) -->
+                    <div class="mt-10 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center sm:space-x-4">
+                        <a href="#elector" class="w-full sm:w-auto mb-4 sm:mb-0 flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-lg shadow-lg text-blue-600 bg-white hover:bg-blue-50">
+                            Soy Elector
+                        </a>
+                        <a href="#miembro" class="w-full sm:w-auto flex items-center justify-center px-8 py-3 border border-blue-300 text-base font-medium rounded-lg text-white bg-blue-600 bg-opacity-60 hover:bg-opacity-80">
+                            Soy Miembro de Mesa
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Acciones Rápidas (Widgets) -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Widget 1: Consulta tu Votación -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Consulta tu local de votación</h2>
+                    <p class="text-gray-600 mb-6">Ingresa tu número de DNI para saber dónde te toca votar y si has sido seleccionado como miembro de mesa.</p>
+                    <form>
+                        <label for="dni" class="block text-sm font-medium text-gray-700">Número de DNI</label>
+                        <div class="mt-1 flex rounded-lg shadow-sm">
+                            <input type="text" name="dni" id="dni" class="flex-1 block w-full min-w-0 rounded-none rounded-l-lg sm:text-sm border-gray-300" placeholder="Ej: 12345678">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Consultar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Widget 2: Calendario Electoral -->
+                <div id="calendario" class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Calendario Electoral</h2>
+                    <p class="text-gray-600 mb-6">No te pierdas las fechas clave del proceso electoral 2026.</p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center bg-green-100 text-green-700 rounded-full">
+                                <!-- Icono Check -->
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                            </div>
+                            <p class="ml-3 text-sm font-medium text-gray-700">Cierre de Padrón Electoral: <span class="text-gray-500">10 Ene 2026</span></p>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full">
+                                <!-- Icono Calendario -->
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            </div>
+                            <p class="ml-3 text-sm font-medium text-gray-700">Sorteo de Miembros de Mesa: <span class="text-gray-500">15 Feb 2026</span></p>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full">
+                                <!-- Icono Calendario -->
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            </div>
+                            <p class="ml-3 text-sm font-medium text-gray-700">Debate Presidencial: <span class="text-gray-500">28 Mar 2026</span></p>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center bg-yellow-100 text-yellow-700 rounded-full">
+                                <!-- Icono Exclamación -->
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                            </div>
+                            <p class="ml-3 text-sm font-bold text-gray-900">Día de Elecciones (1ra Vuelta): <span class="text-red-600">11 Abr 2026</span></p>
+                        </li>
+                    </ul>
+                    <a href="#" class="inline-block mt-6 text-sm font-medium text-blue-600 hover:text-blue-500">Ver calendario completo &rarr;</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección "Explora Candidatos" -->
+        <div id="candidatos" class="bg-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <h2 class="text-3xl font-bold text-gray-900 text-center">Explora los Candidatos</h2>
+                <p class="text-center text-lg text-gray-600 mt-4 max-w-2xl mx-auto">Busca, compara y conoce a fondo las propuestas de quienes postulan al congreso, senado y presidencia.</p>
+                
+                <!-- Barra de Búsqueda de Candidatos -->
+                <div class="mt-8 max-w-xl mx-auto">
+                    <label for="search-candidato" class="sr-only">Buscar candidato</label>
+                    <div class="relative rounded-lg shadow-sm">
+                        <input type="search" name="search-candidato" id="search-candidato" class="form-input block w-full p-4 sm:text-sm rounded-lg" placeholder="Buscar por candidato o partido político...">
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <!-- Icono Lupa -->
+                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enlace a herramientas clave (del PDF) -->
+                <div class="mt-8 text-center">
+                    <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+                        Usar el Comparador de Propuestas
+                    </a>
+                    <a href="#" class="ml-4 inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg shadow-sm text-blue-700 bg-white hover:bg-gray-50">
+                        Hacer el Quiz de Candidatos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secciones de Guías (Elector / Miembro) -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
+                <!-- Guía para el Elector -->
+                <section id="elector" class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900">Guía para el Elector</h2>
+                    <p class="mt-4 text-gray-600">Todo lo que necesitas saber para ejercer tu voto de manera informada y segura.</p>
+                    <ul class="mt-8 space-y-4">
+                        <li><a href="#" class="flex items-center text-lg font-medium text-blue-600 hover:text-blue-800">
+                            <!-- Icono Mapa -->
+                            <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                            Ubica tu local y mesa de votación
+                        </a></li>
+                        <li><a href="#" class="flex items-center text-lg font-medium text-blue-600 hover:text-blue-800">
+                            <!-- Icono Voto -->
+                            <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                            Simulador de Votación (Tutorial)
+                        </a></li>
+                        <li><a href="#" class="flex items-center text-lg font-medium text-blue-600 hover:text-blue-800">
+                            <!-- Icono Escudo -->
+                            <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                            Recomendaciones de seguridad
+                        </a></li>
+                        <li><a href="#" class="flex items-center text-lg font-medium text-blue-600 hover:text-blue-800">
+                            <!-- Icono Documento -->
+                            <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                            Marco legal y multas
+                        </a></li>
+                    </ul>
+                </section>
+                
+                <!-- Guía para Miembro de Mesa -->
+                <section id="miembro" class="bg-blue-50 border-2 border-blue-200 rounded-xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900">Guía para Miembro de Mesa</h2>
+                    <p class="mt-4 text-gray-600">Recursos, deberes e instrucciones para tu importante labor durante la jornada electoral.</p>
+                    <ul class="mt-8 space-y-4">
+                        <li><a href="#" class="flex items-center text-lg font-medium text-blue-600 hover:text-blue-800">
+                            <!-- Icono Calendario -->
+                            <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            Tu calendario de actividades y capacitaciones
+                        </a></li>
+                        <li><a href="#" class="flex items-center text-lg font-medium text-blue-600 hover:text-blue-800">
+                            <!-- Icono Lista -->
+                            <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                            Checklist de Deberes (Instalación, Sufragio, Escrutinio)
+                        </a></li>
+                        <li><a href="#" class="flex items-center text-lg font-medium text-blue-600 hover:text-blue-800">
+                            <!-- Icono Ayuda -->
+                            <svg class="h-6 w-6 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.79 4 4 0 1.152-.468 2.18-1.217 2.903a.5.5 0 01-.707 0l-1.06-1.06a.5.5 0 00-.707 0l-.001.001a.5.5 0 000 .707l1.06 1.06a.5.5 0 010 .707l-1.06 1.06a.5.5 0 00-.707 0l-.001.001a.5.5 0 000 .707l1.06 1.06a.5.5 0 010 .707l-1.06 1.06a.5.5 0 00-.707 0l-.001.001a.5.5 0 01-.707 0l-1.06-1.06a.5.5 0 00-.707 0l-.001.001a.5.5 0 01-.707 0A5.002 5.002 0 017 13c0-1.657 1.343-3 3-3a3 3 0 013 3v.5a.5.5 0 001 0V13c0-2.21-1.79-4-4-4-1.933 0-3.516 1.258-3.9 2.964m1.306 6.064A5.002 5.002 0 017 13c0-1.657 1.343-3 3-3a3 3 0 013 3v.5a.5.5 0 001 0V13c0-2.21-1.79-4-4-4-1.933 0-3.516 1.258-3.9 2.964m1.306 6.064A5.002 5.002 0 017 13c0-1.657 1.343-3 3-3a3 3 0 013 3v.5a.5.5 0 001 0V13c0-2.21-1.79-4-4-4-1.933 0-3.516 1.258-3.9 2.964" /></svg>
+                            Preguntas Frecuentes
+                        </a></li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+
+        <!-- Sección de Herramientas Adicionales (del PDF) -->
+        <div class="bg-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <h2 class="text-3xl font-bold text-gray-900 text-center">Herramientas para un Voto Consciente</h2>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <!-- Feature 1: Detector de Fake News -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                        <div class="flex justify-center items-center h-16 w-16 rounded-full bg-red-100 text-red-600 mx-auto">
+                            <!-- Icono Alerta -->
+                            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                        </div>
+                        <h3 class="mt-4 text-xl font-bold text-gray-900">Detector de Fake News</h3>
+                        <p class="mt-2 text-gray-600">Verifica noticias y declaraciones con nuestra base de datos (Chatbot).</p>
+                    </div>
+                    
+                    <!-- Feature 2: Preguntas Ciudadanas -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                        <div class="flex justify-center items-center h-16 w-16 rounded-full bg-green-100 text-green-600 mx-auto">
+                            <!-- Icono Chat -->
+                            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                        </div>
+                        <h3 class="mt-4 text-xl font-bold text-gray-900">Preguntas Ciudadanas</h3>
+                        <p class="mt-2 text-gray-600">Vota por las preguntas que te gustaría que los candidatos respondan.</p>
+                    </div>
+
+                    <!-- Feature 3: Match de Candidatos -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                        <div class="flex justify-center items-center h-16 w-16 rounded-full bg-purple-100 text-purple-600 mx-auto">
+                            <!-- Icono Corazón/Match -->
+                            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.5l1.318-1.182a4.5 4.5 0 116.364 6.364L12 19.5l-7.682-7.682a4.5 4.5 0 010-6.364z" /></svg>
+                        </div>
+                        <h3 class="mt-4 text-xl font-bold text-gray-900">Match de Candidatos</h3>
+                        <p class="mt-2 text-gray-600">Responde un quiz y descubre qué candidatos se alinean con tus prioridades.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-400">&copy; 2026 - Información oficial.</p>
+            <p class="mt-2 text-gray-500 text-sm">Un proyecto de Innovative Minds para la Hackathon UTP 7ma Edición.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
