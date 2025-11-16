@@ -9,6 +9,7 @@ import {
   Loader,
   ArrowLeft,
   ArrowRight,
+  ExternalLink,
 } from 'lucide-react'
 
 type Resultado = {
@@ -23,6 +24,16 @@ type Resultado = {
 // --- Componente de Contenido ---
 const ContenidoPagina: React.FC = () => {
   const [resultado, setResultado] = useState<Resultado | null>(null)
+
+  // ✅ CORRECCIÓN: Eliminada la función no utilizada 'abrirGoogleMaps'
+  // Función para abrir Google Maps con la dirección
+  const abrirGoogleMapsConDireccion = () => {
+    const direccion =
+      'Institución Educativa José María Eguren, Av. Los Álamos 245, Barranco'
+    const direccionCodificada = encodeURIComponent(direccion)
+    const url = `https://www.google.com/maps/search/?api=1&query=${direccionCodificada}`
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -119,15 +130,33 @@ const ContenidoPagina: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <button className="bg-primary text-primary-foreground hover:bg-primary/90 flex w-full items-center justify-center rounded-lg p-4 text-lg font-semibold transition-colors">
-                <ArrowRight className="mr-2" size={20} />
-                Ver ubicación exacta
+
+              {/* Botón con funcionalidad Google Maps */}
+              <button
+                onClick={abrirGoogleMapsConDireccion}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 group flex w-full items-center justify-center rounded-lg p-4 text-lg font-semibold transition-colors"
+              >
+                <ArrowRight
+                  className="mr-2 transition-transform group-hover:translate-x-1"
+                  size={20}
+                />
+                Ver ubicación exacta en Google Maps
+                <ExternalLink className="ml-2 text-sm" size={16} />
               </button>
+
               <div className="bg-accent flex items-start gap-3 rounded-lg p-5">
                 <Lightbulb className="text-primary shrink-0 text-2xl" />
                 <p className="text-muted-foreground font-medium">
                   Recuerda: Llega con anticipación y lleva tu DNI original. El
                   local abre a las 8:00 AM.
+                </p>
+              </div>
+
+              {/* Información adicional para desktop */}
+              <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+                <p className="text-sm text-blue-800">
+                  <strong>💡 Tip:</strong> Al hacer clic en el botón, se abrirá
+                  Google Maps con la ubicación exacta de tu local de votación.
                 </p>
               </div>
             </div>
@@ -146,6 +175,7 @@ const ContenidoPagina: React.FC = () => {
                 title="Mapa del local de votación"
               ></iframe>
             </div>
+
             {/* Detalles */}
             <div className="bg-card rounded-lg p-6 shadow-xl">
               <div className="flex">
@@ -182,11 +212,20 @@ const ContenidoPagina: React.FC = () => {
                 </div>
               </div>
             </div>
-            {/* Botón */}
-            <button className="bg-primary text-primary-foreground hover:bg-primary/90 flex w-full items-center justify-center rounded-lg p-4 text-lg font-semibold transition-colors">
-              <ArrowRight className="mr-2" size={20} />
-              Ver ubicación exacta
+
+            {/* Botón con funcionalidad Google Maps */}
+            <button
+              onClick={abrirGoogleMapsConDireccion}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 group flex w-full items-center justify-center rounded-lg p-4 text-lg font-semibold transition-colors"
+            >
+              <ArrowRight
+                className="mr-2 transition-transform group-hover:translate-x-1"
+                size={20}
+              />
+              Abrir en Google Maps
+              <ExternalLink className="ml-2 text-sm" size={16} />
             </button>
+
             {/* Alerta */}
             <div className="bg-accent flex items-start gap-3 rounded-lg p-5">
               <Lightbulb className="text-primary shrink-0 text-2xl" />
@@ -221,9 +260,8 @@ const PaginaLocalVotacion: React.FC = () => {
       {/* --- UI DE MÓVIL --- */}
       <div className="bg-background min-h-screen md:hidden">
         <header className="bg-primary text-primary-foreground flex items-center gap-4 rounded-b-[20px] p-4 shadow-lg">
-          {/* ✅ CORRECCIÓN: Cambiado de '/elector/local' a '/elector' */}
           <Link
-            to="/elector" // ← ¡AQUÍ ESTÁ LA CORRECCIÓN!
+            to="/elector"
             className="rounded-full p-2 hover:bg-white/10"
             aria-label="Volver al menú principal"
           >
