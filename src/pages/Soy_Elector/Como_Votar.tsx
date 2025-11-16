@@ -53,7 +53,6 @@ const pasos: Paso[] = [
 ]
 
 // --- 2. Creamos un componente para el contenido ---
-//    (Así no repetimos el código de la cuadrícula)
 const ContenidoPagina: React.FC = () => (
   <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
     {/* --- COLUMNA 1: Lista de Pasos --- */}
@@ -87,8 +86,10 @@ const ContenidoPagina: React.FC = () => (
           Ejemplo de cédula válida
         </h3>
         <div className="rounded-lg border-2 border-dashed border-gray-300 p-6">
+          {/* CANDIDATO 1: Voto Válido */}
           <div className="bg-accent/50 border-primary relative flex items-center justify-between rounded-lg border p-4">
             <div className="flex items-center">
+              {/* LOGO: Circular */}
               <div className="bg-primary mr-4 h-12 w-12 rounded-full"></div>
               <div>
                 <div className="text-foreground text-lg font-bold">
@@ -97,13 +98,30 @@ const ContenidoPagina: React.FC = () => (
                 <div className="text-muted-foreground text-sm">Partido A</div>
               </div>
             </div>
-            <X className="text-destructive absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 text-5xl" />
+            {/* CASILLA DE VOTO: Cuadrada con la 'X' GRANDE */}
+            <div className="relative h-12 w-12 shrink-0">
+              <div className="border-primary absolute inset-0 flex items-center justify-center rounded-md border-2 bg-white">
+                {/* AUMENTO DE TAMAÑO DE LA 'X' */}
+                <X className="text-destructive **text-5xl**" />
+              </div>
+            </div>
           </div>
-          <div className="mt-4 flex items-center p-4">
-            <div className="mr-4 h-12 w-12 rounded-lg bg-gray-300"></div>
-            <div>
-              <div className="text-lg font-bold text-gray-500">Candidato 2</div>
-              <div className="text-sm text-gray-400">Partido B</div>
+
+          {/* CANDIDATO 2: Sin marcar */}
+          <div className="mt-4 flex items-center justify-between p-4">
+            <div className="flex items-center">
+              {/* LOGO: Circular */}
+              <div className="mr-4 h-12 w-12 rounded-full bg-gray-300"></div>
+              <div>
+                <div className="text-lg font-bold text-gray-500">
+                  Candidato 2
+                </div>
+                <div className="text-sm text-gray-400">Partido B</div>
+              </div>
+            </div>
+            {/* CASILLA DE VOTO: Cuadrada sin marcar */}
+            <div className="h-12 w-12 shrink-0">
+              <div className="h-full w-full rounded-md border-2 border-gray-300"></div>
             </div>
           </div>
         </div>
@@ -141,7 +159,7 @@ const PaginaComoVotar: React.FC = () => {
       <div className="hidden md:block">
         {/* Título y Descripción (Solo para PC) */}
         <h1 className="text-foreground mb-6 text-3xl font-bold md:text-4xl">
-          Cómo Votar
+          ¿Cómo Votar?
         </h1>
         <p className="text-muted-foreground mb-10 max-w-3xl text-lg">
           Sigue esta guía paso a paso para emitir tu voto de manera correcta.
