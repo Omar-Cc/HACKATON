@@ -18,7 +18,6 @@ import {
 } from 'lucide-react'
 import clsx from 'clsx'
 import { toast } from 'sonner'
-// Se eliminó driver.js
 
 // --- DATOS FALSOS (MOCK DATA) ---
 const presidentialCandidatos = [
@@ -121,8 +120,7 @@ interface SimuladorContextType {
   resetCongresional: (
     setParty: React.Dispatch<React.SetStateAction<string | null>>,
     setPrefs: React.Dispatch<React.SetStateAction<PrefVotes>>,
-    setErrorState: React.Dispatch<React.SetStateAction<PrefErrors>>,
-    prevStep: number
+    setErrorState: React.Dispatch<React.SetStateAction<PrefErrors>>
   ) => void
   resetPresidential: () => void
 
@@ -221,7 +219,7 @@ const PenSelector: React.FC<{
   const { isTourActive, step } = useSimulador()
   const isHighlighted =
     isTourActive &&
-    (step === 1 || step === 3 || step === 5 || step === 7 || step === 9)
+    (step === 1 || step === 2 || step === 3 || step === 4 || step === 5)
 
   return (
     <div
@@ -432,39 +430,6 @@ const CedulaCongresal: React.FC<{
   )
 }
 
-// Tarjeta de Verificación Reutilizable
-const TarjetaVerificacion: React.FC<{
-  titulo: string
-  prefVotes?: { v1: string; v2: string }
-}> = ({ titulo, prefVotes }) => {
-  const v1 = prefVotes?.v1 ? parseInt(prefVotes.v1, 10).toString() : ''
-  const v2 = prefVotes?.v2 ? parseInt(prefVotes.v2, 10).toString() : ''
-
-  return (
-    <div className="rounded-lg border border-green-300 bg-green-50 p-6 shadow-md">
-      <div className="flex items-center">
-        <CheckCircle className="text-3xl text-green-600" />
-        <div className="ml-4">
-          <h3 className="text-xl font-bold text-green-800">{titulo}</h3>
-          <p className="text-lg text-green-700">
-            Has marcado correctamente. Tu voto será contabilizado.
-          </p>
-        </div>
-      </div>
-      {(v1 || v2) && (
-        <>
-          <hr className="my-4 border-green-200" />
-          <p className="text-muted-foreground text-lg">
-            Votos preferenciales:
-            <span className="text-foreground ml-2 font-bold">
-              {[v1, v2].filter(Boolean).join(', ')}
-            </span>
-          </p>
-        </>
-      )}
-    </div>
-  )
-}
 // --- COMPONENTE DE CONTENIDO (Ahora usa Context) ---
 const ContenidoPagina: React.FC = () => {
   // --- ESTADO (Obtenido del Context) ---
@@ -509,17 +474,14 @@ const ContenidoPagina: React.FC = () => {
     hasPrefErrors,
     handleFinish,
     handleModalConfirm,
-    resetCongresional,
-    resetPresidential,
-    isTourActive, // Para destacar botones
-    tutorialContent, // Para destacar botones
+    isTourActive,
+    tutorialContent,
   } = useSimulador()
 
   // --- Lógica de destacado para el tour ---
   const isContinuarHighlighted =
     isTourActive &&
     (tutorialContent?.title.includes('Voto Completo') ||
-      tutorialContent?.title.includes('Voto Válido') ||
       tutorialContent?.title.includes('Voto Preferencial'))
 
   const isComenzarHighlighted =
@@ -527,9 +489,18 @@ const ContenidoPagina: React.FC = () => {
   const isDepositarHighlighted =
     isTourActive && tutorialContent?.title.includes('Último Paso')
 
+  // Lógica para avanzar de paso
+  const handleAdvanceStep = (currentStep: number) => {
+    setStep(currentStep + 1)
+    setSelectedPen(null)
+  }
+
+  // Número total de pasos (5 votos + 1 final)
+  const TOTAL_STEPS = 6
+
   return (
     <div className="mx-auto max-w-2xl">
-      {step > 0 && <PaginationDots current={step} total={11} />}
+      {step > 0 && <PaginationDots current={step} total={TOTAL_STEPS} />}
 
       {/* --- PASO 0: Bienvenida --- */}
       {step === 0 && (
@@ -558,7 +529,7 @@ const ContenidoPagina: React.FC = () => {
             onClick={() => setStep(1)}
             className={clsx(
               'bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg p-4 text-lg font-semibold transition-colors',
-              isComenzarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
+              isComenzarHighlighted && 'ring-primary ring-4 ring-offset-2'
             )}
           >
             Comenzar Tutorial
@@ -566,7 +537,7 @@ const ContenidoPagina: React.FC = () => {
         </div>
       )}
 
-      {/* --- PASO 1: Voto Presidencial (AHORA RESPONSIVE) --- */}
+      {/* --- PASO 1: Voto Presidencial --- */}
       {step === 1 && (
         <>
           <div className="bg-card border-border mb-6 rounded-lg border p-6 shadow-md">
@@ -577,16 +548,16 @@ const ContenidoPagina: React.FC = () => {
               Debes marcar el logo del partido Y la foto del candidato.
             </p>
           </div>
+          <PenSelector selectedPen={selectedPen} onSelect={setSelectedPen} />
           <div
             data-tour="cedula-presidencial"
-            className="bg-card border-border rounded-lg border p-6 shadow-md"
+            className="bg-card border-border mt-6 rounded-lg border p-6 shadow-md"
           >
             <h3 className="text-foreground mb-4 text-lg font-semibold">
               Cédula de Votación - Presidencial 2026
             </h3>
             <div className="space-y-4">
               {presidentialCandidatos.map((c, index) => {
-                // --- Lógica de destacado para el tour ---
                 const isLogoHighlighted =
                   isTourActive &&
                   index === 0 &&
@@ -606,9 +577,7 @@ const ContenidoPagina: React.FC = () => {
                         : 'border-border bg-card'
                     )}
                   >
-                    {/* Stacked en móvil, row en desktop */}
                     <div className="flex flex-col gap-4 md:flex-row md:items-center">
-                      {/* Nombre/Partido */}
                       <div className="flex-1">
                         <p className="text-foreground text-lg font-bold">
                           {c.partido}
@@ -617,7 +586,6 @@ const ContenidoPagina: React.FC = () => {
                           {c.nombre}
                         </p>
                       </div>
-                      {/* Cajas de marcado (flex-1 en móvil) */}
                       <div className="flex shrink-0 gap-2">
                         <div
                           data-tour={
@@ -635,7 +603,7 @@ const ContenidoPagina: React.FC = () => {
                           className={clsx(
                             'hover:bg-accent/50 relative flex h-16 w-full flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-md border-4 border-blue-600 md:w-16 md:flex-none',
                             isLogoHighlighted &&
-                              'ring-primary ring-4 ring-offset-2' // Destacado
+                              'ring-primary ring-4 ring-offset-2'
                           )}
                         >
                           <span className="text-4xl">{c.logo}</span>
@@ -659,7 +627,7 @@ const ContenidoPagina: React.FC = () => {
                           className={clsx(
                             'hover:bg-accent/50 relative ml-2 flex h-16 w-full flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-md border-4 border-blue-600 md:w-16 md:flex-none',
                             isFotoHighlighted &&
-                              'ring-primary ring-4 ring-offset-2' // Destacado
+                              'ring-primary ring-4 ring-offset-2'
                           )}
                         >
                           <User className="text-4xl text-gray-400" />
@@ -674,60 +642,32 @@ const ContenidoPagina: React.FC = () => {
               })}
             </div>
           </div>
-          <PenSelector selectedPen={selectedPen} onSelect={setSelectedPen} />
           <button
             data-tour="continuar-btn"
-            onClick={() => setStep(2)}
+            onClick={() => handleAdvanceStep(1)}
             disabled={!presidentialVote.logo || !presidentialVote.photo}
             className={clsx(
               'bg-primary text-primary-foreground hover:bg-primary/90 mt-6 w-full rounded-lg p-4 text-lg font-semibold transition-colors disabled:opacity-50',
-              isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
+              isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2'
             )}
           >
-            Continuar
+            Continuar (Paso 1 de 5 completado)
           </button>
         </>
       )}
 
-      {/* --- PASO 2: Verificar Voto Presidencial --- */}
+      {/* --- PASO 2: Senado Nacional --- */}
       {step === 2 && (
-        <>
-          <TarjetaVerificacion titulo="Voto Presidencial Válido" />
-          <div className="mt-6 flex gap-4">
-            <button
-              onClick={resetPresidential}
-              className="bg-card border-primary text-primary hover:bg-accent w-full rounded-lg border-2 p-4 text-lg font-semibold transition-colors"
-            >
-              Volver
-            </button>
-            <button
-              data-tour="continuar-btn"
-              onClick={() => {
-                setStep(3)
-                setSelectedPen(null)
-              }}
-              className={clsx(
-                'bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg p-4 text-lg font-semibold transition-colors',
-                isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
-              )}
-            >
-              Continuar
-            </button>
-          </div>
-        </>
-      )}
-
-      {/* --- PASO 3: Senado Nacional --- */}
-      {step === 3 && (
         <>
           <div className="bg-card border-border mb-6 rounded-lg border p-6 shadow-md">
             <h3 className="text-foreground text-xl font-bold">
-              Paso 3: Senado Nacional
+              Paso 2: Senado Nacional
             </h3>
             <p className="text-muted-foreground text-lg">
               Marca el logo del partido y/o ingresa 1 o 2 números.
             </p>
           </div>
+          <PenSelector selectedPen={selectedPen} onSelect={setSelectedPen} />
           <CedulaCongresal
             titulo="Cédula de Votación - Senado Nacional"
             partidos={congressionalParties}
@@ -748,75 +688,35 @@ const ContenidoPagina: React.FC = () => {
             }
             selectedPen={selectedPen}
           />
-          <PenSelector selectedPen={selectedPen} onSelect={setSelectedPen} />
           <button
             data-tour="continuar-btn"
-            onClick={() => setStep(4)}
+            onClick={() => handleAdvanceStep(2)}
             disabled={
               !senadoNacional ||
               hasPrefErrors(senadoNacional, errSenadoNacional)
             }
             className={clsx(
               'bg-primary text-primary-foreground hover:bg-primary/90 mt-6 w-full rounded-lg p-4 text-lg font-semibold transition-colors disabled:opacity-50',
-              isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
+              isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2'
             )}
           >
-            Continuar
+            Continuar (Paso 2 de 5 completado)
           </button>
         </>
       )}
 
-      {/* --- PASO 4: Verificar Senado Nacional --- */}
-      {step === 4 && (
-        <>
-          <TarjetaVerificacion
-            titulo="Voto Senado Nacional Válido"
-            prefVotes={
-              senadoNacional ? prefSenadoNacional[senadoNacional] : undefined
-            }
-          />
-          <div className="mt-6 flex gap-4">
-            <button
-              onClick={() =>
-                resetCongresional(
-                  setSenadoNacional,
-                  setPrefSenadoNacional,
-                  setErrSenadoNacional,
-                  3
-                )
-              }
-              className="bg-card border-primary text-primary hover:bg-accent w-full rounded-lg border-2 p-4 text-lg font-semibold transition-colors"
-            >
-              Volver
-            </button>
-            <button
-              data-tour="continuar-btn"
-              onClick={() => {
-                setStep(5)
-                setSelectedPen(null)
-              }}
-              className={clsx(
-                'bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg p-4 text-lg font-semibold transition-colors',
-                isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
-              )}
-            >
-              Continuar
-            </button>
-          </div>
-        </>
-      )}
-
-      {/* --- PASO 5: Senado Regional --- */}
-      {step === 5 && (
+      {/* --- PASO 3: Senado Regional --- */}
+      {step === 3 && (
         <>
           <div className="bg-card border-border mb-6 rounded-lg border p-6 shadow-md">
             <h3 className="text-foreground text-xl font-bold">
-              Paso 5: Senado Regional
+              Paso 3: Senado Regional
             </h3>
             <p className="text-muted-foreground text-lg">
               Marca el logo del partido y/o ingresa 1 o 2 números.
             </p>
           </div>
+          <PenSelector selectedPen={selectedPen} onSelect={setSelectedPen} />
           <CedulaCongresal
             titulo="Cédula de Votación - Senado Regional"
             partidos={congressionalParties.slice().reverse()}
@@ -837,75 +737,35 @@ const ContenidoPagina: React.FC = () => {
             }
             selectedPen={selectedPen}
           />
-          <PenSelector selectedPen={selectedPen} onSelect={setSelectedPen} />
           <button
             data-tour="continuar-btn"
-            onClick={() => setStep(6)}
+            onClick={() => handleAdvanceStep(3)}
             disabled={
               !senadoRegional ||
               hasPrefErrors(senadoRegional, errSenadoRegional)
             }
             className={clsx(
               'bg-primary text-primary-foreground hover:bg-primary/90 mt-6 w-full rounded-lg p-4 text-lg font-semibold transition-colors disabled:opacity-50',
-              isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
+              isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2'
             )}
           >
-            Continuar
+            Continuar (Paso 3 de 5 completado)
           </button>
         </>
       )}
 
-      {/* --- PASO 6: Verificar Senado Regional --- */}
-      {step === 6 && (
-        <>
-          <TarjetaVerificacion
-            titulo="Voto Senado Regional Válido"
-            prefVotes={
-              senadoRegional ? prefSenadoRegional[senadoRegional] : undefined
-            }
-          />
-          <div className="mt-6 flex gap-4">
-            <button
-              onClick={() =>
-                resetCongresional(
-                  setSenadoRegional,
-                  setPrefSenadoRegional,
-                  setErrSenadoRegional,
-                  5
-                )
-              }
-              className="bg-card border-primary text-primary hover:bg-accent w-full rounded-lg border-2 p-4 text-lg font-semibold transition-colors"
-            >
-              Volver
-            </button>
-            <button
-              data-tour="continuar-btn"
-              onClick={() => {
-                setStep(7)
-                setSelectedPen(null)
-              }}
-              className={clsx(
-                'bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg p-4 text-lg font-semibold transition-colors',
-                isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
-              )}
-            >
-              Continuar
-            </button>
-          </div>
-        </>
-      )}
-
-      {/* --- PASO 7: Diputados --- */}
-      {step === 7 && (
+      {/* --- PASO 4: Diputados --- */}
+      {step === 4 && (
         <>
           <div className="bg-card border-border mb-6 rounded-lg border p-6 shadow-md">
             <h3 className="text-foreground text-xl font-bold">
-              Paso 7: Diputados
+              Paso 4: Diputados
             </h3>
             <p className="text-muted-foreground text-lg">
               Marca el logo del partido y/o ingresa 1 o 2 números.
             </p>
           </div>
+          <PenSelector selectedPen={selectedPen} onSelect={setSelectedPen} />
           <CedulaCongresal
             titulo="Cédula de Votación - Diputados"
             partidos={congressionalParties}
@@ -921,70 +781,32 @@ const ContenidoPagina: React.FC = () => {
             }
             selectedPen={selectedPen}
           />
-          <PenSelector selectedPen={selectedPen} onSelect={setSelectedPen} />
           <button
             data-tour="continuar-btn"
-            onClick={() => setStep(8)}
+            onClick={() => handleAdvanceStep(4)}
             disabled={!diputados || hasPrefErrors(diputados, errDiputados)}
             className={clsx(
               'bg-primary text-primary-foreground hover:bg-primary/90 mt-6 w-full rounded-lg p-4 text-lg font-semibold transition-colors disabled:opacity-50',
-              isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
+              isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2'
             )}
           >
-            Continuar
+            Continuar (Paso 4 de 5 completado)
           </button>
         </>
       )}
 
-      {/* --- PASO 8: Verificar Diputados --- */}
-      {step === 8 && (
-        <>
-          <TarjetaVerificacion
-            titulo="Voto Diputados Válido"
-            prefVotes={diputados ? prefDiputados[diputados] : undefined}
-          />
-          <div className="mt-6 flex gap-4">
-            <button
-              onClick={() =>
-                resetCongresional(
-                  setDiputados,
-                  setPrefDiputados,
-                  setErrDiputados,
-                  7
-                )
-              }
-              className="bg-card border-primary text-primary hover:bg-accent w-full rounded-lg border-2 p-4 text-lg font-semibold transition-colors"
-            >
-              Volver
-            </button>
-            <button
-              data-tour="continuar-btn"
-              onClick={() => {
-                setStep(9)
-                setSelectedPen(null)
-              }}
-              className={clsx(
-                'bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg p-4 text-lg font-semibold transition-colors',
-                isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
-              )}
-            >
-              Continuar
-            </button>
-          </div>
-        </>
-      )}
-
-      {/* --- PASO 9: Parlamento Andino --- */}
-      {step === 9 && (
+      {/* --- PASO 5: Parlamento Andino --- */}
+      {step === 5 && (
         <>
           <div className="bg-card border-border mb-6 rounded-lg border p-6 shadow-md">
             <h3 className="text-foreground text-xl font-bold">
-              Paso 9: Parlamento Andino
+              Paso 5: Parlamento Andino
             </h3>
             <p className="text-muted-foreground text-lg">
               Marca el logo del partido y/o ingresa 1 o 2 números.
             </p>
           </div>
+          <PenSelector selectedPen={selectedPen} onSelect={setSelectedPen} />
           <CedulaCongresal
             titulo="Cédula de Votación - Parlamento Andino"
             partidos={congressionalParties.slice().reverse()}
@@ -1000,75 +822,36 @@ const ContenidoPagina: React.FC = () => {
             }
             selectedPen={selectedPen}
           />
-          <PenSelector selectedPen={selectedPen} onSelect={setSelectedPen} />
           <button
             data-tour="continuar-btn"
-            onClick={() => setStep(10)}
+            onClick={() => handleAdvanceStep(5)}
             disabled={!parlamento || hasPrefErrors(parlamento, errParlamento)}
             className={clsx(
               'bg-primary text-primary-foreground hover:bg-primary/90 mt-6 w-full rounded-lg p-4 text-lg font-semibold transition-colors disabled:opacity-50',
-              isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
+              isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2'
             )}
           >
-            Continuar
+            Continuar (Paso 5 de 5 completado)
           </button>
         </>
       )}
 
-      {/* --- PASO 10: Verificar Parlamento Andino --- */}
-      {step === 10 && (
-        <>
-          <TarjetaVerificacion
-            titulo="Voto Parlamento Andino Válido"
-            prefVotes={parlamento ? prefParlamento[parlamento] : undefined}
-          />
-          <div className="mt-6 flex gap-4">
-            <button
-              onClick={() =>
-                resetCongresional(
-                  setParlamento,
-                  setPrefParlamento,
-                  setErrParlamento,
-                  9
-                )
-              }
-              className="bg-card border-primary text-primary hover:bg-accent w-full rounded-lg border-2 p-4 text-lg font-semibold transition-colors"
-            >
-              Volver
-            </button>
-            <button
-              data-tour="continuar-btn"
-              onClick={() => {
-                setStep(11)
-                setSelectedPen(null)
-              }}
-              className={clsx(
-                'bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg p-4 text-lg font-semibold transition-colors',
-                isContinuarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
-              )}
-            >
-              Continuar
-            </button>
-          </div>
-        </>
-      )}
-
-      {/* --- PASO 11: Depositar Voto (Final) --- */}
-      {step === 11 && (
+      {/* --- PASO 6: Depositar Voto (Final) --- */}
+      {step === TOTAL_STEPS && (
         <>
           <div className="bg-card border-border mb-6 rounded-lg border p-6 shadow-md">
             <h3 className="text-foreground text-xl font-bold">
-              Paso 11: Deposita tus votos
+              Paso 6: Deposita tus votos
             </h3>
             <p className="text-muted-foreground text-lg">
-              Dobla tus 5 cédulas y colócalas en el ánfora.
+              ¡Misión cumplida! Dobla tus 5 cédulas y colócalas en el ánfora.
             </p>
           </div>
           <div
             data-tour="finalizacion"
             className={clsx(
               'bg-card border-border rounded-lg border p-12 text-center shadow-md',
-              isDepositarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
+              isDepositarHighlighted && 'ring-primary ring-4 ring-offset-2'
             )}
           >
             <Box className="mx-auto text-9xl text-gray-400" />
@@ -1084,7 +867,7 @@ const ContenidoPagina: React.FC = () => {
             onClick={handleFinish}
             className={clsx(
               'bg-primary text-primary-foreground hover:bg-primary/90 mt-6 w-full rounded-lg p-4 text-lg font-semibold transition-colors',
-              isDepositarHighlighted && 'ring-primary ring-4 ring-offset-2' // Destacado
+              isDepositarHighlighted && 'ring-primary ring-4 ring-offset-2'
             )}
           >
             Depositar Votos y Finalizar
@@ -1189,30 +972,31 @@ const SimuladorProvider: React.FC<{ children: React.ReactNode }> = ({
   // --- LÓGICA DEL NUEVO TUTORIAL ---
   const [isTourActive, setIsTourActive] = useState(false)
 
-  // CORRECCIÓN 2: 'tutorialContent' ya no es un estado, es un valor derivado.
-  // Se elimina: const [tutorialContent, setTutorialContent] = useState<TutorialContent | null>(null)
+  let tutorialContent: TutorialContent | null = null
+  const TOTAL_STEPS = 6
 
   const startTour = () => {
     setIsTourActive(true)
-    // Reseteamos al paso 0 si el tour se inicia
     setStep(0)
     resetPresidential()
     resetCongresional(
       setSenadoNacional,
       setPrefSenadoNacional,
-      setErrSenadoNacional,
-      0
+      setErrSenadoNacional
     )
+    resetCongresional(
+      setSenadoRegional,
+      setPrefSenadoRegional,
+      setErrSenadoRegional
+    )
+    resetCongresional(setDiputados, setPrefDiputados, setErrDiputados)
+    resetCongresional(setParlamento, setPrefParlamento, setErrParlamento)
   }
 
   const stopTour = () => {
     setIsTourActive(false)
-    // CORRECCIÓN 2: Ya no es necesario
-    // setTutorialContent(null)
   }
 
-  // CORRECCIÓN 2: El 'useEffect' para el tutorial se reemplaza por lógica de render.
-  let tutorialContent: TutorialContent | null = null
   if (isTourActive) {
     let content: TutorialContent | null = null
     const isValidPen = selectedPen === 'x' || selectedPen === 'plus'
@@ -1247,43 +1031,40 @@ const SimuladorProvider: React.FC<{ children: React.ReactNode }> = ({
         } else {
           content = {
             title: '4. Voto Completo',
-            description: 'Perfecto. Haz clic en "Continuar" para verificar.',
+            description:
+              'Perfecto. Haz clic en "Continuar" para ir al siguiente voto.',
           }
         }
         break
 
-      case 2: // Verificación Presidencial
-        content = {
-          title: 'Voto Válido',
-          description: 'Tu voto ha sido verificado. Continuemos.',
-        }
-        break
-
-      case 3: // Senado Nacional
-      case 5: // Senado Regional
-      case 7: // Diputados
-      case 9: {
+      case 2: // Senado Nacional
+      case 3: // Senado Regional
+      case 4: // Diputados
+      case 5: {
         // Parlamento Andino
         const partidoVotado = [
+          null, // Paso 1 es presidencial
           senadoNacional,
           senadoRegional,
           diputados,
           parlamento,
-        ][Math.floor((step - 3) / 2)]
+        ][step - 1]
+
+        const pasoNumero = step
 
         if (!isValidPen) {
           content = {
-            title: '1. Selecciona tu Marcador',
+            title: `${pasoNumero}. Selecciona tu Marcador`,
             description: "Nuevamente, elige 'X' o '+'.",
           }
         } else if (!partidoVotado) {
           content = {
-            title: '2. Marca un Partido',
+            title: `${pasoNumero}. Marca un Partido`,
             description: 'Haz clic en el logo del partido que prefieras.',
           }
         } else {
           content = {
-            title: '3. (Opcional) Voto Preferencial',
+            title: `${pasoNumero}. (Opcional) Voto Preferencial`,
             description:
               'Si deseas, puedes añadir 1 o 2 números en las casillas. <strong>Esto es opcional.</strong> Cuando estés listo, presiona "Continuar".',
           }
@@ -1291,17 +1072,7 @@ const SimuladorProvider: React.FC<{ children: React.ReactNode }> = ({
         break
       }
 
-      case 4: // Verif. Senado Nacional
-      case 6: // Verif. Senado Regional
-      case 8: // Verif. Diputados
-      case 10: // Verif. Parlamento Andino
-        content = {
-          title: 'Voto Válido',
-          description: 'Tu voto ha sido verificado. Siguiente cédula.',
-        }
-        break
-
-      case 11: // Final
+      case TOTAL_STEPS: // Final
         content = {
           title: '¡Último Paso!',
           description:
@@ -1342,7 +1113,7 @@ const SimuladorProvider: React.FC<{ children: React.ReactNode }> = ({
     }))
   }
 
-  // Lógica de Validación (al salir del input)
+  // Lógica de Validación (al salir del input) - CORREGIDA
   const validatePrefVote = (
     partyId: string,
     voteNumber: 'v1' | 'v2',
@@ -1365,6 +1136,7 @@ const SimuladorProvider: React.FC<{ children: React.ReactNode }> = ({
       return
     }
 
+    // Validación 1: No puede ser cero
     if (parseInt(currentValue, 10) === 0) {
       const error = 'El número no puede ser cero.'
       setErrorState((prev) => ({
@@ -1383,8 +1155,9 @@ const SimuladorProvider: React.FC<{ children: React.ReactNode }> = ({
       ? parseInt(otherVoteValue, 10).toString()
       : ''
 
+    // Validación 2: No puede repetir el mismo número en ambas casillas
     if (parsedValue && parsedOtherValue && parsedValue === parsedOtherValue) {
-      const error = 'No puedes repetir el número.'
+      const error = 'No puedes repetir el mismo número en ambas casillas.'
       setErrorState((prev) => ({
         ...prev,
         [partyId]: { ...prev[partyId], [voteNumber]: error },
@@ -1393,6 +1166,7 @@ const SimuladorProvider: React.FC<{ children: React.ReactNode }> = ({
       return
     }
 
+    // Si pasa todas las validaciones, limpia el error
     clearError(voteNumber)
     if (parsedValue && parsedOtherValue && parsedValue !== parsedOtherValue) {
       clearError(otherVoteNumber)
@@ -1409,9 +1183,10 @@ const SimuladorProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleFinish = () => {
     setIsFinishModalOpen(true)
     if (isTourActive) {
-      stopTour() // Termina el tour al finalizar
+      stopTour()
     }
   }
+
   const handleModalConfirm = () => {
     navigate({ to: '/elector' })
   }
@@ -1419,20 +1194,15 @@ const SimuladorProvider: React.FC<{ children: React.ReactNode }> = ({
   const resetCongresional = (
     setParty: React.Dispatch<React.SetStateAction<string | null>>,
     setPrefs: React.Dispatch<React.SetStateAction<PrefVotes>>,
-    setErrorState: React.Dispatch<React.SetStateAction<PrefErrors>>,
-    prevStep: number
+    setErrorState: React.Dispatch<React.SetStateAction<PrefErrors>>
   ) => {
     setParty(null)
     setPrefs({})
-    setSelectedPen(null)
     setErrorState({})
-    setStep(prevStep)
   }
 
   const resetPresidential = () => {
     setPresidentialVote({ partyId: null, logo: false, photo: false })
-    setSelectedPen(null)
-    setStep(1)
   }
 
   // --- VALOR DEL CONTEXTO ---
@@ -1479,7 +1249,6 @@ const SimuladorProvider: React.FC<{ children: React.ReactNode }> = ({
     handleModalConfirm,
     resetCongresional,
     resetPresidential,
-    // --- Nuevos valores del tour ---
     isTourActive,
     startTour,
     stopTour,
@@ -1533,8 +1302,6 @@ const SimuladorUI: React.FC = () => {
           <SimuladorTourButton />
         </header>
         <main className="p-6 pb-32">
-          {' '}
-          {/* Añadido padding-bottom para que el tutorial no tape el botón */}
           <ContenidoPagina />
         </main>
       </div>

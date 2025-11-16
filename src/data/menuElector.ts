@@ -6,7 +6,6 @@ import {
   Laptop,
   BarChart2,
   Shield,
-  Users,
   Gavel,
   Sparkles,
   Search,
@@ -21,16 +20,12 @@ export type OpcionMenu = {
 
 export const opcionesMenuElector: OpcionMenu[] = [
   { icono: MapPin, texto: 'Local de votación', path: '/elector/local' },
-  { icono: FileText, texto: 'Cómo votar', path: '/elector/como-votar' },
+  { icono: FileText, texto: '¿Cómo votar?', path: '/elector/como-votar' },
   { icono: Laptop, texto: 'Simulador de votación', path: '/elector/simulador' },
   { icono: Search, texto: 'Verificador de Info', path: '/elector/verificar' },
 
   //Investiga
-  {
-    icono: Users,
-    texto: 'Candidatos y Partidos',
-    path: '/planchas-presidenciales',
-  },
+
   { icono: Sparkles, texto: 'Match Electoral', path: '/elector/match' },
   { icono: BarChart2, texto: 'Intención de voto', path: '/elector/intencion' },
 
