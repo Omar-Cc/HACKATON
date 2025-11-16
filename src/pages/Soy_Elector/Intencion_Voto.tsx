@@ -1,14 +1,12 @@
 // src/pages/Soy_Elector/Intencion_Voto.tsx
 
 import React, { useState, useMemo } from 'react'
-// 1. Importamos Link y la flecha para el header de móvil
 import { Link } from '@tanstack/react-router'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useLocalStorage } from 'usehooks-ts'
 import { toast } from 'sonner'
-import { Lock, ArrowLeft } from 'lucide-react'
+import { Lock, ArrowLeft, CheckCircle } from 'lucide-react'
 
-// ... (CANDIDATE_LIST y DEFAULT_VOTES no cambian) ...
 const CANDIDATE_LIST = [
   {
     id: 'c1',
@@ -129,6 +127,32 @@ const ContenidoPagina: React.FC<{
       </Dialog.Portal>
     </Dialog.Root>
 
+    {/* --- Mensaje de Confirmación de Voto --- */}
+    {userVoteId && (
+      <div className="rounded-lg border border-green-200 bg-green-50 p-4">
+        <div className="flex items-center">
+          <CheckCircle className="mr-3 text-xl text-green-600" />
+          <div>
+            <p className="font-semibold text-green-800">
+              {(() => {
+                const candidate = CANDIDATE_LIST.find(
+                  (c) => c.id === userVoteId
+                )
+                return candidate
+                  ? `Has votado por ${candidate.nombre}`
+                  : 'Tu voto ha sido registrado'
+              })()}
+            </p>
+            <p className="text-sm text-green-700">
+              {userVoteId === 'c4'
+                ? 'Tu voto en blanco ha sido registrado correctamente.'
+                : 'Tu voto ha sido registrado de forma anónima y segura.'}
+            </p>
+          </div>
+        </div>
+      </div>
+    )}
+
     {/* --- Resultados --- */}
     <div className="bg-card border-border rounded-lg border p-6 shadow-md">
       <h3 className="text-foreground mb-6 text-2xl font-bold">Resultados</h3>
@@ -175,7 +199,6 @@ const ContenidoPagina: React.FC<{
 )
 
 const PaginaIntencionVoto: React.FC = () => {
-  // --- (Todos los hooks de estado se quedan igual) ---
   const [votes, setVotes] = useLocalStorage('voteCounts', DEFAULT_VOTES)
   const [userVoteId, setUserVoteId] = useLocalStorage<string | null>(
     'userVoteId',
@@ -184,58 +207,65 @@ const PaginaIntencionVoto: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedVote, setSelectedVote] = useState<string | null>(null)
 
-  // --- (Todas las funciones de cálculo y lógica se quedan igual) ---
   const totalVotes = useMemo(
     () => Object.values(votes).reduce((a, b) => a + b, 0),
     [votes]
   )
+
   const getPercentage = (count: number) => {
     if (totalVotes === 0) return '0.0%'
     return ((count / totalVotes) * 100).toFixed(1) + '%'
   }
+
   const handleSubmitVote = () => {
     if (!selectedVote) return
     const isFirstVote = userVoteId === null
     const isChangingVote = userVoteId !== null && userVoteId !== selectedVote
     const newVotes = { ...votes }
+
     if (userVoteId && userVoteId !== selectedVote) {
       newVotes[userVoteId as keyof typeof newVotes] -= 1
     }
+
     if (userVoteId !== selectedVote) {
       newVotes[selectedVote as keyof typeof newVotes] += 1
     }
+
     setVotes(newVotes)
     setUserVoteId(selectedVote)
     setIsModalOpen(false)
+
+    // Mensajes de éxito mejorados
     if (isFirstVote) {
-      toast.success('¡Gracias por tu voto!', {
-        description: 'Tu voto ha sido registrado anónimamente.',
-        duration: 3000,
+      toast.success('¡Voto realizado con éxito!', {
+        description: 'Tu voto ha sido registrado de forma anónima.',
+        duration: 4000,
+        icon: <CheckCircle className="text-green-500" />,
       })
     } else if (isChangingVote) {
-      toast.info('¡Tu voto se ha actualizado!', {
+      toast.success('¡Voto actualizado con éxito!', {
         description: 'Tu selección anterior ha sido modificada.',
+        duration: 4000,
+        icon: <CheckCircle className="text-green-500" />,
+      })
+    } else {
+      toast.info('Voto confirmado', {
+        description: 'Mantienes tu selección anterior.',
         duration: 3000,
       })
     }
   }
 
-  // --- 3. Renderizamos el Layout Responsivo ---
   return (
     <>
-      {/* ========================================================== */}
-      {/* 1. UI DE PC (Renderiza dentro del layout padre) */}
-      {/* ========================================================== */}
+      {/* UI DE PC */}
       <div className="hidden md:block">
-        {/* Título y Descripción (Solo para PC) */}
         <h1 className="text-foreground mb-2 text-3xl font-bold md:text-4xl">
           Intención de Voto
         </h1>
         <p className="text-muted-foreground mb-8 text-lg">
           Resultados en tiempo real (simulación)
         </p>
-
-        {/* Renderiza el contenido */}
         <ContenidoPagina
           votes={votes}
           userVoteId={userVoteId}
@@ -249,14 +279,11 @@ const PaginaIntencionVoto: React.FC = () => {
         />
       </div>
 
-      {/* ========================================================== */}
-      {/* 2. UI DE MÓVIL (Layout propio) */}
-      {/* ========================================================== */}
+      {/* UI DE MÓVIL */}
       <div className="bg-background min-h-screen md:hidden">
-        {/* Header de Móvil con FLECHA ATRÁS */}
         <header className="bg-primary text-primary-foreground flex items-center gap-4 rounded-b-[20px] p-4 shadow-lg">
           <Link
-            to="/elector" // Link de regreso al menú principal de móvil
+            to="/elector"
             className="rounded-full p-2 hover:bg-white/10"
             aria-label="Volver"
           >
@@ -264,10 +291,7 @@ const PaginaIntencionVoto: React.FC = () => {
           </Link>
           <h1 className="text-2xl font-bold">Intención de Voto</h1>
         </header>
-
-        {/* Contenido de Móvil */}
         <main className="p-6">
-          {/* Renderiza el mismo contenido */}
           <ContenidoPagina
             votes={votes}
             userVoteId={userVoteId}
