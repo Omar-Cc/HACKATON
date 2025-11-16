@@ -151,7 +151,20 @@ function eventsForDate(dateKey: string) {
 }
 
 function formatKey(d: Date) {
-  return d.toISOString().slice(0, 10)
+  // Use local date parts to avoid timezone shifts caused by toISOString()
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
+// Parse a yyyy-mm-dd key into a local Date (avoid Date(string) which may be treated as UTC)
+function parseKeyToDate(key: string) {
+  const parts = key.split('-').map((s) => Number(s))
+  const y = parts[0] || 0
+  const m = (parts[1] || 1) - 1
+  const d = parts[2] || 1
+  return new Date(y, m, d)
 }
 
 export default function CalendarioPage() {
@@ -176,7 +189,7 @@ export default function CalendarioPage() {
     refDate.getMonth()
   )
 
-  const dayLabel = new Date(selectedDate).toLocaleDateString(undefined, {
+  const dayLabel = parseKeyToDate(selectedDate).toLocaleDateString(undefined, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -198,7 +211,7 @@ export default function CalendarioPage() {
     }
     return `Del ${startDay} ${startMonth} al ${endDay} ${endMonth} ${year}`
   }
-  const weekLabel = weekRangeLabelFromDate(new Date(selectedDate))
+  const weekLabel = weekRangeLabelFromDate(parseKeyToDate(selectedDate))
 
   function buildWeekCells(baseDate: Date) {
     const weekStart = new Date(baseDate)
@@ -213,23 +226,25 @@ export default function CalendarioPage() {
     }
     return arr
   }
-  const weekCells = buildWeekCells(new Date(selectedDate))
-  const [mobileMonth, setMobileMonth] = React.useState<Date>(
-    () => new Date(selectedDate)
-  )
+  const weekCells = buildWeekCells(parseKeyToDate(selectedDate))
+  const [mobileMonth, setMobileMonth] = React.useState<Date>(() => {
+    const sd = parseKeyToDate(selectedDate)
+    return new Date(sd.getFullYear(), sd.getMonth(), 1)
+  })
   const [tempSelectedDay, setTempSelectedDay] = React.useState<string | null>(
     null
   )
 
   React.useEffect(() => {
-    const sd = new Date(selectedDate)
+    const sd = parseKeyToDate(selectedDate)
     if (
       sd.getFullYear() !== mobileMonth.getFullYear() ||
       sd.getMonth() !== mobileMonth.getMonth()
     ) {
       setMobileMonth(new Date(sd.getFullYear(), sd.getMonth(), 1))
     }
-  }, [selectedDate, mobileMonth])
+    // only re-run when selectedDate changes; avoid extra runs caused by mobileMonth reference
+  }, [selectedDate])
 
   const { cells: mobileCells } = buildMonthGrid(
     mobileMonth.getFullYear(),
@@ -304,13 +319,13 @@ export default function CalendarioPage() {
         (prev) => new Date(prev.getFullYear(), prev.getMonth() + offset, 1)
       )
     } else if (viewMode === 'semana') {
-      const d = new Date(selectedDate)
+      const d = parseKeyToDate(selectedDate)
       d.setDate(d.getDate() + offset * 7)
       setSelectedDate(formatKey(d))
       setViewMode('semana')
     } else {
       // día
-      const d = new Date(selectedDate)
+      const d = parseKeyToDate(selectedDate)
       d.setDate(d.getDate() + offset)
       setSelectedDate(formatKey(d))
       setViewMode('dia')
@@ -388,7 +403,7 @@ export default function CalendarioPage() {
                   size="sm"
                   onClick={() => {
                     setViewMode('mes')
-                    const sd = new Date(selectedDate)
+                    const sd = parseKeyToDate(selectedDate)
                     setRefDate(new Date(sd.getFullYear(), sd.getMonth(), 1))
                   }}
                 >
@@ -414,59 +429,73 @@ export default function CalendarioPage() {
             <CardContent className="px-6 pb-6">
               {/* Content varies by view mode */}
               {viewMode === 'mes' && (
-                <div className="mt-2 grid grid-cols-7 gap-2">
-                  {cells.map((cell, idx) => {
-                    const key = formatKey(cell.date)
-                    const events = eventsForDate(key)
-                    const isToday = formatKey(cell.date) === formatKey(today)
-                    return (
-                      <div
-                        key={idx}
-                        onClick={() => {
-                          setSelectedDate(key)
-                          setViewMode('dia')
-                        }}
-                        className={`min-h-24 cursor-pointer rounded-lg border p-2 ${cell.inMonth ? 'bg-white' : 'text-muted-foreground bg-gray-50'} flex flex-col justify-start gap-2`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div
-                            className={`text-xs font-medium ${isToday ? 'text-primary' : 'text-muted-foreground'}`}
-                          >
-                            {cell.date.getDate()}
-                          </div>
-                          {isToday && (
-                            <span className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-[10px]">
-                              Hoy
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex flex-col gap-1">
-                          {events.slice(0, 3).map((ev: Activity, i: number) => (
-                            <div
-                              key={i}
-                              role="button"
-                              tabIndex={0}
-                              onClick={() => openDayAndScroll(ev.date, ev.time)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter')
-                                  openDayAndScroll(ev.date, ev.time)
-                              }}
-                              className="group focus:ring-primary/30 flex cursor-pointer items-center gap-3 truncate rounded-md border border-gray-100 bg-white px-3 py-1 transition-all duration-150 hover:shadow-md focus:ring-2 focus:outline-none"
-                            >
-                              <span
-                                className={`inline-block h-6 w-2 rounded-full ${ev.color ?? 'bg-primary/40'}`}
-                              />
-                              <div className="truncate text-[12px] text-ellipsis">
-                                {ev.time ? `${ev.time} • ` : ''}
-                                {ev.label}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                <div className="mt-2">
+                  <div className="text-muted-foreground mb-2 grid grid-cols-7 gap-2 text-xs">
+                    {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((d) => (
+                      <div key={d} className="text-center font-medium">
+                        {d}
                       </div>
-                    )
-                  })}
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-7 gap-2">
+                    {cells.map((cell, idx) => {
+                      const key = formatKey(cell.date)
+                      const events = eventsForDate(key)
+                      const isToday = formatKey(cell.date) === formatKey(today)
+                      return (
+                        <div
+                          key={idx}
+                          onClick={() => {
+                            setSelectedDate(key)
+                            setViewMode('dia')
+                          }}
+                          className={`min-h-24 cursor-pointer rounded-lg border p-2 ${cell.inMonth ? 'bg-white' : 'text-muted-foreground bg-gray-50'} flex flex-col justify-start gap-2`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div
+                              className={`text-xs font-medium ${isToday ? 'text-primary' : 'text-muted-foreground'}`}
+                            >
+                              {cell.date.getDate()}
+                            </div>
+                            {isToday && (
+                              <span className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-[10px]">
+                                Hoy
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex flex-col gap-1">
+                            {events
+                              .slice(0, 3)
+                              .map((ev: Activity, i: number) => (
+                                <div
+                                  key={i}
+                                  role="button"
+                                  tabIndex={0}
+                                  onClick={() =>
+                                    openDayAndScroll(ev.date, ev.time)
+                                  }
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter')
+                                      openDayAndScroll(ev.date, ev.time)
+                                  }}
+                                  className="group focus:ring-primary/30 flex cursor-pointer items-center gap-3 truncate rounded-md border border-gray-100 bg-white px-3 py-1 transition-all duration-150 hover:shadow-md focus:ring-2 focus:outline-none"
+                                >
+                                  <span
+                                    className={`inline-block h-6 w-2 rounded-full ${ev.color ?? 'bg-primary/40'}`}
+                                  />
+                                  <div className="truncate text-[12px] text-ellipsis">
+                                    {ev.time ? `${ev.time} • ` : ''}
+                                    {ev.label}
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
               )}
 
@@ -813,11 +842,14 @@ export default function CalendarioPage() {
                     Día seleccionado
                   </div>
                   <div className="text-base font-semibold">
-                    {new Date(selectedDate).toLocaleDateString(undefined, {
-                      weekday: 'long',
-                      day: 'numeric',
-                      month: 'long',
-                    })}
+                    {parseKeyToDate(selectedDate).toLocaleDateString(
+                      undefined,
+                      {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long',
+                      }
+                    )}
                   </div>
                 </div>
 

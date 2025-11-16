@@ -9,8 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PlanchasPresidencialesRouteImport } from './routes/planchas-presidenciales'
 import { Route as MiembroMesaRouteImport } from './routes/miembro-mesa'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as FeedRouteImport } from './routes/feed'
 import { Route as ElectorRouteImport } from './routes/elector'
 import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as CalendarioRouteImport } from './routes/calendario'
@@ -29,6 +32,11 @@ import { Route as CandidatoIdRouteImport } from './routes/candidato.$id'
 import { Route as ElectorCandidatosIndexRouteImport } from './routes/elector.candidatos.index'
 import { Route as ElectorCandidatosCompararRouteImport } from './routes/elector.candidatos.comparar'
 
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlanchasPresidencialesRoute = PlanchasPresidencialesRouteImport.update({
   id: '/planchas-presidenciales',
   path: '/planchas-presidenciales',
@@ -37,6 +45,16 @@ const PlanchasPresidencialesRoute = PlanchasPresidencialesRouteImport.update({
 const MiembroMesaRoute = MiembroMesaRouteImport.update({
   id: '/miembro-mesa',
   path: '/miembro-mesa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedRoute = FeedRouteImport.update({
+  id: '/feed',
+  path: '/feed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ElectorRoute = ElectorRouteImport.update({
@@ -131,8 +149,11 @@ export interface FileRoutesByFullPath {
   '/calendario': typeof CalendarioRoute
   '/comparar': typeof CompararRoute
   '/elector': typeof ElectorRouteWithChildren
+  '/feed': typeof FeedRoute
+  '/login': typeof LoginRoute
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
+  '/register': typeof RegisterRoute
   '/candidato/$id': typeof CandidatoIdRoute
   '/elector/ajustes': typeof ElectorAjustesRoute
   '/elector/candidatos': typeof ElectorCandidatosRouteWithChildren
@@ -151,8 +172,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/calendario': typeof CalendarioRoute
   '/comparar': typeof CompararRoute
+  '/feed': typeof FeedRoute
+  '/login': typeof LoginRoute
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
+  '/register': typeof RegisterRoute
   '/candidato/$id': typeof CandidatoIdRoute
   '/elector/ajustes': typeof ElectorAjustesRoute
   '/elector/como-votar': typeof ElectorComoVotarRoute
@@ -172,8 +196,11 @@ export interface FileRoutesById {
   '/calendario': typeof CalendarioRoute
   '/comparar': typeof CompararRoute
   '/elector': typeof ElectorRouteWithChildren
+  '/feed': typeof FeedRoute
+  '/login': typeof LoginRoute
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
+  '/register': typeof RegisterRoute
   '/candidato/$id': typeof CandidatoIdRoute
   '/elector/ajustes': typeof ElectorAjustesRoute
   '/elector/candidatos': typeof ElectorCandidatosRouteWithChildren
@@ -195,8 +222,11 @@ export interface FileRouteTypes {
     | '/calendario'
     | '/comparar'
     | '/elector'
+    | '/feed'
+    | '/login'
     | '/miembro-mesa'
     | '/planchas-presidenciales'
+    | '/register'
     | '/candidato/$id'
     | '/elector/ajustes'
     | '/elector/candidatos'
@@ -215,8 +245,11 @@ export interface FileRouteTypes {
     | '/'
     | '/calendario'
     | '/comparar'
+    | '/feed'
+    | '/login'
     | '/miembro-mesa'
     | '/planchas-presidenciales'
+    | '/register'
     | '/candidato/$id'
     | '/elector/ajustes'
     | '/elector/como-votar'
@@ -235,8 +268,11 @@ export interface FileRouteTypes {
     | '/calendario'
     | '/comparar'
     | '/elector'
+    | '/feed'
+    | '/login'
     | '/miembro-mesa'
     | '/planchas-presidenciales'
+    | '/register'
     | '/candidato/$id'
     | '/elector/ajustes'
     | '/elector/candidatos'
@@ -257,14 +293,24 @@ export interface RootRouteChildren {
   CalendarioRoute: typeof CalendarioRoute
   CompararRoute: typeof CompararRoute
   ElectorRoute: typeof ElectorRouteWithChildren
+  FeedRoute: typeof FeedRoute
+  LoginRoute: typeof LoginRoute
   MiembroMesaRoute: typeof MiembroMesaRoute
   PlanchasPresidencialesRoute: typeof PlanchasPresidencialesRoute
+  RegisterRoute: typeof RegisterRoute
   CandidatoIdRoute: typeof CandidatoIdRoute
   CongresoIndexRoute: typeof CongresoIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/planchas-presidenciales': {
       id: '/planchas-presidenciales'
       path: '/planchas-presidenciales'
@@ -277,6 +323,20 @@ declare module '@tanstack/react-router' {
       path: '/miembro-mesa'
       fullPath: '/miembro-mesa'
       preLoaderRoute: typeof MiembroMesaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feed': {
+      id: '/feed'
+      path: '/feed'
+      fullPath: '/feed'
+      preLoaderRoute: typeof FeedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/elector': {
@@ -446,8 +506,11 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarioRoute: CalendarioRoute,
   CompararRoute: CompararRoute,
   ElectorRoute: ElectorRouteWithChildren,
+  FeedRoute: FeedRoute,
+  LoginRoute: LoginRoute,
   MiembroMesaRoute: MiembroMesaRoute,
   PlanchasPresidencialesRoute: PlanchasPresidencialesRoute,
+  RegisterRoute: RegisterRoute,
   CandidatoIdRoute: CandidatoIdRoute,
   CongresoIndexRoute: CongresoIndexRoute,
 }
