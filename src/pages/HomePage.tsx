@@ -16,6 +16,7 @@ import {
   MapPin,
   ClipboardCheck,
 } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 
 export default function Principal() {
   // 2. Estado para el enlace activo, inicializado en '#match'
@@ -160,13 +161,13 @@ export default function Principal() {
 
               {/* BOTÓN ÚNICO */}
               <div className="mt-10 flex justify-center">
-                <a
-                  href="#match"
+                <Link
+                  to="/planchas-presidenciales"
                   className="group inline-flex transform items-center justify-center rounded-xl bg-white px-8 py-4 font-semibold text-blue-700 shadow-lg transition-transform duration-300 hover:scale-105"
                 >
                   Probar App ElecInfo 2026
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
+                </Link>
               </div>
             </div>
           </section>
