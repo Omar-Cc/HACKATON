@@ -23,8 +23,8 @@ export default defineConfig({
         'favicon-96x96.png',
       ],
       manifest: {
-        name: 'PeruVoto',
-        short_name: 'PeruVoto',
+        name: 'TúEliges2026',
+        short_name: 'TúEliges2026',
         description:
           'Plataforma electoral para informar y participar en las elecciones de Perú',
         theme_color: '#ffffff',
