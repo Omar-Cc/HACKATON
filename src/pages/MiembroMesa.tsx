@@ -25,14 +25,7 @@ import {
 } from '@/components/ui/alert-dialog'
 
 import { mesaSimulada } from '@/data/MiembrosMesa'
-import type { RoleKey } from '@/data/MiembrosMesa'
-interface MemberInfo {
-  nombre: string
-  dni: string
-  local: string
-  mesa: string
-  presente: boolean
-}
+import type { RoleKey, MemberInfo } from '@/data/MiembrosMesa'
 
 export default function MiembroMesa() {
   const [dni, setDni] = useState('')
@@ -49,6 +42,7 @@ export default function MiembroMesa() {
   const [fromVolunteer, setFromVolunteer] = useState(false)
   const [ingresoCodigo, setIngresoCodigo] = useState('')
   const [codigoValidado, setCodigoValidado] = useState(false)
+  const [dniError, setDniError] = useState('')
 
   const CODIGO_ONPE = 'ONPE2026'
   const CODIGO_VOLUNTARIO = 'VOL2026'
@@ -62,10 +56,10 @@ export default function MiembroMesa() {
   const [showModal, setShowModal] = useState(false)
   const [modalMessage, setModalMessage] = useState('')
 
-  // Fecha habilitada
-  const fechaHabilitada = new Date('2025-11-15T07:00:00')
-  const ahora = new Date()
-  const disponible = ahora >= fechaHabilitada
+  // fecha global como fallback
+  const fechaGeneral = new Date('2025-11-15T07:00:00')
+  // calcularemos "disponible" después de identificar usuario
+  const [disponible, setDisponible] = useState(false)
 
   const startTour = () => {
     const tour = driver({
@@ -218,6 +212,25 @@ export default function MiembroMesa() {
 
   const verifyDni = () => {
     const dniIngresado = dni.trim()
+
+    // Validaciones básicas
+    if (dniIngresado.length === 0) {
+      setDniError('El DNI no puede estar vacío.')
+      return
+    }
+
+    if (!/^\d+$/.test(dniIngresado)) {
+      setDniError('El DNI solo debe contener números.')
+      return
+    }
+
+    if (dniIngresado.length !== 8) {
+      setDniError('El DNI debe tener exactamente 8 dígitos.')
+      return
+    }
+
+    setDniError('')
+
     let rolEncontrado: RoleKey | null = null
 
     for (const rol in mesaSimulada) {
@@ -227,15 +240,28 @@ export default function MiembroMesa() {
       }
     }
 
+    // 👉 SI ES MIEMBRO DE MESA
     if (rolEncontrado) {
+      const datosMiembro = mesaSimulada[rolEncontrado]
+
+      // fecha habilitada individual o fecha general
+      const fechaPersonal = datosMiembro.fechaHabilitada
+        ? new Date(datosMiembro.fechaHabilitada)
+        : fechaGeneral
+
+      // estado habilitado
+      setDisponible(new Date() >= fechaPersonal)
+
       setIsMember(true)
       setRole(rolEncontrado)
-      setMemberInfo(mesaSimulada[rolEncontrado])
-    } else {
-      setIsMember(false)
-      setModalMessage('El DNI no corresponde a un miembro de mesa.')
-      setShowModal(true)
+      setMemberInfo(datosMiembro)
+      return // ← solo sale en este caso
     }
+
+    // 👉 SI NO ES MIEMBRO (ANTES ESTO YA NO SE EJECUTABA)
+    setIsMember(false)
+    setModalMessage('El DNI no corresponde a un miembro de mesa.')
+    setShowModal(true)
   }
 
   // Timer asistencia
@@ -297,8 +323,15 @@ export default function MiembroMesa() {
               id="dni-input"
               placeholder="Ingresa tu DNI"
               value={dni}
-              onChange={(e) => setDni(e.target.value)}
+              onChange={(e) => {
+                setDni(e.target.value)
+                setDniError('') // limpiar error al escribir
+              }}
             />
+
+            {dniError && (
+              <p className="mt-1 text-sm text-red-600">{dniError}</p>
+            )}
 
             <Button onClick={verifyDni} className="mt-2 w-full">
               Validar
@@ -306,27 +339,51 @@ export default function MiembroMesa() {
 
             {isMember === false && (
               <>
-                <p className="mt-4">No eres miembro de mesa.</p>
-                <Button onClick={() => setIsVolunteer(true)}>
+                <p className="mt-4 font-medium text-gray-700">
+                  No eres miembro de mesa.
+                </p>
+
+                {/* BOTÓN VOLUNTARIO */}
+                <Button
+                  onClick={() => {
+                    if (!disponible) {
+                      // Mostrar mensaje informativo en modal
+                      setModalMessage(
+                        'Aún no puedes registrarte como voluntario. ' +
+                          'El registro estará habilitado el 15/11/2026 a las 7:00 AM.'
+                      )
+                      setShowModal(true)
+                    } else {
+                      // Si ya es día de elecciones, recién permitir ingreso como voluntario
+                      setIsVolunteer(true)
+                    }
+                  }}
+                  className="mt-2 w-full"
+                >
                   Ingresar como voluntario
                 </Button>
 
-                {isVolunteer && (
+                {/* SOLO MOSTRAR INPUT DE CÓDIGO SI LA FECHA ESTÁ HABILITADA */}
+                {isVolunteer && disponible && (
                   <div className="mt-3 space-y-2">
                     <Input
                       placeholder="Código ONPE para voluntarios"
                       value={volunteerCode}
                       onChange={(e) => setVolunteerCode(e.target.value)}
                     />
-                    <Button onClick={validarCodigoVoluntario}>
+                    <Button
+                      onClick={validarCodigoVoluntario}
+                      className="w-full"
+                    >
                       Validar Código
                     </Button>
                   </div>
                 )}
 
+                {/* MENSAJE INFORMATIVO CUANDO NO ES FECHA */}
                 {!disponible && (
-                  <p className="mt-2 text-blue-600">
-                    Este apartado estará disponible el 12/04/2026 desde las 7:00
+                  <p className="mt-3 text-sm text-blue-600">
+                    Este apartado estará disponible el 15/11/2026 desde las 7:00
                     AM.
                   </p>
                 )}
@@ -336,7 +393,68 @@ export default function MiembroMesa() {
         )}
 
         {/** BLOQUEO POR FECHA */}
-        {isMember && !disponible && <></>}
+        {isMember && !disponible && (
+          <div className="flex min-h-screen items-center justify-center">
+            <Card className="max-w-md rounded-lg p-6 text-center shadow-md lg:rounded-xl lg:p-8 lg:shadow-lg">
+              {fromVolunteer ? (
+                <>
+                  <h2 className="mb-3 text-xl font-bold">
+                    Aún no puedes ingresar
+                  </h2>
+
+                  <p className="mb-4 leading-relaxed text-gray-700">
+                    La plataforma estará disponible el{' '}
+                    <strong>15/11/2026 a las 7:00 AM</strong>.
+                  </p>
+
+                  <p className="mb-5 text-sm leading-relaxed text-blue-600">
+                    Si el día de las elecciones faltan los miembros titulares o
+                    suplentes, podrás apoyar como <strong>voluntario</strong>{' '}
+                    siguiendo las indicaciones del Coordinador ONPE.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h2 className="mb-3 text-xl font-bold">
+                    Aún no puedes ingresar
+                  </h2>
+
+                  <p className="mb-3 leading-relaxed text-gray-700">
+                    Has sido seleccionado como <strong>miembro de mesa</strong>.
+                  </p>
+
+                  <p className="mb-3 leading-relaxed text-gray-700">
+                    La jornada electoral inicia el{' '}
+                    <strong>15/11/2026 a las 7:00 AM</strong>.
+                  </p>
+
+                  <p className="mb-5 text-sm leading-relaxed font-medium text-red-600">
+                    Si no te presentas puntualmente, podrías recibir una
+                    <strong>
+                      {' '}
+                      multa establecida por el Jurado Nacional de
+                      Elecciones{' '}
+                    </strong>
+                    .
+                  </p>
+                </>
+              )}
+
+              <Button
+                className="w-full"
+                variant="outline"
+                onClick={() => {
+                  setIsMember(null)
+                  setRole(null)
+                  setMemberInfo(null)
+                  setFromVolunteer(false)
+                }}
+              >
+                Volver
+              </Button>
+            </Card>
+          </div>
+        )}
 
         {/** CONTENIDO PRINCIPAL */}
         {isMember && disponible && (
@@ -408,16 +526,30 @@ export default function MiembroMesa() {
                     ) : (
                       <Button
                         onClick={() => {
+                          const hora = new Date().toLocaleTimeString('es-PE', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                          })
+
                           setAttendanceMarked(true)
 
                           if (role) {
-                            setMiembrosData((prev) => ({
-                              ...prev,
-                              [role]: {
-                                ...prev[role],
-                                presente: true,
-                              },
-                            }))
+                            setMiembrosData((prev) => {
+                              const actualizado = {
+                                ...prev,
+                                [role]: {
+                                  ...prev[role],
+                                  presente: true,
+                                  horaIngreso: hora, // ⏰ Guardamos hora exacta
+                                },
+                              }
+
+                              // Reflejar también en la info principal del usuario
+                              setMemberInfo(actualizado[role])
+
+                              return actualizado
+                            })
                           }
                         }}
                         disabled={attendanceMarked}
@@ -542,6 +674,12 @@ export default function MiembroMesa() {
                                     {estadoEsPresente ? 'Presente' : 'Ausente'}
                                   </Badge>
                                 </p>
+                                {data.horaIngreso && (
+                                  <p>
+                                    <strong>⏰ Hora de ingreso:</strong>{' '}
+                                    {data.horaIngreso}
+                                  </p>
+                                )}
                               </div>
                             </AccordionContent>
                           </AccordionItem>
@@ -563,14 +701,15 @@ export default function MiembroMesa() {
                   Tareas por realizar como ({role})
                 </h3>
                 {rolesChecklist[role].map((task) => (
-                  <div key={task} className="flex items-center gap-2 py-2">
+                  <div key={task} className="flex items-center gap-3 py-3">
                     <Checkbox
+                      className="checkbox-strong"
                       checked={!!checklist[task]}
                       onCheckedChange={(v) =>
                         setChecklist((prev) => ({ ...prev, [task]: !!v }))
                       }
                     />
-                    <span>{task}</span>
+                    <span className="font-medium text-gray-700">{task}</span>
                   </div>
                 ))}
               </Card>
