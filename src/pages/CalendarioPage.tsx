@@ -220,6 +220,7 @@ export default function CalendarioPage() {
   const [tempSelectedDay, setTempSelectedDay] = React.useState<string | null>(
     null
   )
+
   React.useEffect(() => {
     const sd = new Date(selectedDate)
     if (
@@ -228,7 +229,8 @@ export default function CalendarioPage() {
     ) {
       setMobileMonth(new Date(sd.getFullYear(), sd.getMonth(), 1))
     }
-  }, [selectedDate])
+  }, [selectedDate, mobileMonth])
+
   const { cells: mobileCells } = buildMonthGrid(
     mobileMonth.getFullYear(),
     mobileMonth.getMonth()
@@ -244,6 +246,57 @@ export default function CalendarioPage() {
       ),
     [activityFilter]
   )
+
+  // combobox state & refs
+  const activitiesRef = React.useRef<HTMLDivElement | null>(null)
+  const [open, setOpen] = React.useState(false)
+  const [selectedActivity, setSelectedActivity] =
+    React.useState<Activity | null>(null)
+
+  const makeActivityKey = (a: Activity) =>
+    `${a.date}::${a.time ?? ''}::${a.label}`
+
+  // load persisted selection
+  React.useEffect(() => {
+    try {
+      const k = localStorage.getItem('calendario:selectedActivity')
+      if (k) {
+        const found =
+          activitiesList.find((a) => makeActivityKey(a) === k) || null
+        setSelectedActivity(found)
+      }
+    } catch (e) {
+      console.warn(e)
+    }
+  }, [])
+
+  // click outside to close
+  React.useEffect(() => {
+    function onDoc(e: MouseEvent) {
+      if (!activitiesRef.current) return
+      if (!activitiesRef.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', onDoc)
+    return () => document.removeEventListener('mousedown', onDoc)
+  }, [])
+
+  function ensureSelectVisible() {
+    const el = activitiesRef.current
+    if (!el) return
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
+
+  function handleSelectActivity(a: Activity) {
+    try {
+      const k = makeActivityKey(a)
+      localStorage.setItem('calendario:selectedActivity', k)
+      setSelectedActivity(a)
+    } catch (err) {
+      console.warn(err)
+    }
+    setOpen(false)
+    openDayAndScroll(a.date, a.time)
+  }
 
   function navigate(offset: number) {
     if (viewMode === 'mes') {
@@ -636,27 +689,100 @@ export default function CalendarioPage() {
                   <label className="mb-2 block text-sm font-medium">
                     Buscar actividad
                   </label>
-                  <select
-                    aria-label="Buscar actividad"
-                    onChange={(e) => {
-                      const idx = Number(e.target.value)
-                      if (Number.isFinite(idx) && !Number.isNaN(idx)) {
-                        const act = visibleActivities[idx]
-                        if (act) openDayAndScroll(act.date, act.time)
-                      }
-                    }}
-                    className="w-full rounded-md border px-3 py-2 text-sm"
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Selecciona una actividad...
-                    </option>
-                    {visibleActivities.map((a, i) => (
-                      <option key={`${a.date}-${a.time}-${i}`} value={i}>
-                        {a.label}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="relative" ref={activitiesRef}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const next = !open
+                        if (next) ensureSelectVisible()
+                        setOpen(next)
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'ArrowDown') {
+                          e.preventDefault()
+                          if (!open) {
+                            setOpen(true)
+                            ensureSelectVisible()
+                            setTimeout(() => {
+                              const first =
+                                activitiesRef.current?.querySelector(
+                                  '[role="option"]'
+                                ) as HTMLElement | null
+                              first?.focus()
+                            }, 50)
+                          }
+                        }
+                        if (e.key === 'Escape') setOpen(false)
+                      }}
+                      className="focus:ring-primary flex w-full items-center justify-between rounded-lg border bg-white px-3 py-2 text-left text-sm shadow-sm hover:shadow-md focus:ring-2"
+                      aria-haspopup="listbox"
+                      aria-expanded={open}
+                    >
+                      <span className="text-muted-foreground truncate text-sm">
+                        {selectedActivity
+                          ? selectedActivity.label
+                          : 'Selecciona una actividad...'}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="text-muted-foreground h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
+                    </button>
+
+                    {open && (
+                      <ul
+                        role="listbox"
+                        tabIndex={-1}
+                        className="absolute right-0 left-0 z-40 mt-2 max-h-56 overflow-auto rounded-lg border bg-white py-1 text-sm shadow-lg"
+                      >
+                        {visibleActivities.map((a, i) => (
+                          <li key={`${a.date}-${a.time}-${i}`}>
+                            <button
+                              role="option"
+                              tabIndex={0}
+                              onClick={() => handleSelectActivity(a)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault()
+                                  handleSelectActivity(a)
+                                }
+                                if (e.key === 'ArrowDown') {
+                                  ;(
+                                    e.currentTarget.parentElement?.nextElementSibling?.querySelector(
+                                      'button'
+                                    ) as HTMLElement | null
+                                  )?.focus()
+                                }
+                                if (e.key === 'ArrowUp') {
+                                  ;(
+                                    e.currentTarget.parentElement?.previousElementSibling?.querySelector(
+                                      'button'
+                                    ) as HTMLElement | null
+                                  )?.focus()
+                                }
+                                if (e.key === 'Escape') setOpen(false)
+                              }}
+                              className="w-full px-3 py-2 text-left hover:bg-gray-50 focus:bg-gray-50"
+                            >
+                              {a.label}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
 
                 {/* Mobile pill filters */}
