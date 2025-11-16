@@ -21,58 +21,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import type { Candidato } from '@/types/candidatos'
-
-// Mock data: candidatos de ejemplo
-const MOCK_CANDIDATOS: Candidato[] = [
-  {
-    id: 'PA1',
-    nombre: 'Jorge Luis Ramírez',
-    profesion: 'Economista Internacional',
-    edad: 50,
-    partido: {
-      nombre: 'Alianza para el Progreso',
-      nombreCorto: 'APP',
-      color: '#0073e6',
-      logo: '/logos/app.png',
-    },
-    tipo: 'parlamento-andino',
-    experiencia: ['Ex Canciller', 'Negociador Comercial CAN'],
-    avatar: 'JR',
-  },
-  {
-    id: 'PA3',
-    nombre: 'Sofía Guerrero',
-    profesion: 'Abogada Internacionalista',
-    edad: 45,
-    partido: {
-      nombre: 'Renovación Popular',
-      nombreCorto: 'RP',
-      color: '#ff0000',
-      logo: '/logos/rp.png',
-    },
-    tipo: 'parlamento-andino',
-    experiencia: ['Asesora de Relaciones Exteriores', 'Docente Universitaria'],
-    avatar: 'SG',
-  },
-  {
-    id: 'PA5',
-    nombre: 'Manuel Vega',
-    profesion: 'Politólogo',
-    edad: 38,
-    partido: {
-      nombre: 'Fuerza Popular',
-      nombreCorto: 'FP',
-      color: '#ff6600',
-      logo: '/logos/fp.png',
-    },
-    tipo: 'parlamento-andino',
-    experiencia: [
-      'Investigador en Integración Regional',
-      'Consultor Internacional',
-    ],
-    avatar: 'MV',
-  },
-]
+import { PARLAMENTO_ANDINO } from '@/data/elecciones'
 
 export default function ParlamentoAndinoTab() {
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -99,7 +48,7 @@ export default function ParlamentoAndinoTab() {
   }
 
   // Filtrado de candidatos
-  const filteredCandidatos = MOCK_CANDIDATOS.filter((c) => {
+  const filteredCandidatos = PARLAMENTO_ANDINO.filter((c: Candidato) => {
     const matchesSearch = c.nombre
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
@@ -327,8 +276,8 @@ export default function ParlamentoAndinoTab() {
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {selectedCandidatos.map((candidatoId) => {
-              const candidato = MOCK_CANDIDATOS.find(
-                (c) => c.id === candidatoId
+              const candidato = PARLAMENTO_ANDINO.find(
+                (c: Candidato) => c.id === candidatoId
               )
               if (!candidato) return null
 

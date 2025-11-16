@@ -20,65 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import type { Candidato } from '@/types/candidatos'
-
-// Mock data: candidatos de ejemplo
-const MOCK_CANDIDATOS: Candidato[] = [
-  {
-    id: '3',
-    nombre: 'Ana Lucía Vargas',
-    profesion: 'Médica Cirujana',
-    edad: 41,
-    partido: {
-      nombre: 'Alianza para el Progreso',
-      nombreCorto: 'APP',
-      color: '#0066CC',
-      logo: '/logos/app.png',
-    },
-    region: 'La Libertad',
-    tipo: 'diputado',
-    experiencia: [
-      'Directora Regional de Salud',
-      'Presidenta del Colegio Médico',
-    ],
-    avatar: 'AV',
-  },
-  {
-    id: '12',
-    nombre: 'Roberto Palomino',
-    profesion: 'Ingeniero Civil',
-    edad: 56,
-    partido: {
-      nombre: 'Renovación Popular',
-      nombreCorto: 'RP',
-      color: '#00A651',
-      logo: '/logos/rp.png',
-    },
-    region: 'Lima',
-    tipo: 'diputado',
-    experiencia: ['Gerente de Obras Públicas', 'Constructor privado'],
-    avatar: 'RP',
-  },
-  {
-    id: '27',
-    nombre: 'Cecilia Rojas',
-    profesion: 'Abogada',
-    edad: 38,
-    partido: {
-      nombre: 'Fuerza Popular',
-      nombreCorto: 'FP',
-      color: '#FF0000',
-      logo: '/logos/fp.png',
-    },
-    region: 'Arequipa',
-    tipo: 'diputado',
-    experiencia: [
-      'Asesora Legal en Municipalidad',
-      'Defensora de Derechos Humanos',
-    ],
-    avatar: 'CR',
-  },
-]
+import { DIPUTADOS } from '@/data/elecciones'
 
 export default function DiputadosTab() {
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -106,7 +48,7 @@ export default function DiputadosTab() {
   }
 
   // Filtrado de candidatos
-  const filteredCandidatos = MOCK_CANDIDATOS.filter((c) => {
+  const filteredCandidatos = DIPUTADOS.filter((c) => {
     const matchesSearch = c.nombre
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
@@ -382,9 +324,7 @@ export default function DiputadosTab() {
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {selectedCandidatos.map((candidatoId) => {
-              const candidato = MOCK_CANDIDATOS.find(
-                (c) => c.id === candidatoId
-              )
+              const candidato = DIPUTADOS.find((c) => c.id === candidatoId)
               if (!candidato) return null
 
               const partidoColor = candidato.partido.color

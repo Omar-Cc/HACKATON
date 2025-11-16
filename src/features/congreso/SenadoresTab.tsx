@@ -22,59 +22,7 @@ import {
 } from '@/components/ui/dialog'
 import type { Candidato } from '@/types/candidatos'
 
-// Mock data: candidatos de ejemplo
-const MOCK_CANDIDATOS: Candidato[] = [
-  {
-    id: 'S1',
-    nombre: 'María Elena Torres',
-    profesion: 'Economista',
-    edad: 52,
-    partido: {
-      nombre: 'Alianza para el Progreso',
-      nombreCorto: 'APP',
-      color: '#0073e6',
-      logo: '/logos/app.png',
-    },
-    tipo: 'senador',
-    tipoSenador: 'nacional',
-    experiencia: ['Ex Ministra de Economía', 'Consultora Internacional'],
-    avatar: 'MT',
-  },
-  {
-    id: 'S5',
-    nombre: 'Carlos Mendoza',
-    profesion: 'Abogado',
-    edad: 48,
-    partido: {
-      nombre: 'Renovación Popular',
-      nombreCorto: 'RP',
-      color: '#00A651',
-      logo: '/logos/rp.png',
-    },
-    region: 'Lima',
-    tipo: 'senador',
-    tipoSenador: 'regional',
-    experiencia: ['Congresista 2016-2021', 'Docente Universitario'],
-    avatar: 'CM',
-  },
-  {
-    id: 'S12',
-    nombre: 'Patricia Salazar',
-    profesion: 'Ingeniera Ambiental',
-    edad: 44,
-    partido: {
-      nombre: 'Fuerza Popular',
-      nombreCorto: 'FP',
-      color: '#FF0000',
-      logo: '/logos/fp.png',
-    },
-    region: 'Cusco',
-    tipo: 'senador',
-    tipoSenador: 'regional',
-    experiencia: ['Gobernadora Regional', 'Activista Ambiental'],
-    avatar: 'PS',
-  },
-]
+import { SENADORES } from '@/data/elecciones'
 
 export default function SenadoresTab() {
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -103,7 +51,7 @@ export default function SenadoresTab() {
   }
 
   // Filtrado de candidatos
-  const filteredCandidatos = MOCK_CANDIDATOS.filter((c) => {
+  const filteredCandidatos = SENADORES.filter((c: Candidato) => {
     const matchesSearch = c.nombre
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
@@ -408,8 +356,8 @@ export default function SenadoresTab() {
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {selectedCandidatos.map((candidatoId) => {
-              const candidato = MOCK_CANDIDATOS.find(
-                (c) => c.id === candidatoId
+              const candidato = SENADORES.find(
+                (c: Candidato) => c.id === candidatoId
               )
               if (!candidato) return null
 
