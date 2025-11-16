@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useParams } from '@tanstack/react-router'
 import {
   ExternalLink,
   Plus,
@@ -20,6 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import type { Candidato } from '@/types/candidatos'
 import { getPartidoColor } from '@/data/partidos'
+import { getCandidatoById } from '@/data/elecciones'
 
 // Mock data - En producción vendría del JSON o CMS
 const MOCK_CANDIDATO: Candidato = {
@@ -159,29 +161,28 @@ const MOCK_CANDIDATO: Candidato = {
   ],
 }
 
-interface PerfilCandidatoPageProps {
-  readonly candidato?: Candidato
-}
-
-export default function PerfilCandidatoPage({
-  candidato = MOCK_CANDIDATO,
-}: PerfilCandidatoPageProps) {
+export default function PerfilCandidatoPage() {
+  const params = useParams({ from: '/candidato/$id' as const })
+  const routeId = params?.id
+  const candidatoReal: Candidato =
+    (routeId ? getCandidatoById(routeId) : null) ?? MOCK_CANDIDATO
   const [enComparacion, setEnComparacion] = useState(false)
-  const partidoColor = getPartidoColor(candidato.partido.color)
+  const partidoColor = getPartidoColor(candidatoReal.partido.color)
 
   const getBadgeTexto = () => {
-    if (candidato.tipo === 'presidente') return 'Candidato a la Presidencia'
-    if (candidato.tipo === 'senador') {
-      return candidato.tipoSenador === 'nacional'
+    if (candidatoReal.tipo === 'presidente') return 'Candidato a la Presidencia'
+    if (candidatoReal.tipo === 'senador') {
+      return candidatoReal.tipoSenador === 'nacional'
         ? 'Senador - Lista Nacional'
-        : `Senador Regional - ${candidato.region}`
+        : `Senador Regional - ${candidatoReal.region}`
     }
-    if (candidato.tipo === 'diputado') return `Diputado por ${candidato.region}`
+    if (candidatoReal.tipo === 'diputado')
+      return `Diputado por ${candidatoReal.region}`
     return `Parlamento Andino - Distrito Nacional`
   }
 
-  const maxMenciones = candidato.planAnalisis
-    ? Math.max(...candidato.planAnalisis.categorias.map((c) => c.menciones))
+  const maxMenciones = candidatoReal.planAnalisis
+    ? Math.max(...candidatoReal.planAnalisis.categorias.map((c) => c.menciones))
     : 100
 
   return (
@@ -199,22 +200,22 @@ export default function PerfilCandidatoPage({
                 className="text-9xl font-black"
                 style={{ color: partidoColor }}
               >
-                {candidato.partido.nombreCorto}
+                {candidatoReal.partido.nombreCorto}
               </span>
             </div>
 
             <div className="relative z-10 flex flex-col items-start gap-6 md:flex-row">
               {/* Foto del candidato */}
               <div className="shrink-0">
-                {candidato.fotoPrincipal ? (
+                {candidatoReal.fotoPrincipal ? (
                   <img
-                    src={candidato.fotoPrincipal}
-                    alt={candidato.nombre}
+                    src={candidatoReal.fotoPrincipal}
+                    alt={candidatoReal.nombre}
                     className="border-background h-32 w-32 rounded-full border-4 object-cover shadow-lg"
                   />
                 ) : (
                   <div className="bg-primary/20 text-primary border-background flex h-32 w-32 items-center justify-center rounded-full border-4 text-4xl font-bold shadow-lg">
-                    {candidato.avatar}
+                    {candidatoReal.avatar}
                   </div>
                 )}
               </div>
@@ -223,10 +224,10 @@ export default function PerfilCandidatoPage({
               <div className="flex-1 space-y-3">
                 <div>
                   <h1 className="text-3xl font-bold md:text-4xl">
-                    {candidato.nombre}
+                    {candidatoReal.nombre}
                   </h1>
                   <p className="text-muted-foreground mt-1 text-lg">
-                    {candidato.profesion}, {candidato.edad} años
+                    {candidatoReal.profesion}, {candidatoReal.edad} años
                   </p>
                 </div>
 
@@ -235,7 +236,7 @@ export default function PerfilCandidatoPage({
                     style={{ backgroundColor: partidoColor, color: '#fff' }}
                     className="px-4 py-1 text-base"
                   >
-                    {candidato.partido.nombre}
+                    {candidatoReal.partido.nombre}
                   </Badge>
                   <Badge variant="secondary" className="px-4 py-1 text-base">
                     {getBadgeTexto()}
@@ -261,17 +262,18 @@ export default function PerfilCandidatoPage({
       </Card>
 
       {/* 2. BLOQUE DE "PROPUESTA CENTRAL" (SOLO PARA PRESIDENTE) */}
-      {candidato.tipo === 'presidente' && candidato.propuestaCentral && (
-        <Alert className="border-primary/50 bg-primary/5">
-          <TrendingUp className="h-5 w-5" />
-          <AlertTitle className="text-lg">
-            Propuesta Central de Campaña
-          </AlertTitle>
-          <AlertDescription className="mt-2 text-base">
-            "{candidato.propuestaCentral}"
-          </AlertDescription>
-        </Alert>
-      )}
+      {candidatoReal.tipo === 'presidente' &&
+        candidatoReal.propuestaCentral && (
+          <Alert className="border-primary/50 bg-primary/5">
+            <TrendingUp className="h-5 w-5" />
+            <AlertTitle className="text-lg">
+              Propuesta Central de Campaña
+            </AlertTitle>
+            <AlertDescription className="mt-2 text-base">
+              "{candidatoReal.propuestaCentral}"
+            </AlertDescription>
+          </Alert>
+        )}
 
       {/* 3. BLOQUE DE "FICHA DE TRANSPARENCIA" (PARA TODOS - El Núcleo) */}
       <Card>
@@ -299,8 +301,9 @@ export default function PerfilCandidatoPage({
             {/* Pestaña 1: Experiencia y Formación */}
             <TabsContent value="experiencia" className="mt-6 space-y-4">
               <div className="space-y-3">
-                {candidato.formacion && candidato.formacion.length > 0 ? (
-                  candidato.formacion.map((item) => (
+                {candidatoReal.formacion &&
+                candidatoReal.formacion.length > 0 ? (
+                  candidatoReal.formacion.map((item) => (
                     <div
                       key={`${item.tipo}-${item.titulo}`}
                       className="bg-muted/30 flex items-start gap-3 rounded-lg p-3"
@@ -345,9 +348,9 @@ export default function PerfilCandidatoPage({
             {/* Pestaña 2: Historial Político */}
             <TabsContent value="historial" className="mt-6 space-y-4">
               <div className="border-primary/20 relative space-y-6 border-l-2 pl-6">
-                {candidato.historialPolitico &&
-                candidato.historialPolitico.length > 0 ? (
-                  candidato.historialPolitico.map((item) => (
+                {candidatoReal.historialPolitico &&
+                candidatoReal.historialPolitico.length > 0 ? (
+                  candidatoReal.historialPolitico.map((item) => (
                     <div
                       key={`${item.anio}-${item.descripcion}`}
                       className="relative"
@@ -383,9 +386,9 @@ export default function PerfilCandidatoPage({
                 información del candidato.
               </p>
               <div className="space-y-3">
-                {candidato.enlacesVerificacion &&
-                candidato.enlacesVerificacion.length > 0 ? (
-                  candidato.enlacesVerificacion.map((enlace) => (
+                {candidatoReal.enlacesVerificacion &&
+                candidatoReal.enlacesVerificacion.length > 0 ? (
+                  candidatoReal.enlacesVerificacion.map((enlace) => (
                     <a
                       key={enlace.url}
                       href={enlace.url}
@@ -427,7 +430,7 @@ export default function PerfilCandidatoPage({
       </Card>
 
       {/* 4. BLOQUE DE "ANÁLISIS DE PLAN" (SOLO PARA PRESIDENTE) */}
-      {candidato.tipo === 'presidente' && candidato.planAnalisis && (
+      {candidatoReal.tipo === 'presidente' && candidatoReal.planAnalisis && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-2xl">
@@ -440,7 +443,7 @@ export default function PerfilCandidatoPage({
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {candidato.planAnalisis.categorias.map((categoria) => {
+              {candidatoReal.planAnalisis.categorias.map((categoria) => {
                 const porcentaje = (categoria.menciones / maxMenciones) * 100
                 return (
                   <div key={categoria.nombre} className="space-y-2">
@@ -460,10 +463,10 @@ export default function PerfilCandidatoPage({
                 )
               })}
             </div>
-            {candidato.planAnalisis.fuenteUrl && (
+            {candidatoReal.planAnalisis.fuenteUrl && (
               <div className="mt-6 border-t pt-6">
                 <a
-                  href={candidato.planAnalisis.fuenteUrl}
+                  href={candidatoReal.planAnalisis.fuenteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary inline-flex items-center gap-2 hover:underline"
@@ -479,8 +482,8 @@ export default function PerfilCandidatoPage({
       )}
 
       {/* 5. BLOQUE DE "NOTICIAS RELACIONADAS" (PARA TODOS) */}
-      {candidato.noticiasRelacionadas &&
-        candidato.noticiasRelacionadas.length > 0 && (
+      {candidatoReal.noticiasRelacionadas &&
+        candidatoReal.noticiasRelacionadas.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-2xl">
@@ -493,7 +496,7 @@ export default function PerfilCandidatoPage({
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {candidato.noticiasRelacionadas.map((noticia) => (
+                {candidatoReal.noticiasRelacionadas.map((noticia) => (
                   <a
                     key={noticia.url}
                     href={noticia.url}

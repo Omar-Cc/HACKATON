@@ -38,180 +38,35 @@ interface Plancha {
   zona: string[]
 }
 
-// Mock data - En producción, esto vendría de la página anterior o API
-const planchasMock: Plancha[] = [
-  {
-    id: 1,
-    numero: '1',
-    presidente: { nombre: 'María González', foto: 'woman president candidate' },
-    vicepresidente: {
-      nombre: 'Carlos Rodríguez',
-      foto: 'man vice president candidate',
-    },
-    partido: 'Partido Progreso Nacional',
-    partidoId: 'ppn',
-    color: '#3B82F6',
-    zona: ['lima', 'cusco', 'arequipa'],
-    propuestas: {
-      educacion: [
-        'Educación universitaria gratuita para estudiantes destacados',
-        'Becas para estudiantes de bajos recursos en universidades públicas y privadas',
-        'Modernización de infraestructura educativa con tecnología de punta',
-        'Capacitación continua para docentes en metodologías modernas',
-        'Implementación de laboratorios de ciencia en todas las escuelas públicas',
-        'Programa de alfabetización digital para zonas rurales',
-      ],
-      salud: [
-        'Cobertura universal de salud con atención gratuita en hospitales públicos',
-        'Hospitales nuevos en zonas rurales de Cusco, Ayacucho y Huancavelica',
-        'Telemedicina para zonas alejadas con conectividad satelital',
-        'Contratación de 5,000 médicos especialistas para hospitales regionales',
-        'Programa de prevención de enfermedades crónicas en todo el país',
-        'Medicamentos oncológicos gratuitos para pacientes de escasos recursos',
-      ],
-      seguridad: [
-        'Mayor presencia policial en barrios con alta incidencia delictiva',
-        'Cámaras de seguridad inteligentes con reconocimiento facial en Lima y principales ciudades',
-        'Programas de prevención juvenil en colegios de zonas vulnerables',
-        'Creación de 50 comisarías nuevas en distritos de alto riesgo',
-        'Modernización del equipamiento policial con patrulleros y motos',
-        'Sistema de denuncia digital anónima con respuesta inmediata',
-      ],
-      economia: [
-        'Reducción del IVA en productos básicos de la canasta familiar',
-        'Apoyo a pequeñas empresas con créditos blandos del Banco de la Nación',
-        'Creación de 500,000 empleos formales en sectores productivos',
-        'Incentivos tributarios para empresas que contraten jóvenes profesionales',
-        'Fomento del turismo interno con promoción de destinos regionales',
-        'Construcción de infraestructura vial para conectar zonas productivas',
-      ],
-      medio_ambiente: [
-        'Energía solar en edificios públicos con meta de 100% para 2030',
-        'Reforestación de áreas urbanas con 1 millón de árboles por año',
-        'Prohibición de plásticos de un solo uso en todo el territorio nacional',
-        'Protección de parques nacionales y reservas naturales',
-        'Programa de reciclaje obligatorio en todos los municipios',
-        'Incentivos para vehículos eléctricos e híbridos',
-      ],
-    },
-  },
-  {
-    id: 2,
-    numero: '2',
-    presidente: {
-      nombre: 'Carlos Mendoza',
-      foto: 'man president candidate suit',
-    },
-    vicepresidente: {
-      nombre: 'Ana Silva',
-      foto: 'woman vice president candidate',
-    },
-    partido: 'Frente Democrático',
-    partidoId: 'fd',
-    color: '#10B981',
-    zona: ['la_libertad', 'piura', 'lambayeque'],
-    propuestas: {
-      educacion: [
-        'Vouchers educativos para familias de hasta S/2,000 mensuales',
-        'Inglés obligatorio desde primaria con profesores nativos',
-        'Alianzas con universidades internacionales para intercambios estudiantiles',
-        'Evaluación constante de calidad educativa en todos los colegios',
-        'Meritocracia en la contratación de docentes con mejores salarios',
-        'Educación técnica de alto nivel con certificación internacional',
-      ],
-      salud: [
-        'Seguros de salud privados accesibles con subsidio estatal del 50%',
-        'Incentivos fiscales para clínicas privadas que atiendan pacientes de bajos recursos',
-        'Reducción de listas de espera con alianzas público-privadas',
-        'Hospitales de alta complejidad en Trujillo, Chiclayo y Piura',
-        'Programa de salud preventiva con chequeos médicos anuales gratuitos',
-        'Importación de medicamentos genéricos de calidad a precios reducidos',
-      ],
-      seguridad: [
-        'Mano dura contra el crimen con penas más severas para delincuentes reincidentes',
-        'Aumento del pie de fuerza policial con 20,000 nuevos efectivos',
-        'Penas más severas para crímenes violentos y tráfico de drogas',
-        'Construcción de centros penitenciarios de máxima seguridad',
-        'Uso de tecnología de vigilancia en fronteras y puertos',
-        'Coordinación con INTERPOL para combatir crimen organizado',
-      ],
-      economia: [
-        'Reducción de impuestos a empresas del 29.5% al 25%',
-        'Atracción de inversión extranjera con facilidades tributarias',
-        'Zona franca en todas las regiones para exportaciones',
-        'Simplificación de trámites para apertura de negocios en 24 horas',
-        'Promoción de startups tecnológicas con capital semilla estatal',
-        'Acuerdos de libre comercio con nuevos mercados asiáticos',
-      ],
-      medio_ambiente: [
-        'Incentivos para vehículos eléctricos con exoneración de impuestos',
-        'Parques industriales ecológicos con energía renovable',
-        'Reciclaje obligatorio empresarial con sanciones por incumplimiento',
-        'Protección de bosques amazónicos con patrullaje militar',
-        'Programa de reforestación con participación del sector privado',
-        'Certificación ambiental para empresas responsables',
-      ],
-    },
-  },
-  {
-    id: 3,
-    numero: '3',
-    presidente: {
-      nombre: 'Ana Flores',
-      foto: 'woman president candidate professional',
-    },
-    vicepresidente: {
-      nombre: 'Jorge Morales',
-      foto: 'man vice president candidate professional',
-    },
-    partido: 'Unión por el Cambio',
-    partidoId: 'uc',
-    color: '#8B5CF6',
-    zona: ['cusco', 'puno', 'junin'],
-    propuestas: {
-      educacion: [
-        'Educación ambiental obligatoria desde inicial hasta secundaria',
-        'Escuelas sostenibles certificadas con energía solar y reciclaje',
-        'Huertos escolares en todas las escuelas para enseñar agricultura sostenible',
-        'Cursos de emprendimiento verde para estudiantes de secundaria',
-        'Becas para carreras relacionadas con medio ambiente y sostenibilidad',
-        'Programa de intercambio estudiantil en temas ambientales',
-      ],
-      salud: [
-        'Medicina preventiva como prioridad con campañas de vacunación masiva',
-        'Alimentación saludable en hospitales con productos orgánicos locales',
-        'Centros de salud mental gratuitos en todas las regiones',
-        'Promoción de medicina natural y tradicional andina',
-        'Programa de salud comunitaria con participación de promotores locales',
-        'Atención especializada en salud infantil y materna en zonas rurales',
-      ],
-      seguridad: [
-        'Policía comunitaria cercana con presencia en barrios y comunidades',
-        'Justicia restaurativa para delitos menores con reinserción social',
-        'Iluminación LED en calles de todas las ciudades y pueblos',
-        'Programa de empleo juvenil para prevenir la delincuencia',
-        'Capacitación policial en derechos humanos y trato ciudadano',
-        'Creación de redes vecinales de seguridad con apoyo estatal',
-      ],
-      economia: [
-        'Economía circular y reciclaje como eje de desarrollo económico',
-        'Agricultura orgánica subsidiada con certificación internacional',
-        'Turismo ecológico como motor de desarrollo en Cusco, Puno y regiones',
-        'Microcréditos para emprendimientos verdes y sostenibles',
-        'Fomento de artesanía local con ferias y exportaciones',
-        'Energías renovables como fuente de empleo en zonas rurales',
-      ],
-      medio_ambiente: [
-        '100% energías renovables para 2030 con inversión en solar y eólica',
-        'Protección de reservas naturales con guardaparques y tecnología',
-        'Transporte público eléctrico en todas las ciudades principales',
-        'Prohibición total de minería ilegal con sanciones severas',
-        'Recuperación de ecosistemas degradados en todo el país',
-        'Educación ambiental obligatoria para empresas extractivas',
-      ],
-    },
-  },
-]
+import { PLANCHAS } from '@/data/elecciones'
+
+// Map PLANCHAS centralizadas a la estructura que usa esta página
+const planchasMock: Plancha[] = PLANCHAS.map((p) => {
+  // PLANCHAS comes from a shared source and may have slightly different field names
+  const pSource = p as unknown as {
+    id: number
+    numero: string
+    presidente: { nombre: string; foto: string }
+    vicepresidente1?: { nombre: string; foto: string }
+    vicepresidente2?: { nombre: string; foto: string }
+    partido: { nombre: string; id: string; color?: string }
+    propuestas: Plancha['propuestas']
+    zona: string[]
+  }
+
+  return {
+    id: pSource.id,
+    numero: pSource.numero,
+    presidente: pSource.presidente,
+    vicepresidente: pSource.vicepresidente1 ??
+      pSource.vicepresidente2 ?? { nombre: '', foto: '' },
+    partido: pSource.partido.nombre,
+    partidoId: pSource.partido.id,
+    color: pSource.partido.color || '#000000',
+    propuestas: pSource.propuestas,
+    zona: pSource.zona,
+  }
+})
 
 const temas = [
   { id: 'educacion', label: 'Educación', icon: '📚' },
@@ -335,10 +190,14 @@ export function ComparacionPage() {
       medio_ambiente: [],
     }
 
-    Object.entries(plancha.propuestas).forEach(([tema, propuestas]) => {
+    for (const tema of Object.keys(
+      plancha.propuestas
+    ) as (keyof typeof plancha.propuestas)[]) {
+      const propuestas = plancha.propuestas[tema]
+
       // Si hay tema seleccionado, solo mostrar ese tema
-      if (selectedTemas.length > 0 && !selectedTemas.includes(tema)) {
-        return
+      if (selectedTemas.length > 0 && !selectedTemas.includes(tema as string)) {
+        continue
       }
 
       // Filtrar por palabra clave
@@ -348,8 +207,8 @@ export function ComparacionPage() {
           propuesta.toLowerCase().includes(searchTerm.toLowerCase())
       )
 
-      propuestasFiltradas[tema as keyof typeof propuestasFiltradas] = filtered
-    })
+      propuestasFiltradas[tema] = filtered
+    }
 
     return propuestasFiltradas
   }
