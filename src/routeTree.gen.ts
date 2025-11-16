@@ -9,7 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PlanchasPresidencialesRouteImport } from './routes/planchas-presidenciales'
+import { Route as MiembroMesaRouteImport } from './routes/miembro-mesa'
 import { Route as ElectorRouteImport } from './routes/elector'
+import { Route as CompararRouteImport } from './routes/comparar'
+import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ElectorIndexRouteImport } from './routes/elector.index'
 import { Route as ElectorSimuladorRouteImport } from './routes/elector.simulador'
@@ -20,12 +24,33 @@ import { Route as ElectorIntencionRouteImport } from './routes/elector.intencion
 import { Route as ElectorComoVotarRouteImport } from './routes/elector.como-votar'
 import { Route as ElectorCandidatosRouteImport } from './routes/elector.candidatos'
 import { Route as ElectorAjustesRouteImport } from './routes/elector.ajustes'
+import { Route as CandidatoIdRouteImport } from './routes/candidato.$id'
 import { Route as ElectorCandidatosIndexRouteImport } from './routes/elector.candidatos.index'
 import { Route as ElectorCandidatosCompararRouteImport } from './routes/elector.candidatos.comparar'
 
+const PlanchasPresidencialesRoute = PlanchasPresidencialesRouteImport.update({
+  id: '/planchas-presidenciales',
+  path: '/planchas-presidenciales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MiembroMesaRoute = MiembroMesaRouteImport.update({
+  id: '/miembro-mesa',
+  path: '/miembro-mesa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ElectorRoute = ElectorRouteImport.update({
   id: '/elector',
   path: '/elector',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompararRoute = CompararRouteImport.update({
+  id: '/comparar',
+  path: '/comparar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarioRoute = CalendarioRouteImport.update({
+  id: '/calendario',
+  path: '/calendario',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -78,6 +103,11 @@ const ElectorAjustesRoute = ElectorAjustesRouteImport.update({
   path: '/ajustes',
   getParentRoute: () => ElectorRoute,
 } as any)
+const CandidatoIdRoute = CandidatoIdRouteImport.update({
+  id: '/candidato/$id',
+  path: '/candidato/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ElectorCandidatosIndexRoute = ElectorCandidatosIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -92,7 +122,12 @@ const ElectorCandidatosCompararRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/calendario': typeof CalendarioRoute
+  '/comparar': typeof CompararRoute
   '/elector': typeof ElectorRouteWithChildren
+  '/miembro-mesa': typeof MiembroMesaRoute
+  '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
+  '/candidato/$id': typeof CandidatoIdRoute
   '/elector/ajustes': typeof ElectorAjustesRoute
   '/elector/candidatos': typeof ElectorCandidatosRouteWithChildren
   '/elector/como-votar': typeof ElectorComoVotarRoute
@@ -107,6 +142,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/calendario': typeof CalendarioRoute
+  '/comparar': typeof CompararRoute
+  '/miembro-mesa': typeof MiembroMesaRoute
+  '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
+  '/candidato/$id': typeof CandidatoIdRoute
   '/elector/ajustes': typeof ElectorAjustesRoute
   '/elector/como-votar': typeof ElectorComoVotarRoute
   '/elector/intencion': typeof ElectorIntencionRoute
@@ -121,7 +161,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/calendario': typeof CalendarioRoute
+  '/comparar': typeof CompararRoute
   '/elector': typeof ElectorRouteWithChildren
+  '/miembro-mesa': typeof MiembroMesaRoute
+  '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
+  '/candidato/$id': typeof CandidatoIdRoute
   '/elector/ajustes': typeof ElectorAjustesRoute
   '/elector/candidatos': typeof ElectorCandidatosRouteWithChildren
   '/elector/como-votar': typeof ElectorComoVotarRoute
@@ -138,7 +183,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/calendario'
+    | '/comparar'
     | '/elector'
+    | '/miembro-mesa'
+    | '/planchas-presidenciales'
+    | '/candidato/$id'
     | '/elector/ajustes'
     | '/elector/candidatos'
     | '/elector/como-votar'
@@ -153,6 +203,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/calendario'
+    | '/comparar'
+    | '/miembro-mesa'
+    | '/planchas-presidenciales'
+    | '/candidato/$id'
     | '/elector/ajustes'
     | '/elector/como-votar'
     | '/elector/intencion'
@@ -166,7 +221,12 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/calendario'
+    | '/comparar'
     | '/elector'
+    | '/miembro-mesa'
+    | '/planchas-presidenciales'
+    | '/candidato/$id'
     | '/elector/ajustes'
     | '/elector/candidatos'
     | '/elector/como-votar'
@@ -182,16 +242,49 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CalendarioRoute: typeof CalendarioRoute
+  CompararRoute: typeof CompararRoute
   ElectorRoute: typeof ElectorRouteWithChildren
+  MiembroMesaRoute: typeof MiembroMesaRoute
+  PlanchasPresidencialesRoute: typeof PlanchasPresidencialesRoute
+  CandidatoIdRoute: typeof CandidatoIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/planchas-presidenciales': {
+      id: '/planchas-presidenciales'
+      path: '/planchas-presidenciales'
+      fullPath: '/planchas-presidenciales'
+      preLoaderRoute: typeof PlanchasPresidencialesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/miembro-mesa': {
+      id: '/miembro-mesa'
+      path: '/miembro-mesa'
+      fullPath: '/miembro-mesa'
+      preLoaderRoute: typeof MiembroMesaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/elector': {
       id: '/elector'
       path: '/elector'
       fullPath: '/elector'
       preLoaderRoute: typeof ElectorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparar': {
+      id: '/comparar'
+      path: '/comparar'
+      fullPath: '/comparar'
+      preLoaderRoute: typeof CompararRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendario': {
+      id: '/calendario'
+      path: '/calendario'
+      fullPath: '/calendario'
+      preLoaderRoute: typeof CalendarioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -264,6 +357,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ElectorAjustesRouteImport
       parentRoute: typeof ElectorRoute
     }
+    '/candidato/$id': {
+      id: '/candidato/$id'
+      path: '/candidato/$id'
+      fullPath: '/candidato/$id'
+      preLoaderRoute: typeof CandidatoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/elector/candidatos/': {
       id: '/elector/candidatos/'
       path: '/'
@@ -323,7 +423,12 @@ const ElectorRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CalendarioRoute: CalendarioRoute,
+  CompararRoute: CompararRoute,
   ElectorRoute: ElectorRouteWithChildren,
+  MiembroMesaRoute: MiembroMesaRoute,
+  PlanchasPresidencialesRoute: PlanchasPresidencialesRoute,
+  CandidatoIdRoute: CandidatoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

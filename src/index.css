@@ -23,6 +23,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-success: var(--success); /* Añadido para tu color "Verde Éxito" */
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -41,9 +42,10 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Modo Claro (Light Mode) - Basado en tu imagen */
 :root {
+  --font-size: 16px;
   --radius: 0.625rem;
-  /* ✅ TUS COLORES INSTITUCIONALES */
   --background: #f3f4f6; /* Gris Claro */
   --foreground: #1f2937; /* Gris Oscuro */
   --card: #ffffff; /* Blanco */
@@ -59,6 +61,7 @@
   --accent: #dbeafe; /* Azul Claro */
   --accent-foreground: #1e40af; /* Azul Institucional */
   --destructive: #dc2626; /* Rojo ONPE */
+  --success: #16a34a; /* Verde Éxito */
   --border: #e5e7eb; /* Borde gris claro */
   --input: #ffffff; /* Blanco */
   --ring: #1e40af; /* Azul Institucional */
@@ -77,12 +80,15 @@
   --sidebar-ring: #1e40af; /* Azul Institucional */
 }
 
+/* Modo Oscuro (Dark Mode) - Lógica invertida de tu paleta */
 .dark {
   /* Versión dark mode opcional - puedes ajustar según necesites */
   --background: #1f2937; /* Gris Oscuro */
   --foreground: #f9fafb; /* Gris muy claro */
   --card: #374151; /* Gris más oscuro */
   --card-foreground: #f9fafb; /* Gris muy claro */
+  --popover: #1f2937; /* Gris Oscuro */
+  --popover-foreground: #f3f4f6; /* Gris Claro */
   --primary: #3b82f6; /* Azul más claro para dark */
   --primary-foreground: #ffffff; /* Blanco */
   --secondary: #1e40af; /* Azul Institucional */
@@ -109,4 +115,8 @@
     margin: 0;
     padding: 0;
   }
+}
+
+html {
+  font-size: var(--font-size);
 }
