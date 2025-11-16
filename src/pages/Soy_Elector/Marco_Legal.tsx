@@ -5,13 +5,13 @@ import React from 'react'
 import { Link } from '@tanstack/react-router'
 import * as Accordion from '@radix-ui/react-accordion'
 import {
-  FaGavel,
-  FaChevronDown,
-  FaBook,
-  FaExclamationTriangle,
-  FaMoneyBillWave,
-  FaArrowLeft, // <-- ¡Icono para el botón de atrás!
-} from 'react-icons/fa'
+  Gavel,
+  ChevronDown,
+  Book,
+  AlertTriangle,
+  DollarSign,
+  ArrowLeft,
+} from 'lucide-react'
 
 // ... (El 'type TemaLegal' y 'const temasLegales' no cambian) ...
 type TemaLegal = {
@@ -25,28 +25,28 @@ const temasLegales: TemaLegal[] = [
   {
     id: 'ley-general',
     titulo: 'Ley Orgánica de Elecciones (Ley N° 26859)',
-    icono: FaBook,
+    icono: Book,
     contenido:
       'Esta es la ley principal que regula todos los procesos electorales en el país, desde la convocatoria hasta la proclamación de resultados. Define los derechos y obligaciones de los ciudadanos, partidos políticos y organismos electorales.',
   },
   {
     id: 'delitos',
     titulo: 'Delitos Electorales',
-    icono: FaExclamationTriangle,
+    icono: AlertTriangle,
     contenido:
       'Acciones que están prohibidas y son sancionadas por ley. Incluyen: suplantación de identidad, tomar fotos al voto (como vimos en Seguridad), destruir material electoral, y realizar propaganda en el día de la elección.',
   },
   {
     id: 'multas',
     titulo: 'Multas y Sanciones por No Votar',
-    icono: FaMoneyBillWave,
+    icono: DollarSign,
     contenido:
       'El voto es obligatorio para todos los ciudadanos peruanos desde los 18 hasta los 70 años. No asistir a votar o no cumplir con el deber de ser miembro de mesa genera una multa económica. El monto de la multa varía según el distrito de residencia.',
   },
   {
     id: 'ley-seca',
     titulo: 'Ley Seca y Prohibiciones de Último Minuto',
-    icono: FaGavel,
+    icono: Gavel,
     contenido:
       'Desde 48 horas antes y hasta el mediodía del día siguiente a la elección, está prohibida la venta y consumo de bebidas alcohólicas en lugares públicos. También se prohíben los espectáculos públicos y las reuniones políticas durante este período.',
   },
@@ -73,7 +73,7 @@ const ContenidoPagina: React.FC = () => (
               </span>
             </div>
             {/* La flecha que gira */}
-            <FaChevronDown className="text-primary transition-transform duration-300 group-data-[state=open]:rotate-180" />
+            <ChevronDown className="text-primary transition-transform duration-300 group-data-[state=open]:rotate-180" />
           </Accordion.Trigger>
 
           {/* El Contenido que se expande */}
@@ -113,11 +113,11 @@ const PaginaMarcoLegal: React.FC = () => {
         {/* Header de Móvil con FLECHA ATRÁS */}
         <header className="bg-primary text-primary-foreground flex items-center gap-4 rounded-b-[20px] p-4 shadow-lg">
           <Link
-            to="/elector" // Link de regreso al menú principal de móvil
+            to="/elector"
             className="rounded-full p-2 hover:bg-white/10"
             aria-label="Volver"
           >
-            <FaArrowLeft size={20} />
+            <ArrowLeft size={20} />
           </Link>
           <h1 className="text-2xl font-bold">Marco Legal</h1>
         </header>

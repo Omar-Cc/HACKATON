@@ -3,14 +3,14 @@
 import React from 'react'
 import { Link } from '@tanstack/react-router'
 import {
-  FaArrowLeft,
-  FaCog,
-  FaCheckCircle,
-  FaLightbulb,
-  FaFont,
-  FaRegSun,
-  FaWheelchair, // Íconos para la página
-} from 'react-icons/fa'
+  ArrowLeft,
+  Settings,
+  CheckCircle,
+  Lightbulb,
+  Type,
+  Sun,
+  User,
+} from 'lucide-react'
 // Importamos el Switch de Radix
 import * as Switch from '@radix-ui/react-switch'
 // Importamos el store de Zustand
@@ -29,7 +29,7 @@ const ContenidoPagina: React.FC = () => {
     <div className="mx-auto max-w-2xl space-y-8">
       {/* --- Alerta de Información --- */}
       <div className="bg-accent flex items-start gap-4 rounded-lg p-5">
-        <FaWheelchair className="text-primary flex-shrink-0 text-3xl" />
+        <User className="text-primary shrink-0 text-3xl" />
         <p className="text-muted-foreground font-medium">
           Estas opciones te ayudan a usar la aplicación de manera más cómoda
           según tus necesidades.
@@ -39,7 +39,7 @@ const ContenidoPagina: React.FC = () => {
       {/* --- Sección: Tamaño de Texto --- */}
       <div className="bg-card border-border rounded-lg border p-6 shadow-md">
         <div className="mb-4 flex items-center gap-4">
-          <FaFont className="text-primary text-2xl" />
+          <Type className="text-primary text-2xl" />
           <div>
             <h3 className="text-foreground text-xl font-bold">
               Tamaño de texto
@@ -91,7 +91,7 @@ const ContenidoPagina: React.FC = () => {
       {/* --- Sección: Alto Contraste --- */}
       <div className="bg-card border-border rounded-lg border p-6 shadow-md">
         <div className="mb-4 flex items-center gap-4">
-          <FaRegSun className="text-primary text-2xl" />
+          <Sun className="text-primary text-2xl" />
           <div>
             <h3 className="text-foreground text-xl font-bold">Modo Oscuro</h3>
             <p className="text-md text-muted-foreground">
@@ -153,18 +153,18 @@ const ContenidoPagina: React.FC = () => {
         </h3>
         <ul className="space-y-3">
           <li className="text-muted-foreground flex items-center gap-3 text-lg">
-            <FaCheckCircle className="text-green-500" /> Iconografía clara y
+            <CheckCircle className="text-green-500" /> Iconografía clara y
             descriptiva
           </li>
           <li className="text-muted-foreground flex items-center gap-3 text-lg">
-            <FaCheckCircle className="text-green-500" /> Navegación simplificada
+            <CheckCircle className="text-green-500" /> Navegación simplificada
           </li>
           <li className="text-muted-foreground flex items-center gap-3 text-lg">
-            <FaCheckCircle className="text-green-500" /> Textos alternativos en
+            <CheckCircle className="text-green-500" /> Textos alternativos en
             imágenes
           </li>
           <li className="text-muted-foreground flex items-center gap-3 text-lg">
-            <FaCheckCircle className="text-green-500" /> Compatible con lectores
+            <CheckCircle className="text-green-500" /> Compatible con lectores
             de pantalla
           </li>
         </ul>
@@ -173,7 +173,7 @@ const ContenidoPagina: React.FC = () => {
       {/* --- Consejo --- */}
       <div className="rounded-md border-l-4 border-yellow-400 bg-yellow-50 p-5">
         <div className="flex items-start">
-          <FaLightbulb className="text-2xl text-yellow-500" />
+          <Lightbulb className="text-2xl text-yellow-500" />
           <div className="ml-4">
             <h3 className="text-xl font-bold text-yellow-700">Consejo</h3>
             <p className="text-lg text-yellow-600">
@@ -215,10 +215,10 @@ const PaginaAjustes: React.FC = () => {
             className="rounded-full p-2 hover:bg-white/10"
             aria-label="Volver"
           >
-            <FaArrowLeft size={20} />
+            <ArrowLeft size={20} />
           </Link>
           <div className="flex items-center gap-3">
-            <FaCog size={22} />
+            <Settings size={22} />
             <h1 className="text-2xl font-bold">Accesibilidad</h1>
           </div>
         </header>

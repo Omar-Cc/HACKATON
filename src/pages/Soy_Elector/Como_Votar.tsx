@@ -4,14 +4,14 @@ import React from 'react'
 // 1. Importamos Link y la flecha para el header de móvil
 import { Link } from '@tanstack/react-router'
 import {
-  FaMapMarkerAlt,
-  FaIdCard,
-  FaCheckCircle,
-  FaBox,
-  FaTimes,
-  FaExclamationTriangle,
-  FaArrowLeft, // <-- ¡Icono para el botón de atrás!
-} from 'react-icons/fa'
+  MapPin,
+  User,
+  CheckCircle,
+  Box,
+  X,
+  AlertTriangle,
+  ArrowLeft,
+} from 'lucide-react'
 
 // ... (El 'type Paso' y 'const pasos' no cambian) ...
 type Paso = {
@@ -27,28 +27,28 @@ const pasos: Paso[] = [
     titulo: 'Ubica tu mesa',
     descripcion:
       'Busca tu número de mesa en el local de votación. Recuerda consultar antes del día de las elecciones.',
-    icono: FaMapMarkerAlt,
+    icono: MapPin,
   },
   {
     numero: '2',
     titulo: 'Entrega tu DNI',
     descripcion:
       'Presenta tu DNI original al miembro de mesa. Debe estar vigente y en buen estado.',
-    icono: FaIdCard,
+    icono: User,
   },
   {
     numero: '3',
     titulo: 'Marca tu voto correctamente',
     descripcion:
       'Marca con una X o un aspa dentro del recuadro del candidato de tu preferencia. No hagas otros trazos.',
-    icono: FaCheckCircle,
+    icono: CheckCircle,
   },
   {
     numero: '4',
     titulo: 'Deposita tu voto en el ánfora',
     descripcion:
       'Dobla la cédula y colócala en el ánfora. Luego firma el padrón electoral.',
-    icono: FaBox,
+    icono: Box,
   },
 ]
 
@@ -97,7 +97,7 @@ const ContenidoPagina: React.FC = () => (
                 <div className="text-muted-foreground text-sm">Partido A</div>
               </div>
             </div>
-            <FaTimes className="text-destructive absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 text-5xl" />
+            <X className="text-destructive absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 text-5xl" />
           </div>
           <div className="mt-4 flex items-center p-4">
             <div className="mr-4 h-12 w-12 rounded-lg bg-gray-300"></div>
@@ -115,7 +115,7 @@ const ContenidoPagina: React.FC = () => (
       {/* Tarjeta: ¡Importante! (Alerta) */}
       <div className="border-destructive rounded-md border-l-4 bg-red-50 p-6">
         <div className="flex items-start">
-          <FaExclamationTriangle className="text-destructive text-2xl" />
+          <AlertTriangle className="text-destructive text-2xl" />
           <div className="ml-4">
             <h3 className="text-destructive mb-3 text-xl font-bold">
               ¡Importante!
@@ -162,7 +162,7 @@ const PaginaComoVotar: React.FC = () => {
             className="rounded-full p-2 hover:bg-white/10"
             aria-label="Volver"
           >
-            <FaArrowLeft size={20} />
+            <ArrowLeft size={20} />
           </Link>
           <h1 className="text-2xl font-bold">Cómo Votar</h1>
         </header>

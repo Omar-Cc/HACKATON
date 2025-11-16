@@ -4,35 +4,35 @@ import React from 'react'
 import { Link } from '@tanstack/react-router'
 // Importamos todos los íconos necesarios
 import {
-  FaMapMarkerAlt,
-  FaFileAlt,
-  FaLaptopCode,
-  FaPoll,
-  FaShieldAlt,
-  FaUsers,
-  FaGavel,
-  FaCog,
-  FaHandPointLeft,
-} from 'react-icons/fa'
-import { ArrowRight } from 'lucide-react'
+  MapPin,
+  FileText,
+  Laptop,
+  BarChart2,
+  Shield,
+  Users,
+  Gavel,
+  Settings,
+  ArrowRight,
+  Hand,
+} from 'lucide-react'
 
 // --- (opcionesMobile no cambia) ---
 const opcionesMobile = [
-  { icono: FaMapMarkerAlt, texto: 'Local de votación', path: '/elector/local' },
-  { icono: FaFileAlt, texto: 'Cómo votar', path: '/elector/como-votar' },
+  { icono: MapPin, texto: 'Local de votación', path: '/elector/local' },
+  { icono: FileText, texto: 'Cómo votar', path: '/elector/como-votar' },
   {
-    icono: FaLaptopCode,
+    icono: Laptop,
     texto: 'Simulador de votación',
     path: '/elector/simulador',
   },
-  { icono: FaPoll, texto: 'Intención de voto', path: '/elector/intencion' },
-  { icono: FaShieldAlt, texto: 'Seguridad', path: '/elector/seguridad' },
+  { icono: BarChart2, texto: 'Intención de voto', path: '/elector/intencion' },
+  { icono: Shield, texto: 'Seguridad', path: '/elector/seguridad' },
   {
-    icono: FaUsers,
+    icono: Users,
     texto: 'Candidatos y Partidos',
     path: '/elector/candidatos',
   },
-  { icono: FaGavel, texto: 'Marco Legal', path: '/elector/legal' },
+  { icono: Gavel, texto: 'Marco Legal', path: '/elector/legal' },
 ]
 
 const ElectorPrincipal: React.FC = () => {
@@ -56,7 +56,7 @@ const ElectorPrincipal: React.FC = () => {
             className="rounded-full p-2 transition-colors hover:bg-white/10"
             aria-label="Configuración"
           >
-            <FaCog size={24} />
+            <Settings size={24} />
           </Link>
         </header>
 
@@ -87,7 +87,7 @@ const ElectorPrincipal: React.FC = () => {
         {/* Icono e indicación para desktop */}
         <div className="mb-8 hidden flex-col items-center md:flex">
           <div className="mb-6 flex items-center justify-center">
-            <FaHandPointLeft className="text-primary mr-4 text-3xl" />
+            <Hand className="text-primary mr-4 text-3xl" />
             <span className="text-primary text-xl font-semibold">
               Selecciona una opción del menú lateral
             </span>

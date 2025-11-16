@@ -4,15 +4,15 @@ import React from 'react'
 import { Outlet, Link } from '@tanstack/react-router'
 // import { Toaster } from 'sonner'; // <-- 1. ¡LÍNEA ELIMINADA!
 import {
-  FaCog,
-  FaMapMarkerAlt,
-  FaFileAlt,
-  FaLaptopCode,
-  FaPoll,
-  FaShieldAlt,
-  FaUsers,
-  FaGavel,
-} from 'react-icons/fa'
+  Settings,
+  MapPin,
+  FileText,
+  Laptop,
+  BarChart2,
+  Shield,
+  Users,
+  Gavel,
+} from 'lucide-react'
 // Importamos el store y clsx (para accesibilidad)
 import { useAccessibilityStore } from '../../store/accessibilityStore'
 import clsx from 'clsx'
@@ -24,21 +24,21 @@ type OpcionMenu = {
 }
 
 const opciones: OpcionMenu[] = [
-  { icono: FaMapMarkerAlt, texto: 'Local de votación', path: '/elector/local' },
-  { icono: FaFileAlt, texto: 'Cómo votar', path: '/elector/como-votar' },
+  { icono: MapPin, texto: 'Local de votación', path: '/elector/local' },
+  { icono: FileText, texto: 'Cómo votar', path: '/elector/como-votar' },
   {
-    icono: FaLaptopCode,
+    icono: Laptop,
     texto: 'Simulador de votación',
     path: '/elector/simulador',
   },
-  { icono: FaPoll, texto: 'Intención de voto', path: '/elector/intencion' },
-  { icono: FaShieldAlt, texto: 'Seguridad', path: '/elector/seguridad' },
+  { icono: BarChart2, texto: 'Intención de voto', path: '/elector/intencion' },
+  { icono: Shield, texto: 'Seguridad', path: '/elector/seguridad' },
   {
-    icono: FaUsers,
+    icono: Users,
     texto: 'Candidatos y Partidos',
     path: '/elector/candidatos',
   },
-  { icono: FaGavel, texto: 'Marco Legal', path: '/elector/legal' },
+  { icono: Gavel, texto: 'Marco Legal', path: '/elector/legal' },
 ]
 
 const LayoutElector: React.FC = () => {
@@ -77,7 +77,7 @@ const LayoutElector: React.FC = () => {
                 className="hover:bg-primary-foreground/10 rounded-full p-3 transition-colors"
                 aria-label="Configuración"
               >
-                <FaCog size={24} />
+                <Settings size={24} />
               </Link>
             </div>
           </div>

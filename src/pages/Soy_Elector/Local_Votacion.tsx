@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
-  FaMapMarkerAlt,
-  FaUser,
-  FaLightbulb,
-  FaSpinner,
-  FaArrowLeft,
-} from 'react-icons/fa'
-import { ArrowRight } from 'lucide-react'
+  MapPin,
+  User,
+  Lightbulb,
+  Loader,
+  ArrowLeft,
+  ArrowRight,
+} from 'lucide-react'
 
 type Resultado = {
   nombre: string
@@ -47,7 +47,7 @@ const ContenidoPagina: React.FC = () => {
       {/* ESTADO DE CARGA */}
       {resultado === null && (
         <div className="bg-card border-border flex items-center justify-center rounded-lg border p-12 shadow-md">
-          <FaSpinner className="text-primary mr-4 animate-spin text-2xl" />
+          <Loader className="text-primary mr-4 animate-spin text-2xl" />
           <p className="text-muted-foreground text-lg">
             Cargando tu información...
           </p>
@@ -62,7 +62,7 @@ const ContenidoPagina: React.FC = () => {
           <div className="bg-card border-primary/20 overflow-hidden rounded-lg border shadow-xl">
             <div className="bg-accent border-primary/20 border-b p-6">
               <div className="flex items-center">
-                <FaUser className="text-primary text-3xl" />
+                <User className="text-primary text-3xl" />
                 <div className="ml-4">
                   <p className="text-primary text-sm font-semibold">ELECTOR</p>
                   <p className="text-foreground text-2xl font-bold">
@@ -94,7 +94,7 @@ const ContenidoPagina: React.FC = () => {
             <div className="flex flex-col gap-6">
               <div className="bg-card rounded-lg p-8 shadow-xl">
                 <div className="flex">
-                  <FaMapMarkerAlt className="text-primary mt-1 text-3xl" />
+                  <MapPin className="text-primary mt-1 text-3xl" />
                   <div className="ml-5">
                     <p className="text-muted-foreground text-sm font-semibold">
                       Dirección
@@ -132,7 +132,7 @@ const ContenidoPagina: React.FC = () => {
                 Ver ubicación exacta
               </button>
               <div className="bg-accent flex items-start gap-3 rounded-lg p-5">
-                <FaLightbulb className="text-primary flex-shrink-0 text-2xl" />
+                <Lightbulb className="text-primary shrink-0 text-2xl" />
                 <p className="text-muted-foreground font-medium">
                   Recuerda: Llega con anticipación y lleva tu DNI original. El
                   local abre a las 8:00 AM.
@@ -157,7 +157,7 @@ const ContenidoPagina: React.FC = () => {
             {/* Detalles */}
             <div className="bg-card rounded-lg p-6 shadow-xl">
               <div className="flex">
-                <FaMapMarkerAlt className="text-primary mt-1 text-3xl" />
+                <MapPin className="text-primary mt-1 text-3xl" />
                 <div className="ml-5">
                   <p className="text-muted-foreground text-sm font-semibold">
                     Dirección
@@ -197,7 +197,7 @@ const ContenidoPagina: React.FC = () => {
             </button>
             {/* Alerta */}
             <div className="bg-accent flex items-start gap-3 rounded-lg p-5">
-              <FaLightbulb className="text-primary flex-shrink-0 text-2xl" />
+              <Lightbulb className="text-primary shrink-0 text-2xl" />
               <p className="text-muted-foreground font-medium">
                 Recuerda: Llega con anticipación y lleva tu DNI original. El
                 local abre a las 8:00 AM.
@@ -234,7 +234,7 @@ const PaginaLocalVotacion: React.FC = () => {
             className="rounded-full p-2 hover:bg-white/10"
             aria-label="Volver"
           >
-            <FaArrowLeft size={20} />
+            <ArrowLeft size={20} />
           </Link>
           <h1 className="text-2xl font-bold">Tu Local de Votación</h1>
         </header>

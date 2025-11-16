@@ -6,10 +6,7 @@ import { Link } from '@tanstack/react-router'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useLocalStorage } from 'usehooks-ts'
 import { toast } from 'sonner'
-import {
-  FaLock,
-  FaArrowLeft, // <-- ¡Icono para el botón de atrás!
-} from 'react-icons/fa'
+import { Lock, ArrowLeft } from 'lucide-react'
 
 // ... (CANDIDATE_LIST y DEFAULT_VOTES no cambian) ...
 const CANDIDATE_LIST = [
@@ -168,7 +165,7 @@ const ContenidoPagina: React.FC<{
 
     {/* --- Nota de Privacidad --- */}
     <div className="bg-accent flex items-start gap-3 rounded-lg p-5">
-      <FaLock className="text-primary flex-shrink-0 text-2xl" />
+      <Lock className="text-primary shrink-0 text-2xl" />
       <p className="text-muted-foreground font-medium">
         Privacidad: Tu voto es completamente anónimo. No se almacena ninguna
         información que permita identificar tu elección.
@@ -263,7 +260,7 @@ const PaginaIntencionVoto: React.FC = () => {
             className="rounded-full p-2 hover:bg-white/10"
             aria-label="Volver"
           >
-            <FaArrowLeft size={20} />
+            <ArrowLeft size={20} />
           </Link>
           <h1 className="text-2xl font-bold">Intención de Voto</h1>
         </header>

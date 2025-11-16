@@ -27,7 +27,7 @@ import { Route as ElectorComoVotarRouteImport } from './routes/elector.como-vota
 import { Route as ElectorCandidatosRouteImport } from './routes/elector.candidatos'
 import { Route as ElectorAjustesRouteImport } from './routes/elector.ajustes'
 import { Route as CandidatoIdRouteImport } from './routes/candidato.$id'
-import { Route as ElectorCandidatosIndexRouteImport } from './routes/elector.candidatos.index'
+import { Route as ElectorCandidatosIndexRouteImport } from './routes/elector/candidatos/index'
 import { Route as ElectorCandidatosCompararRouteImport } from './routes/elector.candidatos.comparar'
 
 const PlanchasPresidencialesRoute = PlanchasPresidencialesRouteImport.update({

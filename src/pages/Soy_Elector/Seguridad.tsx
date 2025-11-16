@@ -2,14 +2,14 @@ import React from 'react'
 // 1. Importamos Link y la flecha para el header de móvil
 import { Link } from '@tanstack/react-router'
 import {
-  FaIdCard,
-  FaClock,
-  FaMapMarkedAlt,
-  FaBan,
-  FaUserSecret,
-  FaExclamationTriangle,
-  FaArrowLeft, // <-- ¡Icono para el botón de atrás!
-} from 'react-icons/fa'
+  CreditCard,
+  Clock,
+  MapPin,
+  XCircle,
+  User,
+  AlertTriangle,
+  ArrowLeft,
+} from 'lucide-react'
 
 // ... (El 'type Recomendacion' y las listas 'recomendacionesAntes' y 'recomendacionesDurante' no cambian) ...
 type Recomendacion = {
@@ -23,19 +23,19 @@ const recomendacionesAntes: Recomendacion[] = [
     titulo: 'Lleva tu DNI',
     descripcion:
       'Es el único documento válido para votar. Asegúrate de que esté vigente.',
-    icono: FaIdCard,
+    icono: CreditCard,
   },
   {
     titulo: 'Verifica tu local con tiempo',
     descripcion:
       'Consulta en esta app tu local y mesa de votación días antes para evitar confusiones.',
-    icono: FaMapMarkedAlt,
+    icono: MapPin,
   },
   {
     titulo: 'Descarga tu mapa de geolocalización',
     descripcion:
       'Descarga con días de anticipación el mapa o la ubicación de tu local. La señal de internet puede fallar ese día.',
-    icono: FaMapMarkedAlt,
+    icono: MapPin,
   },
 ]
 
@@ -44,19 +44,19 @@ const recomendacionesDurante: Recomendacion[] = [
     titulo: 'Ve a la hora indicada',
     descripcion:
       'Si se te ha asignado un horario sugerido, respétalo para evitar aglomeraciones.',
-    icono: FaClock,
+    icono: Clock,
   },
   {
     titulo: 'Prohibido tomar fotos al voto',
     descripcion:
       'Está prohibido tomarle foto a la cédula de votación marcada. Es un delito electoral.',
-    icono: FaBan,
+    icono: XCircle,
   },
   {
     titulo: 'No vayas con propaganda política',
     descripcion:
       'No puedes usar ropa, mascarillas o cualquier distintivo de un partido político en el local de votación.',
-    icono: FaUserSecret,
+    icono: User,
   },
 ]
 
@@ -66,7 +66,7 @@ const ContenidoPagina: React.FC = () => (
   <>
     {/* --- Alerta Principal --- */}
     <div className="bg-accent mb-10 flex items-start gap-4 rounded-lg p-6">
-      <FaExclamationTriangle className="text-primary flex-shrink-0 text-3xl" />
+      <AlertTriangle className="text-primary shrink-0 text-3xl" />
       <p className="text-muted-foreground text-lg font-medium">
         Recuerda: Tu DNI es indispensable. Sin él, no podrás votar. Ve con
         tiempo y cumple los protocolos.
@@ -86,7 +86,7 @@ const ContenidoPagina: React.FC = () => (
             key={item.titulo}
             className="bg-card border-border flex items-start rounded-lg border p-6 shadow-md"
           >
-            <div className="bg-accent flex-shrink-0 rounded-full p-3">
+            <div className="bg-accent shrink-0 rounded-full p-3">
               <item.icono className="text-primary text-2xl" />
             </div>
             <div className="ml-5">
@@ -111,7 +111,7 @@ const ContenidoPagina: React.FC = () => (
             key={item.titulo}
             className="bg-card border-border flex items-start rounded-lg border p-6 shadow-md"
           >
-            <div className="bg-accent flex-shrink-0 rounded-full p-3">
+            <div className="bg-accent shrink-0 rounded-full p-3">
               <item.icono className="text-primary text-2xl" />
             </div>
             <div className="ml-5">
@@ -156,11 +156,11 @@ const PaginaSeguridad: React.FC = () => {
         {/* Header de Móvil con FLECHA ATRÁS */}
         <header className="bg-primary text-primary-foreground flex items-center gap-4 rounded-b-[20px] p-4 shadow-lg">
           <Link
-            to="/elector" // Link de regreso al menú principal de móvil
+            to="/elector"
             className="rounded-full p-2 hover:bg-white/10"
             aria-label="Volver"
           >
-            <FaArrowLeft size={20} />
+            <ArrowLeft size={20} />
           </Link>
           <h1 className="text-2xl font-bold">Seguridad</h1>
         </header>

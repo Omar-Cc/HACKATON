@@ -4,17 +4,16 @@ import React, { useState } from 'react'
 import { useNavigate, Link } from '@tanstack/react-router'
 import * as AlertDialog from '@radix-ui/react-alert-dialog'
 import {
-  FaCheckCircle,
-  FaTimes,
-  FaBox,
-  FaCheck,
-  FaArrowLeft, // Íconos base
-  FaRegCircle,
-  FaRegCheckCircle,
-  FaExclamationTriangle,
-  FaPlus, // 'Aspa'
-  FaUser, // Foto del candidato
-} from 'react-icons/fa'
+  CheckCircle,
+  X,
+  Box,
+  Check,
+  ArrowLeft,
+  Circle,
+  Plus,
+  AlertTriangle,
+  User,
+} from 'lucide-react'
 import clsx from 'clsx'
 import { toast } from 'sonner'
 
@@ -85,7 +84,7 @@ const PenSelector: React.FC<{
         )}
         aria-label="Marcar con X"
       >
-        <FaTimes className="text-foreground text-4xl" />
+        <X className="text-foreground text-4xl" />
       </button>
       <button
         onClick={() => onSelect('plus')}
@@ -95,7 +94,7 @@ const PenSelector: React.FC<{
         )}
         aria-label="Marcar con Aspa"
       >
-        <FaPlus className="text-foreground text-4xl" />
+        <Plus className="text-foreground text-4xl" />
       </button>
       <button
         onClick={() => onSelect('check')}
@@ -105,7 +104,7 @@ const PenSelector: React.FC<{
         )}
         aria-label="Marcar con check"
       >
-        <FaRegCheckCircle className="text-foreground text-4xl" />
+        <CheckCircle className="text-foreground text-4xl" />
       </button>
       <button
         onClick={() => onSelect('circle')}
@@ -115,7 +114,7 @@ const PenSelector: React.FC<{
         )}
         aria-label="Marcar con círculo"
       >
-        <FaRegCircle className="text-foreground text-4xl" />
+        <Circle className="text-foreground text-4xl" />
       </button>
     </div>
   </div>
@@ -123,7 +122,7 @@ const PenSelector: React.FC<{
 
 // Marca (X o +) que cubre todo el div
 const Mark: React.FC<{ pen: PenType }> = ({ pen }) => {
-  const MarkIcon = pen === 'x' ? FaTimes : pen === 'plus' ? FaPlus : null
+  const MarkIcon = pen === 'x' ? X : pen === 'plus' ? Plus : null
   if (!MarkIcon) return null
   return (
     <div className="absolute inset-0 flex items-center justify-center rounded-md bg-black/20">
@@ -178,15 +177,15 @@ const CedulaCongresal: React.FC<{
               <div className="flex-1">
                 <p className="text-foreground text-lg font-bold">{p.nombre}</p>
               </div>
-              <div
+              <button
                 onClick={() => onMarkParty(p.id)}
-                className="hover:bg-accent/50 relative ml-4 flex h-16 w-16 flex-shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-md border-4 border-blue-600"
+                className="hover:bg-accent/50 relative ml-4 flex h-16 w-16 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-md border-4 border-blue-600"
               >
                 <span className="text-4xl">{p.logo}</span>
                 {partidoVotado === p.id && selectedPen && (
                   <Mark pen={selectedPen} />
                 )}
-              </div>
+              </button>
               <input
                 type="text"
                 maxLength={2}
@@ -238,7 +237,7 @@ const TarjetaVerificacion: React.FC<{
   return (
     <div className="rounded-lg border border-green-300 bg-green-50 p-6 shadow-md">
       <div className="flex items-center">
-        <FaCheckCircle className="text-3xl text-green-600" />
+        <CheckCircle className="text-3xl text-green-600" />
         <div className="ml-4">
           <h3 className="text-xl font-bold text-green-800">{titulo}</h3>
           <p className="text-lg text-green-700">
@@ -454,15 +453,15 @@ const ContenidoPagina: React.FC = () => {
           </h2>
           <ul className="mb-8 inline-block space-y-2 text-left text-lg">
             <li className="flex items-center">
-              <FaCheck className="mr-3 text-green-500" /> Práctica sin límites
+              <Check className="mr-3 text-green-500" /> Práctica sin límites
             </li>
             <li className="flex items-center">
-              <FaCheck className="mr-3 text-green-500" /> Aprende a marcar
+              <Check className="mr-3 text-green-500" /> Aprende a marcar
               correctamente
             </li>
             <li className="flex items-center">
-              <FaCheck className="mr-3 text-green-500" /> Identifica votos
-              válidos e inválidos
+              <Check className="mr-3 text-green-500" /> Identifica votos válidos
+              e inválidos
             </li>
           </ul>
           <button
@@ -535,7 +534,7 @@ const ContenidoPagina: React.FC = () => {
                     }
                     className="hover:bg-accent/50 relative ml-2 flex h-16 w-16 cursor-pointer items-center justify-center overflow-hidden rounded-md border-4 border-blue-600"
                   >
-                    <FaUser className="text-4xl text-gray-400" />
+                    <User className="text-4xl text-gray-400" />
                     {presidentialVote.partyId === c.id &&
                       presidentialVote.photo &&
                       selectedPen && <Mark pen={selectedPen} />}
@@ -895,7 +894,7 @@ const ContenidoPagina: React.FC = () => {
             </p>
           </div>
           <div className="bg-card border-border rounded-lg border p-12 text-center shadow-md">
-            <FaBox className="mx-auto text-9xl text-gray-400" />
+            <Box className="mx-auto text-9xl text-gray-400" />
             <h3 className="text-foreground mt-4 text-2xl font-bold">
               Ánfora Electoral
             </h3>
@@ -920,7 +919,7 @@ const ContenidoPagina: React.FC = () => {
         <AlertDialog.Portal>
           <AlertDialog.Overlay className="fixed inset-0 z-40 bg-black/50" />
           <AlertDialog.Content className="bg-card fixed top-1/2 left-1/2 z-50 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg p-8 text-center shadow-xl">
-            <FaExclamationTriangle className="text-destructive mx-auto mb-4 text-6xl" />
+            <AlertTriangle className="text-destructive mx-auto mb-4 text-6xl" />
             <AlertDialog.Title className="text-foreground text-2xl font-bold">
               ¡Marca Incorrecta!
             </AlertDialog.Title>
@@ -949,7 +948,7 @@ const ContenidoPagina: React.FC = () => {
         <AlertDialog.Portal>
           <AlertDialog.Overlay className="fixed inset-0 z-40 bg-black/50" />
           <AlertDialog.Content className="bg-card fixed top-1/2 left-1/2 z-50 w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg p-8 text-center shadow-xl">
-            <FaCheckCircle className="mx-auto mb-4 text-6xl text-green-500" />
+            <CheckCircle className="mx-auto mb-4 text-6xl text-green-500" />
             <AlertDialog.Title className="text-foreground text-2xl font-bold">
               ¡Felicitaciones!
             </AlertDialog.Title>
@@ -994,11 +993,11 @@ const PaginaSimuladorVotacion: React.FC = () => {
       <div className="bg-background min-h-screen md:hidden">
         <header className="bg-primary text-primary-foreground flex items-center gap-4 rounded-b-[20px] p-4 shadow-lg">
           <Link
-            to="/elector" // Ruta corregida
+            to="/elector"
             className="rounded-full p-2 hover:bg-white/10"
             aria-label="Volver"
           >
-            <FaArrowLeft size={20} />
+            <ArrowLeft size={20} />
           </Link>
           <h1 className="text-2xl font-bold">Simulador</h1>
         </header>

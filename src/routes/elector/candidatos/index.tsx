@@ -1,9 +1,9 @@
-// src/routes/elector.candidatos.index.tsx
+// src/routes/elector/candidatos/index.tsx
 
 import { createFileRoute } from '@tanstack/react-router'
 // 1. Importamos Accordion de Radix (que tienes en tu package.json)
 import * as Accordion from '@radix-ui/react-accordion'
-import { FaSearch, FaFilter, FaChevronDown } from 'react-icons/fa'
+import { Search, Filter, ChevronDown } from 'lucide-react'
 
 // --- Datos Falsos (Mock Data) ---
 const partidos = [
@@ -43,7 +43,7 @@ function PaginaCandidatosLista() {
           placeholder="Buscar candidato o partido..."
           className="bg-card border-border w-full rounded-lg border p-4 pl-12 shadow-md"
         />
-        <FaSearch className="text-muted-foreground absolute top-1/2 left-4 -translate-y-1/2" />
+        <Search className="text-muted-foreground absolute top-1/2 left-4 -translate-y-1/2" />
       </div>
 
       {/* --- Acordeón de Filtros --- */}
@@ -54,10 +54,10 @@ function PaginaCandidatosLista() {
         >
           <Accordion.Trigger className="text-foreground hover:bg-accent/50 flex w-full items-center justify-between p-4 text-lg font-semibold">
             <div className="flex items-center gap-3">
-              <FaFilter className="text-primary" />
+              <Filter className="text-primary" />
               Filtros avanzados
             </div>
-            <FaChevronDown className="transition-transform duration-300" />
+            <ChevronDown className="transition-transform duration-300" />
           </Accordion.Trigger>
           <Accordion.Content className="border-border border-t p-4 pt-0">
             {/* Filtro Zona Geográfica */}
@@ -136,7 +136,7 @@ function PaginaCandidatosLista() {
                   {partido.nombre}
                 </span>
               </div>
-              <FaChevronDown className="text-muted-foreground -rotate-90" />
+              <ChevronDown className="text-muted-foreground -rotate-90" />
             </div>
           ))}
         </div>
@@ -166,7 +166,7 @@ function PaginaCandidatosLista() {
                   <p className="text-md text-muted-foreground">{c.partido}</p>
                 </div>
               </div>
-              <FaChevronDown className="text-muted-foreground -rotate-90" />
+              <ChevronDown className="text-muted-foreground -rotate-90" />
             </div>
           ))}
         </div>

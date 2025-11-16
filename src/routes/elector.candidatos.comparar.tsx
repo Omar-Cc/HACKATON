@@ -4,16 +4,15 @@ import React, { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 // 1. Importamos Checkbox de Radix
 import * as Checkbox from '@radix-ui/react-checkbox'
-import { FaCheck } from 'react-icons/fa'
-// Iconos de temas
 import {
-  FaBook,
-  FaShieldAlt,
-  FaChartLine,
-  FaBriefcase,
-  FaBus,
-  FaHeartbeat,
-} from 'react-icons/fa'
+  Check,
+  Book,
+  Shield,
+  TrendingUp,
+  Briefcase,
+  Bus,
+  Heart,
+} from 'lucide-react'
 
 // --- Datos Falsos (Mock Data) ---
 const candidatos = [
@@ -38,12 +37,12 @@ const candidatos = [
 ]
 const temas = [
   { id: 'todos', nombre: 'Todos', icono: null },
-  { id: 'edu', nombre: 'Educación', icono: FaBook },
-  { id: 'seg', nombre: 'Seguridad', icono: FaShieldAlt },
-  { id: 'eco', nombre: 'Economía', icono: FaChartLine },
-  { id: 'sal', nombre: 'Salud', icono: FaHeartbeat },
-  { id: 'tra', nombre: 'Transporte', icono: FaBus },
-  { id: 'emp', nombre: 'Empleo', icono: FaBriefcase },
+  { id: 'edu', nombre: 'Educación', icono: Book },
+  { id: 'seg', nombre: 'Seguridad', icono: Shield },
+  { id: 'eco', nombre: 'Economía', icono: TrendingUp },
+  { id: 'sal', nombre: 'Salud', icono: Heart },
+  { id: 'tra', nombre: 'Transporte', icono: Bus },
+  { id: 'emp', nombre: 'Empleo', icono: Briefcase },
 ]
 const propuestas = [
   {
@@ -137,7 +136,7 @@ function PaginaCompararPropuestas() {
                   className="border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground flex h-6 w-6 items-center justify-center rounded-md border-2"
                 >
                   <Checkbox.Indicator>
-                    <FaCheck />
+                    <Check />
                   </Checkbox.Indicator>
                 </Checkbox.Root>
                 <div className="ml-4 text-left">
