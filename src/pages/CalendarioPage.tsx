@@ -236,6 +236,15 @@ export default function CalendarioPage() {
   const showSidebar = viewMode === 'dia'
   const calendarSpan = viewMode === 'dia' ? 'lg:col-span-2' : 'lg:col-span-3'
 
+  // Activities available according to current activityFilter
+  const visibleActivities = React.useMemo(
+    () =>
+      activitiesList.filter((a) =>
+        activityFilter === 'todos' ? true : a.type === activityFilter
+      ),
+    [activityFilter]
+  )
+
   function navigate(offset: number) {
     if (viewMode === 'mes') {
       setRefDate(
@@ -622,6 +631,34 @@ export default function CalendarioPage() {
                 data-tour="activities-list"
                 className="space-y-3 px-4 pt-0 pb-4 lg:pt-4"
               >
+                {/* Combobox (select) — muestra actividades según el filtro seleccionado */}
+                <div className="mb-3 px-2">
+                  <label className="mb-2 block text-sm font-medium">
+                    Buscar actividad
+                  </label>
+                  <select
+                    aria-label="Buscar actividad"
+                    onChange={(e) => {
+                      const idx = Number(e.target.value)
+                      if (Number.isFinite(idx) && !Number.isNaN(idx)) {
+                        const act = visibleActivities[idx]
+                        if (act) openDayAndScroll(act.date, act.time)
+                      }
+                    }}
+                    className="w-full rounded-md border px-3 py-2 text-sm"
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Selecciona una actividad...
+                    </option>
+                    {visibleActivities.map((a, i) => (
+                      <option key={`${a.date}-${a.time}-${i}`} value={i}>
+                        {a.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 {/* Mobile pill filters */}
                 <div className="mb-2 flex gap-3 lg:hidden">
                   <button
