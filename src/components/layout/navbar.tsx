@@ -28,7 +28,7 @@ import {
   NavigationMenuList,
 } from '@/components/ui/navigation-menu'
 import { Link, useLocation } from '@tanstack/react-router'
-import LogoPrincipal from '@/assets/LogoTuElijesApp - Principal.png'
+import LogoPrincipal from '@/assets/LOGO - Principal.png'
 
 export function Navbar() {
   const location = useLocation()
