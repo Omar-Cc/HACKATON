@@ -9,38 +9,191 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ElectorRouteImport } from './routes/elector'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ElectorIndexRouteImport } from './routes/elector.index'
+import { Route as ElectorSimuladorRouteImport } from './routes/elector.simulador'
+import { Route as ElectorSeguridadRouteImport } from './routes/elector.seguridad'
+import { Route as ElectorLocalRouteImport } from './routes/elector.local'
+import { Route as ElectorLegalRouteImport } from './routes/elector.legal'
+import { Route as ElectorIntencionRouteImport } from './routes/elector.intencion'
+import { Route as ElectorComoVotarRouteImport } from './routes/elector.como-votar'
+import { Route as ElectorCandidatosRouteImport } from './routes/elector.candidatos'
+import { Route as ElectorAjustesRouteImport } from './routes/elector.ajustes'
+import { Route as ElectorCandidatosIndexRouteImport } from './routes/elector.candidatos.index'
+import { Route as ElectorCandidatosCompararRouteImport } from './routes/elector.candidatos.comparar'
 
+const ElectorRoute = ElectorRouteImport.update({
+  id: '/elector',
+  path: '/elector',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ElectorIndexRoute = ElectorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ElectorRoute,
+} as any)
+const ElectorSimuladorRoute = ElectorSimuladorRouteImport.update({
+  id: '/simulador',
+  path: '/simulador',
+  getParentRoute: () => ElectorRoute,
+} as any)
+const ElectorSeguridadRoute = ElectorSeguridadRouteImport.update({
+  id: '/seguridad',
+  path: '/seguridad',
+  getParentRoute: () => ElectorRoute,
+} as any)
+const ElectorLocalRoute = ElectorLocalRouteImport.update({
+  id: '/local',
+  path: '/local',
+  getParentRoute: () => ElectorRoute,
+} as any)
+const ElectorLegalRoute = ElectorLegalRouteImport.update({
+  id: '/legal',
+  path: '/legal',
+  getParentRoute: () => ElectorRoute,
+} as any)
+const ElectorIntencionRoute = ElectorIntencionRouteImport.update({
+  id: '/intencion',
+  path: '/intencion',
+  getParentRoute: () => ElectorRoute,
+} as any)
+const ElectorComoVotarRoute = ElectorComoVotarRouteImport.update({
+  id: '/como-votar',
+  path: '/como-votar',
+  getParentRoute: () => ElectorRoute,
+} as any)
+const ElectorCandidatosRoute = ElectorCandidatosRouteImport.update({
+  id: '/candidatos',
+  path: '/candidatos',
+  getParentRoute: () => ElectorRoute,
+} as any)
+const ElectorAjustesRoute = ElectorAjustesRouteImport.update({
+  id: '/ajustes',
+  path: '/ajustes',
+  getParentRoute: () => ElectorRoute,
+} as any)
+const ElectorCandidatosIndexRoute = ElectorCandidatosIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ElectorCandidatosRoute,
+} as any)
+const ElectorCandidatosCompararRoute =
+  ElectorCandidatosCompararRouteImport.update({
+    id: '/comparar',
+    path: '/comparar',
+    getParentRoute: () => ElectorCandidatosRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/elector': typeof ElectorRouteWithChildren
+  '/elector/ajustes': typeof ElectorAjustesRoute
+  '/elector/candidatos': typeof ElectorCandidatosRouteWithChildren
+  '/elector/como-votar': typeof ElectorComoVotarRoute
+  '/elector/intencion': typeof ElectorIntencionRoute
+  '/elector/legal': typeof ElectorLegalRoute
+  '/elector/local': typeof ElectorLocalRoute
+  '/elector/seguridad': typeof ElectorSeguridadRoute
+  '/elector/simulador': typeof ElectorSimuladorRoute
+  '/elector/': typeof ElectorIndexRoute
+  '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
+  '/elector/candidatos/': typeof ElectorCandidatosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/elector/ajustes': typeof ElectorAjustesRoute
+  '/elector/como-votar': typeof ElectorComoVotarRoute
+  '/elector/intencion': typeof ElectorIntencionRoute
+  '/elector/legal': typeof ElectorLegalRoute
+  '/elector/local': typeof ElectorLocalRoute
+  '/elector/seguridad': typeof ElectorSeguridadRoute
+  '/elector/simulador': typeof ElectorSimuladorRoute
+  '/elector': typeof ElectorIndexRoute
+  '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
+  '/elector/candidatos': typeof ElectorCandidatosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/elector': typeof ElectorRouteWithChildren
+  '/elector/ajustes': typeof ElectorAjustesRoute
+  '/elector/candidatos': typeof ElectorCandidatosRouteWithChildren
+  '/elector/como-votar': typeof ElectorComoVotarRoute
+  '/elector/intencion': typeof ElectorIntencionRoute
+  '/elector/legal': typeof ElectorLegalRoute
+  '/elector/local': typeof ElectorLocalRoute
+  '/elector/seguridad': typeof ElectorSeguridadRoute
+  '/elector/simulador': typeof ElectorSimuladorRoute
+  '/elector/': typeof ElectorIndexRoute
+  '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
+  '/elector/candidatos/': typeof ElectorCandidatosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/elector'
+    | '/elector/ajustes'
+    | '/elector/candidatos'
+    | '/elector/como-votar'
+    | '/elector/intencion'
+    | '/elector/legal'
+    | '/elector/local'
+    | '/elector/seguridad'
+    | '/elector/simulador'
+    | '/elector/'
+    | '/elector/candidatos/comparar'
+    | '/elector/candidatos/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/elector/ajustes'
+    | '/elector/como-votar'
+    | '/elector/intencion'
+    | '/elector/legal'
+    | '/elector/local'
+    | '/elector/seguridad'
+    | '/elector/simulador'
+    | '/elector'
+    | '/elector/candidatos/comparar'
+    | '/elector/candidatos'
+  id:
+    | '__root__'
+    | '/'
+    | '/elector'
+    | '/elector/ajustes'
+    | '/elector/candidatos'
+    | '/elector/como-votar'
+    | '/elector/intencion'
+    | '/elector/legal'
+    | '/elector/local'
+    | '/elector/seguridad'
+    | '/elector/simulador'
+    | '/elector/'
+    | '/elector/candidatos/comparar'
+    | '/elector/candidatos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ElectorRoute: typeof ElectorRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/elector': {
+      id: '/elector'
+      path: '/elector'
+      fullPath: '/elector'
+      preLoaderRoute: typeof ElectorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +201,129 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/elector/': {
+      id: '/elector/'
+      path: '/'
+      fullPath: '/elector/'
+      preLoaderRoute: typeof ElectorIndexRouteImport
+      parentRoute: typeof ElectorRoute
+    }
+    '/elector/simulador': {
+      id: '/elector/simulador'
+      path: '/simulador'
+      fullPath: '/elector/simulador'
+      preLoaderRoute: typeof ElectorSimuladorRouteImport
+      parentRoute: typeof ElectorRoute
+    }
+    '/elector/seguridad': {
+      id: '/elector/seguridad'
+      path: '/seguridad'
+      fullPath: '/elector/seguridad'
+      preLoaderRoute: typeof ElectorSeguridadRouteImport
+      parentRoute: typeof ElectorRoute
+    }
+    '/elector/local': {
+      id: '/elector/local'
+      path: '/local'
+      fullPath: '/elector/local'
+      preLoaderRoute: typeof ElectorLocalRouteImport
+      parentRoute: typeof ElectorRoute
+    }
+    '/elector/legal': {
+      id: '/elector/legal'
+      path: '/legal'
+      fullPath: '/elector/legal'
+      preLoaderRoute: typeof ElectorLegalRouteImport
+      parentRoute: typeof ElectorRoute
+    }
+    '/elector/intencion': {
+      id: '/elector/intencion'
+      path: '/intencion'
+      fullPath: '/elector/intencion'
+      preLoaderRoute: typeof ElectorIntencionRouteImport
+      parentRoute: typeof ElectorRoute
+    }
+    '/elector/como-votar': {
+      id: '/elector/como-votar'
+      path: '/como-votar'
+      fullPath: '/elector/como-votar'
+      preLoaderRoute: typeof ElectorComoVotarRouteImport
+      parentRoute: typeof ElectorRoute
+    }
+    '/elector/candidatos': {
+      id: '/elector/candidatos'
+      path: '/candidatos'
+      fullPath: '/elector/candidatos'
+      preLoaderRoute: typeof ElectorCandidatosRouteImport
+      parentRoute: typeof ElectorRoute
+    }
+    '/elector/ajustes': {
+      id: '/elector/ajustes'
+      path: '/ajustes'
+      fullPath: '/elector/ajustes'
+      preLoaderRoute: typeof ElectorAjustesRouteImport
+      parentRoute: typeof ElectorRoute
+    }
+    '/elector/candidatos/': {
+      id: '/elector/candidatos/'
+      path: '/'
+      fullPath: '/elector/candidatos/'
+      preLoaderRoute: typeof ElectorCandidatosIndexRouteImport
+      parentRoute: typeof ElectorCandidatosRoute
+    }
+    '/elector/candidatos/comparar': {
+      id: '/elector/candidatos/comparar'
+      path: '/comparar'
+      fullPath: '/elector/candidatos/comparar'
+      preLoaderRoute: typeof ElectorCandidatosCompararRouteImport
+      parentRoute: typeof ElectorCandidatosRoute
+    }
   }
 }
 
+interface ElectorCandidatosRouteChildren {
+  ElectorCandidatosCompararRoute: typeof ElectorCandidatosCompararRoute
+  ElectorCandidatosIndexRoute: typeof ElectorCandidatosIndexRoute
+}
+
+const ElectorCandidatosRouteChildren: ElectorCandidatosRouteChildren = {
+  ElectorCandidatosCompararRoute: ElectorCandidatosCompararRoute,
+  ElectorCandidatosIndexRoute: ElectorCandidatosIndexRoute,
+}
+
+const ElectorCandidatosRouteWithChildren =
+  ElectorCandidatosRoute._addFileChildren(ElectorCandidatosRouteChildren)
+
+interface ElectorRouteChildren {
+  ElectorAjustesRoute: typeof ElectorAjustesRoute
+  ElectorCandidatosRoute: typeof ElectorCandidatosRouteWithChildren
+  ElectorComoVotarRoute: typeof ElectorComoVotarRoute
+  ElectorIntencionRoute: typeof ElectorIntencionRoute
+  ElectorLegalRoute: typeof ElectorLegalRoute
+  ElectorLocalRoute: typeof ElectorLocalRoute
+  ElectorSeguridadRoute: typeof ElectorSeguridadRoute
+  ElectorSimuladorRoute: typeof ElectorSimuladorRoute
+  ElectorIndexRoute: typeof ElectorIndexRoute
+}
+
+const ElectorRouteChildren: ElectorRouteChildren = {
+  ElectorAjustesRoute: ElectorAjustesRoute,
+  ElectorCandidatosRoute: ElectorCandidatosRouteWithChildren,
+  ElectorComoVotarRoute: ElectorComoVotarRoute,
+  ElectorIntencionRoute: ElectorIntencionRoute,
+  ElectorLegalRoute: ElectorLegalRoute,
+  ElectorLocalRoute: ElectorLocalRoute,
+  ElectorSeguridadRoute: ElectorSeguridadRoute,
+  ElectorSimuladorRoute: ElectorSimuladorRoute,
+  ElectorIndexRoute: ElectorIndexRoute,
+}
+
+const ElectorRouteWithChildren =
+  ElectorRoute._addFileChildren(ElectorRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ElectorRoute: ElectorRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
