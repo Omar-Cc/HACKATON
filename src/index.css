@@ -175,3 +175,211 @@ html {
   stroke-width: 3px !important;
   color: white !important;
 }
+/* ===== DARK MODE FIXES - SIN TRANSPARENCIAS ===== */
+.dark {
+  color-scheme: dark;
+}
+
+/* Fondos - Quitar transparencias */
+.dark .bg-white {
+  background-color: hsl(var(--card)) !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-100,
+.dark .bg-slate-50,
+.dark .bg-slate-100 {
+  background-color: hsl(220 8% 20%) !important; /* Gris oscuro */
+}
+
+/* ===== TEXTOS ===== */
+/* Textos negros -> Gris claro */
+.dark .text-black,
+.dark .text-gray-800,
+.dark .text-slate-800,
+.dark .text-slate-900 {
+  color: hsl(0 0% 85%) !important; /* Gris claro */
+}
+
+/* Textos gris oscuro -> Gris claro */
+.dark .text-gray-700,
+.dark .text-slate-700 {
+  color: hsl(0 0% 80%) !important; /* Gris claro */
+}
+
+/* Textos gris claro -> Blanco */
+.dark .text-gray-600,
+.dark .text-slate-600 {
+  color: hsl(0 0% 95%) !important; /* Blanco */
+}
+
+/* ===== HOVERS ===== */
+/* Hovers gris -> Gris oscuro */
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-gray-100:hover,
+.dark .hover\:bg-slate-100:hover,
+.dark .hover\:bg-blue-50:hover {
+  background-color: hsl(220 8% 25%) !important; /* Gris oscuro para hovers */
+}
+
+/* Hovers de texto gris -> Blanco */
+.dark .hover\:text-gray-900:hover,
+.dark .hover\:text-slate-900:hover {
+  color: hsl(0 0% 95%) !important; /* Blanco */
+}
+
+/* ===== BOTONES ===== */
+/* Botones blancos -> Gris oscuro */
+.dark button.bg-white,
+.dark .bg-white {
+  background-color: hsl(220 8% 20%) !important; /* Gris oscuro */
+  color: hsl(0 0% 95%) !important; /* Blanco */
+  border-color: hsl(220 8% 30%) !important; /* Borde gris más claro */
+}
+
+/* Botones con borde -> Gris oscuro */
+.dark button.border {
+  background-color: hsl(220 8% 20%) !important; /* Gris oscuro */
+  color: hsl(0 0% 95%) !important; /* Blanco */
+  border-color: hsl(220 8% 30%) !important;
+}
+
+/* Hovers de botones -> Gris más oscuro */
+.dark button.bg-white:hover,
+.dark .bg-white:hover,
+.dark button.border:hover {
+  background-color: hsl(220 8% 15%) !important; /* Gris más oscuro */
+  color: hsl(0 0% 95%) !important; /* Blanco */
+}
+
+/* ===== ELEMENTOS AZULES (NO TEXTO) ===== */
+/* Fondos azules -> Gris oscuro */
+.dark .bg-blue-50,
+.dark .bg-blue-100,
+.dark .bg-blue-200 {
+  background-color: hsl(220 8% 20%) !important; /* Gris oscuro */
+}
+
+/* Borders azules -> Gris */
+.dark .border-blue-200,
+.dark .border-blue-300 {
+  border-color: hsl(220 8% 30%) !important; /* Gris */
+}
+
+/* ===== ELEMENTOS ESPECÍFICOS ===== */
+/* Botones transparentes */
+.dark button.bg-transparent {
+  background-color: transparent !important;
+  color: hsl(0 0% 85%) !important; /* Gris claro */
+  border-color: hsl(220 8% 30%) !important;
+}
+
+.dark button.bg-transparent:hover {
+  background-color: hsl(220 8% 20%) !important; /* Gris oscuro al hover */
+  color: hsl(0 0% 95%) !important; /* Blanco */
+}
+
+/* Botones primarios mantienen azul */
+.dark .bg-primary {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+/* Borders */
+.dark .border-gray-200,
+.dark .border-slate-200 {
+  border-color: hsl(220 8% 25%) !important; /* Gris */
+}
+
+/* QUITAR TRANSPARENCIAS - Reemplazar con colores sólidos */
+.dark .bg-white\/90,
+.dark .bg-white\/95 {
+  background-color: hsl(var(--card)) !important;
+}
+
+.dark .backdrop-blur-sm {
+  backdrop-filter: none !important;
+  background-color: hsl(var(--card)) !important;
+}
+
+/* Colores semánticos (mantienen significado) */
+.dark .text-blue-600 {
+  color: hsl(217 91% 65%) !important; /* Azul para textos importantes */
+}
+
+.dark .text-red-600 {
+  color: hsl(0 84% 70%) !important;
+}
+
+.dark .text-green-600 {
+  color: hsl(142 76% 65%) !important;
+}
+
+.dark .bg-green-600 {
+  background-color: hsl(142 76% 45%) !important;
+}
+
+.dark .bg-red-600 {
+  background-color: hsl(0 84% 50%) !important;
+}
+
+/* Badges y estados */
+.dark .bg-green-600.text-white {
+  background-color: hsl(142 76% 45%) !important;
+  color: white !important;
+}
+
+.dark .bg-red-600.text-white {
+  background-color: hsl(0 84% 50%) !important;
+  color: white !important;
+}
+
+/* Inputs y formularios */
+.dark input::placeholder {
+  color: hsl(0 0% 70%) !important; /* Gris medio para placeholders */
+}
+
+.dark input {
+  background-color: hsl(var(--input)) !important;
+  color: hsl(0 0% 85%) !important; /* Gris claro */
+  border-color: hsl(220 8% 25%) !important;
+}
+
+/* Cards con sombras */
+.dark .shadow-md,
+.dark .shadow-lg {
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.3),
+    0 2px 4px -2px rgb(0 0 0 / 0.3) !important;
+}
+
+/* Ajustes específicos para el componente de validación */
+.dark .bg-white\/90.backdrop-blur-sm {
+  background-color: hsl(var(--card)) !important;
+  backdrop-filter: none !important;
+}
+
+/* Fix para el navbar en dark mode */
+.dark .bg-white {
+  background-color: hsl(var(--card)) !important;
+}
+
+.dark .text-slate-600 {
+  color: hsl(0 0% 95%) !important; /* Blanco */
+}
+
+.dark .hover\:bg-slate-100:hover {
+  background-color: hsl(220 8% 25%) !important; /* Gris oscuro */
+}
+
+.dark .hover\:text-slate-900:hover {
+  color: hsl(0 0% 95%) !important; /* Blanco */
+}
+
+/* CHATBOT */
+.dark .fixed.bottom-4.right-4 {
+  background-color: hsl(var(--card)) !important;
+  border: 1px solid hsl(220 8% 25%) !important;
+  color: hsl(0 0% 85%) !important; /* Gris claro */
+}
