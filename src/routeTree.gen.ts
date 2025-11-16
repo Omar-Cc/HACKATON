@@ -17,8 +17,10 @@ import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ElectorIndexRouteImport } from './routes/elector.index'
 import { Route as CongresoIndexRouteImport } from './routes/congreso/index'
+import { Route as ElectorVerificarRouteImport } from './routes/elector.verificar'
 import { Route as ElectorSimuladorRouteImport } from './routes/elector.simulador'
 import { Route as ElectorSeguridadRouteImport } from './routes/elector.seguridad'
+import { Route as ElectorMatchRouteImport } from './routes/elector.match'
 import { Route as ElectorLocalRouteImport } from './routes/elector.local'
 import { Route as ElectorLegalRouteImport } from './routes/elector.legal'
 import { Route as ElectorIntencionRouteImport } from './routes/elector.intencion'
@@ -69,6 +71,11 @@ const CongresoIndexRoute = CongresoIndexRouteImport.update({
   path: '/congreso/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ElectorVerificarRoute = ElectorVerificarRouteImport.update({
+  id: '/verificar',
+  path: '/verificar',
+  getParentRoute: () => ElectorRoute,
+} as any)
 const ElectorSimuladorRoute = ElectorSimuladorRouteImport.update({
   id: '/simulador',
   path: '/simulador',
@@ -77,6 +84,11 @@ const ElectorSimuladorRoute = ElectorSimuladorRouteImport.update({
 const ElectorSeguridadRoute = ElectorSeguridadRouteImport.update({
   id: '/seguridad',
   path: '/seguridad',
+  getParentRoute: () => ElectorRoute,
+} as any)
+const ElectorMatchRoute = ElectorMatchRouteImport.update({
+  id: '/match',
+  path: '/match',
   getParentRoute: () => ElectorRoute,
 } as any)
 const ElectorLocalRoute = ElectorLocalRouteImport.update({
@@ -140,8 +152,10 @@ export interface FileRoutesByFullPath {
   '/elector/intencion': typeof ElectorIntencionRoute
   '/elector/legal': typeof ElectorLegalRoute
   '/elector/local': typeof ElectorLocalRoute
+  '/elector/match': typeof ElectorMatchRoute
   '/elector/seguridad': typeof ElectorSeguridadRoute
   '/elector/simulador': typeof ElectorSimuladorRoute
+  '/elector/verificar': typeof ElectorVerificarRoute
   '/congreso': typeof CongresoIndexRoute
   '/elector/': typeof ElectorIndexRoute
   '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
@@ -159,8 +173,10 @@ export interface FileRoutesByTo {
   '/elector/intencion': typeof ElectorIntencionRoute
   '/elector/legal': typeof ElectorLegalRoute
   '/elector/local': typeof ElectorLocalRoute
+  '/elector/match': typeof ElectorMatchRoute
   '/elector/seguridad': typeof ElectorSeguridadRoute
   '/elector/simulador': typeof ElectorSimuladorRoute
+  '/elector/verificar': typeof ElectorVerificarRoute
   '/congreso': typeof CongresoIndexRoute
   '/elector': typeof ElectorIndexRoute
   '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
@@ -181,8 +197,10 @@ export interface FileRoutesById {
   '/elector/intencion': typeof ElectorIntencionRoute
   '/elector/legal': typeof ElectorLegalRoute
   '/elector/local': typeof ElectorLocalRoute
+  '/elector/match': typeof ElectorMatchRoute
   '/elector/seguridad': typeof ElectorSeguridadRoute
   '/elector/simulador': typeof ElectorSimuladorRoute
+  '/elector/verificar': typeof ElectorVerificarRoute
   '/congreso/': typeof CongresoIndexRoute
   '/elector/': typeof ElectorIndexRoute
   '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
@@ -204,8 +222,10 @@ export interface FileRouteTypes {
     | '/elector/intencion'
     | '/elector/legal'
     | '/elector/local'
+    | '/elector/match'
     | '/elector/seguridad'
     | '/elector/simulador'
+    | '/elector/verificar'
     | '/congreso'
     | '/elector/'
     | '/elector/candidatos/comparar'
@@ -223,8 +243,10 @@ export interface FileRouteTypes {
     | '/elector/intencion'
     | '/elector/legal'
     | '/elector/local'
+    | '/elector/match'
     | '/elector/seguridad'
     | '/elector/simulador'
+    | '/elector/verificar'
     | '/congreso'
     | '/elector'
     | '/elector/candidatos/comparar'
@@ -244,8 +266,10 @@ export interface FileRouteTypes {
     | '/elector/intencion'
     | '/elector/legal'
     | '/elector/local'
+    | '/elector/match'
     | '/elector/seguridad'
     | '/elector/simulador'
+    | '/elector/verificar'
     | '/congreso/'
     | '/elector/'
     | '/elector/candidatos/comparar'
@@ -321,6 +345,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CongresoIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/elector/verificar': {
+      id: '/elector/verificar'
+      path: '/verificar'
+      fullPath: '/elector/verificar'
+      preLoaderRoute: typeof ElectorVerificarRouteImport
+      parentRoute: typeof ElectorRoute
+    }
     '/elector/simulador': {
       id: '/elector/simulador'
       path: '/simulador'
@@ -333,6 +364,13 @@ declare module '@tanstack/react-router' {
       path: '/seguridad'
       fullPath: '/elector/seguridad'
       preLoaderRoute: typeof ElectorSeguridadRouteImport
+      parentRoute: typeof ElectorRoute
+    }
+    '/elector/match': {
+      id: '/elector/match'
+      path: '/match'
+      fullPath: '/elector/match'
+      preLoaderRoute: typeof ElectorMatchRouteImport
       parentRoute: typeof ElectorRoute
     }
     '/elector/local': {
@@ -421,8 +459,10 @@ interface ElectorRouteChildren {
   ElectorIntencionRoute: typeof ElectorIntencionRoute
   ElectorLegalRoute: typeof ElectorLegalRoute
   ElectorLocalRoute: typeof ElectorLocalRoute
+  ElectorMatchRoute: typeof ElectorMatchRoute
   ElectorSeguridadRoute: typeof ElectorSeguridadRoute
   ElectorSimuladorRoute: typeof ElectorSimuladorRoute
+  ElectorVerificarRoute: typeof ElectorVerificarRoute
   ElectorIndexRoute: typeof ElectorIndexRoute
 }
 
@@ -433,8 +473,10 @@ const ElectorRouteChildren: ElectorRouteChildren = {
   ElectorIntencionRoute: ElectorIntencionRoute,
   ElectorLegalRoute: ElectorLegalRoute,
   ElectorLocalRoute: ElectorLocalRoute,
+  ElectorMatchRoute: ElectorMatchRoute,
   ElectorSeguridadRoute: ElectorSeguridadRoute,
   ElectorSimuladorRoute: ElectorSimuladorRoute,
+  ElectorVerificarRoute: ElectorVerificarRoute,
   ElectorIndexRoute: ElectorIndexRoute,
 }
 

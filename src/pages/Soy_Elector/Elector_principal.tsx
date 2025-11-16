@@ -14,10 +14,14 @@ import {
   Settings,
   ArrowRight,
   Hand,
+  Sparkles,
+  Search,
 } from 'lucide-react'
 
 // --- (opcionesMobile no cambia) ---
 const opcionesMobile = [
+  { icono: Sparkles, texto: 'Match Electoral', path: '/elector/match' },
+  { icono: Search, texto: 'Verificador de Info', path: '/elector/verificar' },
   { icono: MapPin, texto: 'Local de votación', path: '/elector/local' },
   { icono: FileText, texto: 'Cómo votar', path: '/elector/como-votar' },
   {

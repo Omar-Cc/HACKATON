@@ -12,6 +12,8 @@ import {
   Shield,
   Users,
   Gavel,
+  Sparkles,
+  Search,
 } from 'lucide-react'
 // Importamos el store y clsx (para accesibilidad)
 import { useAccessibilityStore } from '../../store/accessibilityStore'
@@ -24,6 +26,8 @@ type OpcionMenu = {
 }
 
 const opciones: OpcionMenu[] = [
+  { icono: Sparkles, texto: 'Match Electoral', path: '/elector/match' },
+  { icono: Search, texto: 'Verificador de Info', path: '/elector/verificar' },
   { icono: MapPin, texto: 'Local de votación', path: '/elector/local' },
   { icono: FileText, texto: 'Cómo votar', path: '/elector/como-votar' },
   {
@@ -85,7 +89,7 @@ const LayoutElector: React.FC = () => {
         {/* --- CONTENEDOR PRINCIPAL (Tu nuevo estilo) --- */}
         <div className="flex w-full flex-1">
           {/* --- SIDEBAR (Tu nuevo estilo) --- */}
-          <aside className="bg-card border-border flex w-80 flex-shrink-0 flex-col border-r">
+          <aside className="bg-card border-border flex w-80 shrink-0 flex-col border-r">
             <div className="border-border border-b p-6">
               <h2 className="text-card-foreground text-xl font-bold">
                 Selecciona una opción del menú
@@ -103,7 +107,7 @@ const LayoutElector: React.FC = () => {
                           'bg-accent text-accent-foreground border-l-4 border-primary font-semibold',
                       }}
                     >
-                      <opcion.icono className="mr-4 h-5 w-5 flex-shrink-0" />
+                      <opcion.icono className="mr-4 h-5 w-5 shrink-0" />
                       <span className="text-lg">{opcion.texto}</span>
                     </Link>
                   </li>
