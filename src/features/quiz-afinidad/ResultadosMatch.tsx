@@ -29,7 +29,7 @@ export function ResultadosMatch({ resultados, onReset }: ResultadosMatchProps) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-8">
+    <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-12">
       {/* Header de Resultados */}
       <div className="text-center">
         <div className="bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">

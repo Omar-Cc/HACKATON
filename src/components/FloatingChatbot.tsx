@@ -1,5 +1,3 @@
-// src/components/FloatingChatbot.tsx
-
 import React, {
   useState,
   useContext,

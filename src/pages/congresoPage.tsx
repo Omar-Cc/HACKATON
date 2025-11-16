@@ -94,11 +94,47 @@ function CongresoPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">
-                  Además de las candidaturas para las cámaras nacionales, la
-                  cédula de 2026 incluirá una lista para elegir a los
-                  representantes del Perú ante el Parlamento Andino.
-                </p>
+                <div className="space-y-4">
+                  <p className="text-muted-foreground text-sm">
+                    Además de las candidaturas para las cámaras nacionales, la
+                    cédula de 2026 incluirá una lista para elegir a los
+                    representantes del Perú ante el Parlamento Andino.
+                  </p>
+
+                  <div className="border-primary/20 border-t pt-4">
+                    <h4 className="mb-2 font-semibold">Autoridades a Elegir</h4>
+                    <ul className="text-muted-foreground space-y-1 text-sm">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary">•</span>
+                        <span>5 representantes titulares</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary">•</span>
+                        <span>10 representantes suplentes</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="border-primary/20 border-t pt-4">
+                    <h4 className="mb-2 font-semibold">Periodo de Gobierno</h4>
+                    <p className="text-muted-foreground mb-2 text-sm font-medium">
+                      2026 – 2031
+                    </p>
+                    <ul className="text-muted-foreground space-y-1 text-sm">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary">•</span>
+                        <span>Su mandato es irrenunciable</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary">•</span>
+                        <span>
+                          Pueden ser reelegidos de manera inmediata en el mismo
+                          cargo
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>

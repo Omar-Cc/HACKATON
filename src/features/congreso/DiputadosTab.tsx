@@ -10,9 +10,12 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
+  CardFooter,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { PartidoWatermark } from '@/components/ui/partido-watermark'
 import { DIPUTADOS } from '@/data/elecciones'
 
 export default function DiputadosTab() {
@@ -176,25 +179,25 @@ export default function DiputadosTab() {
               key={candidato.id}
               className={`relative overflow-hidden ${isSelected ? 'ring-primary ring-2' : ''}`}
             >
-              {/* Logo del partido como marca de agua */}
-              <div
-                className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-5"
-                style={{ zIndex: 0 }}
-              >
-                <span
-                  className="text-9xl font-black"
-                  style={{ color: partidoColor }}
-                >
-                  {partidoShort}
-                </span>
-              </div>
+              {/* Marca de agua del partido */}
+              <PartidoWatermark
+                logo={candidato.partido.logo}
+                siglas={candidato.partido.nombreCorto}
+                color={candidato.partido.color}
+              />
 
               <CardHeader className="relative z-10">
                 <div className="flex items-start justify-between">
                   <div className="flex flex-1 items-start gap-3">
-                    <div className="bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-full font-semibold">
-                      {candidato.avatar}
-                    </div>
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage
+                        src={candidato.fotoPrincipal}
+                        alt={candidato.nombre}
+                      />
+                      <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                        {candidato.avatar}
+                      </AvatarFallback>
+                    </Avatar>
                     <div className="flex-1">
                       <CardTitle className="text-lg">
                         {candidato.nombre}
@@ -220,7 +223,7 @@ export default function DiputadosTab() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="relative z-10">
+              <CardContent className="relative z-10 h-full">
                 <div className="space-y-3">
                   <div className="flex flex-wrap gap-2">
                     <Badge
@@ -242,14 +245,16 @@ export default function DiputadosTab() {
                       ))}
                     </ul>
                   </div>
-
-                  <Button variant="outline" className="mt-3 w-full" asChild>
-                    <Link to="/candidato/$id" params={{ id: candidato.id }}>
-                      Ver perfil completo
-                    </Link>
-                  </Button>
                 </div>
               </CardContent>
+
+              <CardFooter className="relative z-10">
+                <Button variant="outline" className="w-full" asChild>
+                  <Link to="/candidato/$id" params={{ id: candidato.id }}>
+                    Ver perfil completo
+                  </Link>
+                </Button>
+              </CardFooter>
             </Card>
           )
         })}

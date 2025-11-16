@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import { Check, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react'
+import {
+  Check,
+  ArrowRight,
+  ArrowLeft,
+  Sparkles,
+  FastForward,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -72,6 +78,31 @@ export function MatchElectoralQuiz({ onComplete }: MatchElectoralQuizProps) {
         setSelectedOption(null)
       }
     }
+  }
+
+  const handleSkipAndComplete = () => {
+    // Completar automáticamente las preguntas restantes con respuestas neutrales (valor medio)
+    const respuestasCompletas = [...respuestas]
+
+    for (const pregunta of PREGUNTAS) {
+      const yaRespondida = respuestasCompletas.some(
+        (r) => r.preguntaId === pregunta.id
+      )
+
+      if (!yaRespondida) {
+        // Seleccionar la opción del medio (neutral)
+        const opcionMedia =
+          pregunta.opciones[Math.floor(pregunta.opciones.length / 2)]
+        respuestasCompletas.push({
+          preguntaId: pregunta.id,
+          opcionId: opcionMedia.id,
+          valor: opcionMedia.valor,
+          categoria: pregunta.categoria,
+        })
+      }
+    }
+
+    onComplete(respuestasCompletas)
   }
 
   const getCategoriaLabel = (categoria: string) => {
@@ -172,6 +203,18 @@ export function MatchElectoralQuiz({ onComplete }: MatchElectoralQuizProps) {
             </>
           )}
         </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleSkipAndComplete}
+          className="text-muted-foreground hover:text-foreground gap-2"
+        >
+          <FastForward className="h-4 w-4" />
+          Saltar
+        </Button>
+
+        <div className="w-10 md:hidden"></div>
       </div>
     </div>
   )

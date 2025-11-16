@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { PartidoWatermark } from '@/components/ui/partido-watermark'
 import type { Candidato } from '@/types/candidatos'
 import { getPartidoColor } from '@/data/partidos'
 import { getCandidatoById } from '@/data/elecciones'
@@ -187,18 +188,13 @@ export default function PerfilCandidatoPage() {
       <Card className="overflow-hidden">
         <CardContent className="p-0">
           <div className="from-primary/10 to-primary/5 relative bg-linear-to-r p-8">
-            {/* Logo del partido como marca de agua */}
-            <div
-              className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-5"
-              style={{ zIndex: 0 }}
-            >
-              <span
-                className="text-9xl font-black"
-                style={{ color: partidoColor }}
-              >
-                {candidatoReal.partido.nombreCorto}
-              </span>
-            </div>
+            {/* Marca de agua del partido */}
+            <PartidoWatermark
+              logo={candidatoReal.partido.logo}
+              siglas={candidatoReal.partido.nombreCorto}
+              color={partidoColor}
+              siglasOpacity={0.05}
+            />
 
             <div className="relative z-10 flex flex-col items-start gap-6 md:flex-row">
               {/* Foto del candidato */}

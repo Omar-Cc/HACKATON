@@ -334,11 +334,42 @@ export function PlanchasPage() {
           <AlertTitle className="text-lg font-semibold">
             ¿Qué es una Plancha Presidencial?
           </AlertTitle>
-          <AlertDescription className="text-base">
-            Es el equipo completo que postula. En Perú, se compone de un
-            candidato a Presidente y dos candidatos a Vicepresidentes (1ra y 2da
-            vicepresidencia). Al votar por un partido para la presidencia, votas
-            por los tres.
+          <AlertDescription className="space-y-4 text-base">
+            <p>
+              Es el equipo completo que postula. En Perú, se compone de un
+              candidato a Presidente y dos candidatos a Vicepresidentes (1ra y
+              2da vicepresidencia). Al votar por un partido para la presidencia,
+              votas por los tres.
+            </p>
+
+            <div className="border-primary/20 border-t pt-4">
+              <h4 className="mb-2 font-semibold text-slate-900">
+                Autoridades a Elegir
+              </h4>
+              <p className="text-slate-700">
+                1 presidente y 2 vicepresidentes (fórmula presidencial)
+              </p>
+            </div>
+
+            <div className="border-primary/20 border-t pt-4">
+              <h4 className="mb-2 font-semibold text-slate-900">
+                Periodo de Gobierno
+              </h4>
+              <p className="mb-2 font-medium text-slate-700">2026 – 2031</p>
+              <ul className="space-y-1 text-slate-700">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary">•</span>
+                  <span>No aplica la reelección inmediata.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary">•</span>
+                  <span>
+                    Prestarán juramento de ley y asumirán el cargo, ante el
+                    Congreso de la República, el 28 de julio del 2026.
+                  </span>
+                </li>
+              </ul>
+            </div>
           </AlertDescription>
         </Alert>
 

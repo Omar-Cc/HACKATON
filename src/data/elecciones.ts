@@ -526,52 +526,91 @@ export const SENADORES: Candidato[] = [
 // Parlamento Andino (copiado desde ParlamentoAndinoTab.tsx)
 export const PARLAMENTO_ANDINO: Candidato[] = [
   {
-    id: 'PA1',
-    nombre: 'Jorge Luis Ramírez',
-    profesion: 'Economista Internacional',
-    edad: 50,
-    partido: {
-      nombre: 'Alianza para el Progreso',
-      nombreCorto: 'APP',
-      color: '#0073e6',
-      logo: '/logos/app.png',
-    },
-    tipo: 'parlamento-andino',
-    experiencia: ['Ex Canciller', 'Negociador Comercial CAN'],
-    avatar: 'JR',
-  },
-  {
-    id: 'PA3',
-    nombre: 'Sofía Guerrero',
-    profesion: 'Abogada Internacionalista',
-    edad: 45,
-    partido: {
-      nombre: 'Renovación Popular',
-      nombreCorto: 'RP',
-      color: '#ff0000',
-      logo: '/logos/rp.png',
-    },
-    tipo: 'parlamento-andino',
-    experiencia: ['Asesora de Relaciones Exteriores', 'Docente Universitaria'],
-    avatar: 'SG',
-  },
-  {
-    id: 'PA5',
-    nombre: 'Manuel Vega',
-    profesion: 'Politólogo',
-    edad: 38,
+    id: 'PA-FP',
+    nombre: 'Luis Galarreta',
+    profesion: 'Abogado y Político',
+    edad: 54,
     partido: {
       nombre: 'Fuerza Popular',
       nombreCorto: 'FP',
-      color: '#ff6600',
-      logo: '/logos/fp.png',
+      color: '#f05023', // Naranja oficial
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/c/cb/Logo_de_fuerza_popular_2024_png.png',
+    },
+    tipo: 'parlamento-andino',
+    // Datos reales de su experiencia
+    experiencia: [
+      'Parlamentario Andino (2021-Actual)',
+      'Ex-Presidente del Congreso (2017-2018)',
+      'Congresista (2006-2020)',
+    ],
+    avatar: 'LG',
+    fotoPrincipal:
+      'https://upload.wikimedia.org/wikipedia/commons/1/13/Congress_of_the_Republic_of_Peru_-_39489264575.jpg',
+  },
+  {
+    id: 'PA-RP',
+    nombre: 'Jorge Zeballos',
+    profesion: 'Abogado',
+    edad: 65,
+    partido: {
+      nombre: 'Renovación Popular',
+      nombreCorto: 'RP',
+      color: '#00a3e0', // Celeste oficial
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/3/33/Logo_Renovaci%C3%B3n_Popular_2023.png',
     },
     tipo: 'parlamento-andino',
     experiencia: [
-      'Investigador en Integración Regional',
-      'Consultor Internacional',
+      'Parlamentario Andino (2021-Actual)',
+      'Ex-Congresista (2006-2011)',
+      'Docente Universitario',
     ],
-    avatar: 'MV',
+    avatar: 'JZ',
+    fotoPrincipal:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbI1fVRBRBK1mOicrcDtDrSzggwOYOzqJNUas9_q1PRx4JHxiHiQiybPq0J92fhE3nDatWIzf2o-v2sc8cKE3-3fTCABUfwJx1W3vFLg&s=10',
+  },
+  {
+    id: 'PA-RP2',
+    nombre: 'Gustavo Pacheco',
+    profesion: 'Abogado y Político',
+    edad: 68,
+    partido: {
+      nombre: 'Renovación Popular',
+      nombreCorto: 'RP',
+      color: '#0073e6', // Azul (como lo tenías)
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/3/33/Logo_Renovaci%C3%B3n_Popular_2023.png',
+    },
+    tipo: 'parlamento-andino',
+    // (Nota: Fue electo con RP pero ahora está en APP,
+    // lo cual es un dato real perfecto para tu "Historial Político")
+    experiencia: [
+      'Parlamentario Andino (2021-Actual)',
+      'Ex-Congresista (2001-2006)',
+      'Ex-Ministro de Energía y Minas',
+    ],
+    avatar: 'GP',
+    fotoPrincipal: 'https://fpp.org.pe/wp-content/uploads/2024/07/gp_ecpv.jpg',
+  },
+  {
+    id: 'PA-AP',
+    nombre: 'Leslye Lazo',
+    profesion: 'Abogada',
+    edad: 42,
+    partido: {
+      nombre: 'Acción Popular',
+      nombreCorto: 'AP',
+      color: '#c00000', // Rojo (color de la lampa)
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Acci%C3%B3n_Popular.svg',
+    },
+    tipo: 'parlamento-andino',
+    // (Fue accesitaria y asumió el cargo)
+    experiencia: [
+      'Parlamentaria Andina (2022-Actual)',
+      'Ex-Congresista (2020-2021)',
+      'Abogada en Sector Privado',
+    ],
+    avatar: 'LL',
+    fotoPrincipal:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4NbikEQGA3NScB1KszkRqJt_GmODm7849lg&s',
   },
 ]
 
