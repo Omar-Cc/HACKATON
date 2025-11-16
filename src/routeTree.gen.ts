@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PlanchasPresidencialesRouteImport } from './routes/planchas-presidenciales'
 import { Route as MiembroMesaRouteImport } from './routes/miembro-mesa'
+import { Route as GuiaElectorRouteImport } from './routes/guia-elector'
+import { Route as CongresoRouteImport } from './routes/congreso'
 import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CandidatoIdRouteImport } from './routes/candidato.$id'
@@ -23,6 +25,16 @@ const PlanchasPresidencialesRoute = PlanchasPresidencialesRouteImport.update({
 const MiembroMesaRoute = MiembroMesaRouteImport.update({
   id: '/miembro-mesa',
   path: '/miembro-mesa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuiaElectorRoute = GuiaElectorRouteImport.update({
+  id: '/guia-elector',
+  path: '/guia-elector',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CongresoRoute = CongresoRouteImport.update({
+  id: '/congreso',
+  path: '/congreso',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompararRoute = CompararRouteImport.update({
@@ -44,6 +56,8 @@ const CandidatoIdRoute = CandidatoIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/comparar': typeof CompararRoute
+  '/congreso': typeof CongresoRoute
+  '/guia-elector': typeof GuiaElectorRoute
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/candidato/$id': typeof CandidatoIdRoute
@@ -51,6 +65,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/comparar': typeof CompararRoute
+  '/congreso': typeof CongresoRoute
+  '/guia-elector': typeof GuiaElectorRoute
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/candidato/$id': typeof CandidatoIdRoute
@@ -59,6 +75,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/comparar': typeof CompararRoute
+  '/congreso': typeof CongresoRoute
+  '/guia-elector': typeof GuiaElectorRoute
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/candidato/$id': typeof CandidatoIdRoute
@@ -68,6 +86,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/comparar'
+    | '/congreso'
+    | '/guia-elector'
     | '/miembro-mesa'
     | '/planchas-presidenciales'
     | '/candidato/$id'
@@ -75,6 +95,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/comparar'
+    | '/congreso'
+    | '/guia-elector'
     | '/miembro-mesa'
     | '/planchas-presidenciales'
     | '/candidato/$id'
@@ -82,6 +104,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/comparar'
+    | '/congreso'
+    | '/guia-elector'
     | '/miembro-mesa'
     | '/planchas-presidenciales'
     | '/candidato/$id'
@@ -90,6 +114,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompararRoute: typeof CompararRoute
+  CongresoRoute: typeof CongresoRoute
+  GuiaElectorRoute: typeof GuiaElectorRoute
   MiembroMesaRoute: typeof MiembroMesaRoute
   PlanchasPresidencialesRoute: typeof PlanchasPresidencialesRoute
   CandidatoIdRoute: typeof CandidatoIdRoute
@@ -109,6 +135,20 @@ declare module '@tanstack/react-router' {
       path: '/miembro-mesa'
       fullPath: '/miembro-mesa'
       preLoaderRoute: typeof MiembroMesaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guia-elector': {
+      id: '/guia-elector'
+      path: '/guia-elector'
+      fullPath: '/guia-elector'
+      preLoaderRoute: typeof GuiaElectorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/congreso': {
+      id: '/congreso'
+      path: '/congreso'
+      fullPath: '/congreso'
+      preLoaderRoute: typeof CongresoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comparar': {
@@ -138,6 +178,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompararRoute: CompararRoute,
+  CongresoRoute: CongresoRoute,
+  GuiaElectorRoute: GuiaElectorRoute,
   MiembroMesaRoute: MiembroMesaRoute,
   PlanchasPresidencialesRoute: PlanchasPresidencialesRoute,
   CandidatoIdRoute: CandidatoIdRoute,
