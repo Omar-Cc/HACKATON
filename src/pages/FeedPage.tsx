@@ -1,5 +1,8 @@
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
+import { MessageCircle, Repeat, Heart, Link2 } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { toast } from 'sonner'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
@@ -8,6 +11,12 @@ type Post = {
   author: string
   text: string
   time: string
+  comments: number
+  shares: number
+  likes: number
+  liked?: boolean
+  isNew?: boolean
+  topics?: string[]
 }
 
 function getAuth() {
@@ -26,20 +35,54 @@ const SAMPLE_POSTS: Post[] = [
     author: 'Juan Perez',
     text: 'Revisa la guía de voto informado en VotoContigo.',
     time: '2h',
+    comments: 12,
+    shares: 34,
+    likes: 128,
+    liked: false,
+    topics: ['Voto informado', 'Guías'],
   },
   {
     id: '2',
     author: 'María López',
     text: '¿Alguien más asistirá al debate esta noche?',
     time: '3h',
+    comments: 3,
+    shares: 5,
+    likes: 20,
+    liked: false,
+    topics: ['Debate', 'Eventos'],
   },
   {
     id: '3',
     author: 'Elector Demo',
     text: 'Recuerda: lleva DNI el día de la votación.',
     time: '1d',
+    comments: 1,
+    shares: 2,
+    likes: 4,
+    liked: false,
+    topics: ['Recordatorio'],
   },
 ]
+
+const TOPICS_KEY = 'mock:topics'
+
+function readTopics() {
+  try {
+    const raw = localStorage.getItem(TOPICS_KEY)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+function writeTopics(list: string[]) {
+  try {
+    localStorage.setItem(TOPICS_KEY, JSON.stringify(list))
+  } catch {
+    // ignore
+  }
+}
 
 export default function FeedPage() {
   const auth = React.useMemo(() => getAuth(), [])
@@ -47,6 +90,92 @@ export default function FeedPage() {
 
   const [posts, setPosts] = React.useState<Post[]>(SAMPLE_POSTS)
   const [newText, setNewText] = React.useState('')
+  const textareaRef = React.useRef<HTMLTextAreaElement | null>(null)
+  const STORAGE_KEY = 'mock:following'
+
+  function readFollowing(): string[] {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      return raw ? JSON.parse(raw) : []
+    } catch {
+      return []
+    }
+  }
+
+  function writeFollowing(list: string[]) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
+    } catch {
+      // ignore
+    }
+  }
+
+  const [following, setFollowing] = React.useState<string[]>(() =>
+    readFollowing()
+  )
+  const [topicsFollowing, setTopicsFollowing] = React.useState<string[]>(() =>
+    readTopics()
+  )
+
+  function toggleFollow(username: string) {
+    setFollowing((prev) => {
+      const isFollowing = prev.includes(username)
+      const next = isFollowing
+        ? prev.filter((u) => u !== username)
+        : [username, ...prev]
+      writeFollowing(next)
+      if (isFollowing) {
+        toast('Dejado de seguir', {
+          description: `Has dejado de seguir a @${username}`,
+        })
+      } else {
+        toast('Siguiendo', { description: `Ahora sigues a @${username}` })
+      }
+      return next
+    })
+  }
+
+  function toggleTopic(topic: string) {
+    setTopicsFollowing((prev) => {
+      const is = prev.includes(topic)
+      const next = is ? prev.filter((t) => t !== topic) : [topic, ...prev]
+      writeTopics(next)
+      if (is)
+        toast('Dejado de seguir tema', {
+          description: `Has dejado de seguir: ${topic}`,
+        })
+      else toast('Siguiendo tema', { description: `Ahora sigues: ${topic}` })
+      return next
+    })
+  }
+
+  function toggleLike(postId: string) {
+    setPosts((prev) =>
+      prev.map((p) => {
+        if (p.id !== postId) return p
+        const liked = !p.liked
+        return {
+          ...p,
+          liked,
+          likes: liked ? p.likes + 1 : Math.max(0, p.likes - 1),
+        }
+      })
+    )
+  }
+
+  function handleShare(postId: string) {
+    setPosts((prev) =>
+      prev.map((p) => (p.id === postId ? { ...p, shares: p.shares + 1 } : p))
+    )
+  }
+
+  function handleCommentClick(postId: string) {
+    // enfoca el composer y añade una mención rápida
+    textareaRef.current?.focus()
+    setNewText((t) =>
+      t ? t : `@${posts.find((p) => p.id === postId)?.author.split(' ')[0]} `
+    )
+  }
 
   function logout() {
     try {
@@ -65,8 +194,22 @@ export default function FeedPage() {
       author: userName,
       text: newText.trim(),
       time: 'Ahora',
+      comments: 0,
+      shares: 0,
+      likes: 0,
+      liked: false,
+      isNew: true,
     }
-    setPosts((s) => [p, ...s])
+    setPosts((s) => {
+      const next = [p, ...s]
+      // limpiar la marca isNew después de un corto delay
+      setTimeout(() => {
+        setPosts((prev) =>
+          prev.map((x) => (x.id === p.id ? { ...x, isNew: false } : x))
+        )
+      }, 1500)
+      return next
+    })
     setNewText('')
   }
 
@@ -175,18 +318,20 @@ export default function FeedPage() {
               <CardContent>
                 <form onSubmit={submitPost} className="flex gap-4">
                   <div className="shrink-0">
-                    <Avatar className="h-12 w-12">
-                      <AvatarFallback className="text-sm">
+                    <Avatar className="h-12 w-12 md:h-14 md:w-14">
+                      <AvatarFallback className="text-sm md:text-base">
                         {userName.split(' ')[0].charAt(0) || 'U'}
                       </AvatarFallback>
                     </Avatar>
                   </div>
                   <div className="flex-1">
                     <textarea
+                      ref={textareaRef}
                       value={newText}
                       onChange={(e) => setNewText(e.target.value)}
                       placeholder={`¿Qué está pasando, ${userName.split(' ')[0]}?`}
-                      className="placeholder:text-muted-foreground min-h-24 w-full rounded-xl border px-4 py-3 shadow-sm"
+                      className="placeholder:text-muted-foreground min-h-24 w-full resize-none rounded-xl border px-4 py-3 text-sm shadow-sm focus:ring-2 focus:ring-blue-200 focus:outline-none md:min-h-[120px] md:text-base"
+                      aria-label="Composer de publicación"
                     />
                     <div className="mt-3 flex items-center justify-between">
                       <div className="text-muted-foreground flex items-center gap-3 text-sm">
@@ -209,8 +354,15 @@ export default function FeedPage() {
                           📍
                         </button>
                       </div>
-                      <div>
-                        <Button type="submit" variant="default">
+                      <div className="flex items-center gap-3">
+                        <div className="text-muted-foreground text-sm">
+                          {newText.length}/280
+                        </div>
+                        <Button
+                          type="submit"
+                          variant="default"
+                          disabled={!newText.trim()}
+                        >
                           Postear
                         </Button>
                       </div>
@@ -223,19 +375,40 @@ export default function FeedPage() {
             {posts.map((p) => (
               <article
                 key={p.id}
-                className="rounded-2xl border bg-white p-4 shadow-sm transition hover:shadow-md"
+                className="overflow-hidden rounded-2xl border bg-white p-4 shadow-sm transition hover:shadow-md md:p-6"
               >
-                <div className="flex gap-4">
-                  <Avatar className="h-12 w-12">
-                    <AvatarFallback className="text-sm">
-                      {p.author.split(' ')[0].charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
+                <div className="flex items-start gap-4">
+                  {/* Avatar y nombre enlazados al perfil del autor */}
+                  <Link
+                    to={'/u/$slug'}
+                    params={{
+                      slug: encodeURIComponent(
+                        p.author.split(' ')[0].toLowerCase()
+                      ),
+                    }}
+                    className="inline-block shrink-0"
+                  >
+                    <Avatar className="h-12 w-12 md:h-14 md:w-14">
+                      <AvatarFallback className="text-sm md:text-base">
+                        {p.author.split(' ')[0].charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
                   <div className="flex-1">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <div className="flex items-center gap-2">
-                          <div className="font-semibold">{p.author}</div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Link
+                            to={'/u/$slug'}
+                            params={{
+                              slug: encodeURIComponent(
+                                p.author.split(' ')[0].toLowerCase()
+                              ),
+                            }}
+                            className="font-semibold hover:underline"
+                          >
+                            {p.author}
+                          </Link>
                           <div className="text-muted-foreground text-xs">
                             @{p.author.split(' ')[0].toLowerCase()}
                           </div>
@@ -243,24 +416,63 @@ export default function FeedPage() {
                             • {p.time}
                           </div>
                         </div>
+                        {/* post topics */}
+                        {p.topics && (
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {p.topics.map((t) => (
+                              <button
+                                key={t}
+                                onClick={() => toggleTopic(t)}
+                                className={`rounded-full border px-2 py-1 text-xs ${topicsFollowing.includes(t) ? 'border-blue-600 bg-blue-600 text-white' : 'bg-white text-slate-700'}`}
+                              >
+                                {t}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                       <div className="text-muted-foreground">•••</div>
                     </div>
-                    <div className="mt-3 text-base leading-relaxed">
+                    <div
+                      className={`mt-3 text-base leading-relaxed whitespace-pre-wrap ${p.isNew ? 'rounded-md p-2 ring-2 ring-blue-100' : ''}`}
+                      style={{
+                        overflowWrap: 'anywhere',
+                        wordBreak: 'break-word',
+                      }}
+                    >
                       {p.text}
                     </div>
-                    <div className="text-muted-foreground mt-3 flex items-center gap-6 text-sm">
-                      <button className="flex items-center gap-2 hover:text-blue-600">
-                        💬 <span>12</span>
+
+                    <div className="text-muted-foreground mt-3 flex flex-wrap items-center gap-3 text-sm">
+                      <button
+                        onClick={() => handleCommentClick(p.id)}
+                        className="flex items-center gap-2 rounded-md px-2 py-1 transition hover:bg-gray-100"
+                        aria-label="Comentar"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        <span>{p.comments}</span>
                       </button>
-                      <button className="flex items-center gap-2 hover:text-green-600">
-                        🔁 <span>34</span>
+
+                      <button
+                        onClick={() => handleShare(p.id)}
+                        className="flex items-center gap-2 rounded-md px-2 py-1 transition hover:bg-gray-100"
+                        aria-label="Compartir"
+                      >
+                        <Repeat className="h-4 w-4" />
+                        <span>{p.shares}</span>
                       </button>
-                      <button className="flex items-center gap-2 hover:text-red-600">
-                        ❤️ <span>128</span>
+
+                      <button
+                        onClick={() => toggleLike(p.id)}
+                        className={`flex items-center gap-2 rounded-md px-2 py-1 transition ${p.liked ? 'bg-red-50 text-red-600' : 'hover:bg-gray-100'}`}
+                        aria-label="Me gusta"
+                      >
+                        <Heart className="h-4 w-4" />
+                        <span>{p.likes}</span>
                       </button>
-                      <button className="hover:text-muted-foreground flex items-center gap-2">
-                        🔗
+
+                      <button className="hover:text-muted-foreground flex items-center gap-2 rounded-md px-2 py-1 transition">
+                        <Link2 className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
@@ -322,7 +534,15 @@ export default function FeedPage() {
                         </div>
                       </div>
                     </div>
-                    <Button size="sm">Seguir</Button>
+                    <Button
+                      size="sm"
+                      variant={
+                        following.includes('m_alex') ? 'outline' : 'default'
+                      }
+                      onClick={() => toggleFollow('m_alex')}
+                    >
+                      {following.includes('m_alex') ? 'Siguiendo' : 'Seguir'}
+                    </Button>
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -337,7 +557,19 @@ export default function FeedPage() {
                         </div>
                       </div>
                     </div>
-                    <Button size="sm">Seguir</Button>
+                    <Button
+                      size="sm"
+                      variant={
+                        following.includes('sofiagarcia')
+                          ? 'outline'
+                          : 'default'
+                      }
+                      onClick={() => toggleFollow('sofiagarcia')}
+                    >
+                      {following.includes('sofiagarcia')
+                        ? 'Siguiendo'
+                        : 'Seguir'}
+                    </Button>
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -352,16 +584,18 @@ export default function FeedPage() {
                         </div>
                       </div>
                     </div>
-                    <Button size="sm">Seguir</Button>
+                    <Button
+                      size="sm"
+                      variant={
+                        following.includes('unidad_ciu') ? 'outline' : 'default'
+                      }
+                      onClick={() => toggleFollow('unidad_ciu')}
+                    >
+                      {following.includes('unidad_ciu')
+                        ? 'Siguiendo'
+                        : 'Seguir'}
+                    </Button>
                   </div>
-                </div>
-                <div className="px-3 pb-3">
-                  <a
-                    href="/seguir"
-                    className="text-sm font-medium text-blue-600"
-                  >
-                    Ver más
-                  </a>
                 </div>
               </CardContent>
             </Card>

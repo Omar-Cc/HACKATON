@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SeguirRouteImport } from './routes/seguir'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PlanchasPresidencialesRouteImport } from './routes/planchas-presidenciales'
 import { Route as MiembroMesaRouteImport } from './routes/miembro-mesa'
@@ -20,6 +21,7 @@ import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ElectorIndexRouteImport } from './routes/elector.index'
 import { Route as CongresoIndexRouteImport } from './routes/congreso/index'
+import { Route as USlugRouteImport } from './routes/u.$slug'
 import { Route as ElectorVerificarRouteImport } from './routes/elector.verificar'
 import { Route as ElectorSimuladorRouteImport } from './routes/elector.simulador'
 import { Route as ElectorSeguridadRouteImport } from './routes/elector.seguridad'
@@ -34,6 +36,11 @@ import { Route as CandidatoIdRouteImport } from './routes/candidato.$id'
 import { Route as ElectorCandidatosIndexRouteImport } from './routes/elector.candidatos.index'
 import { Route as ElectorCandidatosCompararRouteImport } from './routes/elector.candidatos.comparar'
 
+const SeguirRoute = SeguirRouteImport.update({
+  id: '/seguir',
+  path: '/seguir',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -87,6 +94,11 @@ const ElectorIndexRoute = ElectorIndexRouteImport.update({
 const CongresoIndexRoute = CongresoIndexRouteImport.update({
   id: '/congreso/',
   path: '/congreso/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const USlugRoute = USlugRouteImport.update({
+  id: '/u/$slug',
+  path: '/u/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ElectorVerificarRoute = ElectorVerificarRouteImport.update({
@@ -166,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/register': typeof RegisterRoute
+  '/seguir': typeof SeguirRoute
   '/candidato/$id': typeof CandidatoIdRoute
   '/elector/ajustes': typeof ElectorAjustesRoute
   '/elector/candidatos': typeof ElectorCandidatosRouteWithChildren
@@ -177,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/elector/seguridad': typeof ElectorSeguridadRoute
   '/elector/simulador': typeof ElectorSimuladorRoute
   '/elector/verificar': typeof ElectorVerificarRoute
+  '/u/$slug': typeof USlugRoute
   '/congreso': typeof CongresoIndexRoute
   '/elector/': typeof ElectorIndexRoute
   '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
@@ -191,6 +205,7 @@ export interface FileRoutesByTo {
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/register': typeof RegisterRoute
+  '/seguir': typeof SeguirRoute
   '/candidato/$id': typeof CandidatoIdRoute
   '/elector/ajustes': typeof ElectorAjustesRoute
   '/elector/como-votar': typeof ElectorComoVotarRoute
@@ -201,6 +216,7 @@ export interface FileRoutesByTo {
   '/elector/seguridad': typeof ElectorSeguridadRoute
   '/elector/simulador': typeof ElectorSimuladorRoute
   '/elector/verificar': typeof ElectorVerificarRoute
+  '/u/$slug': typeof USlugRoute
   '/congreso': typeof CongresoIndexRoute
   '/elector': typeof ElectorIndexRoute
   '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
@@ -217,6 +233,7 @@ export interface FileRoutesById {
   '/miembro-mesa': typeof MiembroMesaRoute
   '/planchas-presidenciales': typeof PlanchasPresidencialesRoute
   '/register': typeof RegisterRoute
+  '/seguir': typeof SeguirRoute
   '/candidato/$id': typeof CandidatoIdRoute
   '/elector/ajustes': typeof ElectorAjustesRoute
   '/elector/candidatos': typeof ElectorCandidatosRouteWithChildren
@@ -228,6 +245,7 @@ export interface FileRoutesById {
   '/elector/seguridad': typeof ElectorSeguridadRoute
   '/elector/simulador': typeof ElectorSimuladorRoute
   '/elector/verificar': typeof ElectorVerificarRoute
+  '/u/$slug': typeof USlugRoute
   '/congreso/': typeof CongresoIndexRoute
   '/elector/': typeof ElectorIndexRoute
   '/elector/candidatos/comparar': typeof ElectorCandidatosCompararRoute
@@ -245,6 +263,7 @@ export interface FileRouteTypes {
     | '/miembro-mesa'
     | '/planchas-presidenciales'
     | '/register'
+    | '/seguir'
     | '/candidato/$id'
     | '/elector/ajustes'
     | '/elector/candidatos'
@@ -256,6 +275,7 @@ export interface FileRouteTypes {
     | '/elector/seguridad'
     | '/elector/simulador'
     | '/elector/verificar'
+    | '/u/$slug'
     | '/congreso'
     | '/elector/'
     | '/elector/candidatos/comparar'
@@ -270,6 +290,7 @@ export interface FileRouteTypes {
     | '/miembro-mesa'
     | '/planchas-presidenciales'
     | '/register'
+    | '/seguir'
     | '/candidato/$id'
     | '/elector/ajustes'
     | '/elector/como-votar'
@@ -280,6 +301,7 @@ export interface FileRouteTypes {
     | '/elector/seguridad'
     | '/elector/simulador'
     | '/elector/verificar'
+    | '/u/$slug'
     | '/congreso'
     | '/elector'
     | '/elector/candidatos/comparar'
@@ -295,6 +317,7 @@ export interface FileRouteTypes {
     | '/miembro-mesa'
     | '/planchas-presidenciales'
     | '/register'
+    | '/seguir'
     | '/candidato/$id'
     | '/elector/ajustes'
     | '/elector/candidatos'
@@ -306,6 +329,7 @@ export interface FileRouteTypes {
     | '/elector/seguridad'
     | '/elector/simulador'
     | '/elector/verificar'
+    | '/u/$slug'
     | '/congreso/'
     | '/elector/'
     | '/elector/candidatos/comparar'
@@ -322,12 +346,21 @@ export interface RootRouteChildren {
   MiembroMesaRoute: typeof MiembroMesaRoute
   PlanchasPresidencialesRoute: typeof PlanchasPresidencialesRoute
   RegisterRoute: typeof RegisterRoute
+  SeguirRoute: typeof SeguirRoute
   CandidatoIdRoute: typeof CandidatoIdRoute
+  USlugRoute: typeof USlugRoute
   CongresoIndexRoute: typeof CongresoIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/seguir': {
+      id: '/seguir'
+      path: '/seguir'
+      fullPath: '/seguir'
+      preLoaderRoute: typeof SeguirRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -403,6 +436,13 @@ declare module '@tanstack/react-router' {
       path: '/congreso'
       fullPath: '/congreso'
       preLoaderRoute: typeof CongresoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/u/$slug': {
+      id: '/u/$slug'
+      path: '/u/$slug'
+      fullPath: '/u/$slug'
+      preLoaderRoute: typeof USlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/elector/verificar': {
@@ -553,7 +593,9 @@ const rootRouteChildren: RootRouteChildren = {
   MiembroMesaRoute: MiembroMesaRoute,
   PlanchasPresidencialesRoute: PlanchasPresidencialesRoute,
   RegisterRoute: RegisterRoute,
+  SeguirRoute: SeguirRoute,
   CandidatoIdRoute: CandidatoIdRoute,
+  USlugRoute: USlugRoute,
   CongresoIndexRoute: CongresoIndexRoute,
 }
 export const routeTree = rootRouteImport
