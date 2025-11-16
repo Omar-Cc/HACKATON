@@ -63,7 +63,7 @@ const ContenidoPagina: React.FC = () => (
           key={paso.numero}
           className="bg-card border-border flex items-start rounded-lg border p-6 shadow-md"
         >
-          <div className="bg-accent flex-shrink-0 rounded-full p-3">
+          <div className="bg-accent shrink-0 rounded-full p-3">
             <paso.icono className="text-primary text-2xl" />
           </div>
           <div className="ml-5">

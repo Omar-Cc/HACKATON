@@ -272,7 +272,7 @@ export default function Principal() {
           {/* HERO = INICIO */}
           <section
             id="inicio"
-            className="reveal relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 text-white"
+            className="reveal relative overflow-hidden bg-linear-to-br from-blue-600 to-blue-800 text-white"
           >
             {/* Imagen de fondo */}
             <div className="pointer-events-none absolute inset-0 select-none">

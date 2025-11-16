@@ -164,14 +164,14 @@ export function Navbar() {
 
             {/* 3. Derecha - Acciones Rápidas */}
             <div className="flex items-center gap-2">
-              {/* Padrón Familiar */}
-              <button
-                onClick={() => setPadronModalOpen(true)}
+              {/* Padrón Familiar -> Navegar a Login */}
+              <Link
+                to="/login"
                 className="dark:text-muted-foreground dark:hover:bg-secondary/80 dark:hover:text-card-foreground flex h-9 w-9 items-center justify-center rounded-lg text-slate-700 transition-all duration-300 hover:scale-110 hover:bg-slate-100/80 hover:text-slate-900"
-                aria-label="Padrón Familiar"
+                aria-label="Ir al login"
               >
                 <Users className="h-5 w-5" />
-              </button>
+              </Link>
 
               {/* La Voz del Voto */}
               <button
