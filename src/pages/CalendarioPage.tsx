@@ -360,7 +360,7 @@ export default function CalendarioPage() {
         >
           <div>
             <h1 className="text-3xl font-extrabold text-white">
-              Calendario ElecInfo
+              Calendario TúEliges
             </h1>
           </div>
           <div>
@@ -670,7 +670,7 @@ export default function CalendarioPage() {
                 </div>
                 <div>
                   <div className="text-primary text-sm font-semibold">
-                    Calendario Electoral
+                    Calendario TúEliges
                   </div>
                   <div className="text-muted-foreground text-xs">
                     Próximas actividades

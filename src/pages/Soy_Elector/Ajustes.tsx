@@ -8,11 +8,9 @@ import {
   CheckCircle,
   Lightbulb,
   Type,
-  Sun,
   User,
 } from 'lucide-react'
-// Importamos el Switch de Radix
-import * as Switch from '@radix-ui/react-switch'
+
 // Importamos el store de Zustand
 import { useAccessibilityStore } from '../../store/accessibilityStore'
 // Importamos clsx para clases dinámicas
@@ -21,8 +19,7 @@ import clsx from 'clsx'
 // --- Componente de Contenido (para no repetir código) ---
 const ContenidoPagina: React.FC = () => {
   // Leemos el estado Y las funciones para cambiarlo
-  const { textSize, highContrast, setTextSize, setHighContrast } =
-    useAccessibilityStore()
+  const { textSize, setTextSize } = useAccessibilityStore()
 
   return (
     // Usamos max-w-2xl para centrar y limitar el ancho
@@ -85,38 +82,6 @@ const ContenidoPagina: React.FC = () => {
           >
             Muy grande
           </button>
-        </div>
-      </div>
-
-      {/* --- Sección: Alto Contraste --- */}
-      <div className="bg-card border-border rounded-lg border p-6 shadow-md">
-        <div className="mb-4 flex items-center gap-4">
-          <Sun className="text-primary text-2xl" />
-          <div>
-            <h3 className="text-foreground text-xl font-bold">Modo Oscuro</h3>
-            <p className="text-md text-muted-foreground">
-              Ayuda el descanso visual
-            </p>
-          </div>
-        </div>
-
-        {/* Switch Toggle de Radix */}
-        <div
-          className={clsx(
-            'flex items-center justify-between rounded-lg border-2 p-4 transition-all',
-            highContrast ? 'border-primary bg-accent' : 'border-border bg-card'
-          )}
-        >
-          <span className="text-foreground text-lg font-semibold">
-            {highContrast ? 'Activado' : 'Desactivado'}
-          </span>
-          <Switch.Root
-            checked={highContrast}
-            onCheckedChange={setHighContrast}
-            className="data-[state=checked]:bg-primary relative h-[25px] w-[42px] cursor-default rounded-full bg-gray-300 outline-none"
-          >
-            <Switch.Thumb className="block h-[21px] w-[21px] translate-x-[2px] rounded-full bg-white shadow-lg transition-transform duration-100 data-[state=checked]:translate-x-[19px]" />
-          </Switch.Root>
         </div>
       </div>
 

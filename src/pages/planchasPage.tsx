@@ -5,9 +5,9 @@ import {
   X,
   MapPin,
   Users,
+  Info,
 } from 'lucide-react'
 import { useState } from 'react'
-import { ImageWithFallback } from '@/components/imageWithFallback'
 import { PLANCHAS } from '@/data/elecciones'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -20,6 +20,11 @@ import {
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Separator } from '@/components/ui/separator'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Link, useNavigate } from '@tanstack/react-router'
 
 export interface Candidato {
@@ -158,14 +163,19 @@ export function PlanchasPage() {
       style={{ backgroundColor: 'var(--background)' }}
     >
       {/* Header - Responsive */}
-      <header className="rounded-b-4xl bg-linear-to-br from-blue-600 to-blue-700 shadow-lg lg:rounded-none">
+      <header className="bg-primary text-primary-foreground px-6 py-12">
         <div className="container mx-auto max-w-7xl px-4 py-6 md:px-6 lg:px-8 lg:py-8">
           <div className="mb-4 flex items-center justify-between lg:mb-6">
-            <button className="mb-auto flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="mb-auto h-10 w-10 rounded-xl bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+              asChild
+            >
               <Link to="/">
                 <ChevronLeft className="h-5 w-5" />
               </Link>
-            </button>
+            </Button>
             <div className="text-center">
               <h1 className="mb-2 text-3xl leading-tight font-extrabold text-white lg:text-4xl">
                 Candidatos Presidenciales 2026
@@ -177,143 +187,161 @@ export function PlanchasPage() {
             </div>
             <div className="w-10" />
           </div>
-
-          <div className="max-w-2xl lg:max-w-none">
-            {/* Search and Filters Container */}
-            <div className="flex flex-col gap-3 lg:flex-row lg:gap-4">
-              {/* Search Bar */}
-              <div className="relative flex-1">
-                <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="text"
-                  aria-label="Buscar candidato o partido"
-                  placeholder="Buscar candidato o partido..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full rounded-xl border-0 py-3 pr-4 pl-12 transition-shadow focus:outline-none"
-                  style={{
-                    backgroundColor: 'var(--input)',
-                    color: 'var(--foreground)',
-                  }}
-                />
-              </div>
-
-              {/* Filtros Avanzados Button */}
-              <Sheet>
-                <SheetTrigger asChild>
-                  <button
-                    aria-label="Abrir filtros avanzados"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-6 py-3 text-white backdrop-blur-sm transition-colors hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white/30 lg:w-auto"
-                  >
-                    <SlidersHorizontal className="h-5 w-5" />
-                    <span>Filtros avanzados</span>
-                    {activeFiltersCount > 0 && (
-                      <Badge className="bg-white text-blue-600">
-                        {activeFiltersCount}
-                      </Badge>
-                    )}
-                  </button>
-                </SheetTrigger>
-                <SheetContent className="overflow-y-auto">
-                  <SheetHeader>
-                    <SheetTitle>Filtros Avanzados</SheetTitle>
-                  </SheetHeader>
-
-                  <div className="mt-6 space-y-6 ps-3">
-                    {/* Filtro por Zona */}
-                    <div>
-                      <h3 className="mb-3">Departamentos</h3>
-                      <div className="max-h-64 space-y-3 overflow-y-auto">
-                        {zonas.map((zona) => {
-                          const active = selectedZonas.includes(zona.id)
-                          return (
-                            <div
-                              key={zona.id}
-                              className="flex items-center space-x-2"
-                            >
-                              <Checkbox
-                                id={`zona-${zona.id}`}
-                                checked={active}
-                                onCheckedChange={() => toggleZona(zona.id)}
-                              />
-                              <Label
-                                htmlFor={`zona-${zona.id}`}
-                                className="inline-flex cursor-pointer items-center gap-2 rounded-full px-3 py-1 text-sm"
-                                style={{
-                                  backgroundColor: active
-                                    ? 'var(--primary)'
-                                    : 'var(--muted)',
-                                  color: active
-                                    ? 'var(--primary-foreground)'
-                                    : 'var(--muted-foreground)',
-                                }}
-                              >
-                                {zona.label}
-                              </Label>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Filtro por Tema */}
-                    <div>
-                      <h3 className="mb-3">Temas de Interés</h3>
-                      <div className="space-y-3">
-                        {temas.map((tema) => {
-                          const active = selectedTemas.includes(tema.id)
-                          return (
-                            <div
-                              key={tema.id}
-                              className="flex items-center space-x-2"
-                            >
-                              <Checkbox
-                                id={`tema-${tema.id}`}
-                                checked={active}
-                                onCheckedChange={() => toggleTema(tema.id)}
-                              />
-                              <Label
-                                htmlFor={`tema-${tema.id}`}
-                                className="inline-flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
-                                style={{
-                                  backgroundColor: active
-                                    ? 'var(--primary)'
-                                    : 'var(--muted)',
-                                  color: active
-                                    ? 'var(--primary-foreground)'
-                                    : 'var(--muted-foreground)',
-                                }}
-                              >
-                                <span className="mr-1">{tema.icon}</span>
-                                {tema.label}
-                              </Label>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Limpiar Filtros */}
-                    {activeFiltersCount > 0 && (
-                      <Button
-                        variant="outline"
-                        onClick={clearFilters}
-                        className="w-full"
-                      >
-                        <X className="mr-2 h-4 w-4" />
-                        Limpiar Filtros
-                      </Button>
-                    )}
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </div>
-          </div>
         </div>
       </header>
 
       {/* Main Content - Responsive Layout */}
       <main className="container mx-auto max-w-7xl px-4 py-6 md:px-6 lg:px-8 lg:py-10">
+        {/* Sección 1: Cabecera y Herramientas de Navegación */}
+        <div className="mb-8">
+          <h1 className="mb-2 text-3xl font-bold text-slate-900 lg:text-4xl">
+            Planchas Presidenciales 2026
+          </h1>
+          <p className="mb-6 text-base text-slate-600 lg:text-lg">
+            Conoce al equipo completo (Presidente, 1er y 2do Vicepresidente) de
+            cada partido que postula a la presidencia del Perú.
+          </p>
+
+          <div className="flex flex-col gap-3 lg:flex-row lg:gap-4">
+            {/* Barra de búsqueda principal */}
+            <div className="relative flex-1">
+              <Search className="absolute top-1/2 left-4 z-10 h-5 w-5 -translate-y-1/2 text-slate-400" />
+              <Input
+                type="text"
+                placeholder="Buscar por partido o candidato..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full rounded-xl border border-blue-700/20 py-6 pr-4 pl-12 text-base"
+              />
+            </div>
+
+            {/* Filtros Avanzados Button */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  aria-label="Abrir filtros avanzados"
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border-2 border-blue-700/20 px-6 py-3 text-blue-700 backdrop-blur-sm transition-colors hover:bg-blue-700/20 focus-visible:ring-2 focus-visible:ring-white/30 lg:w-auto"
+                >
+                  <SlidersHorizontal className="h-5 w-5" />
+                  <span>Filtros avanzados</span>
+                  {activeFiltersCount > 0 && (
+                    <Badge className="bg-white text-blue-600">
+                      {activeFiltersCount}
+                    </Badge>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>Filtros Avanzados</SheetTitle>
+                </SheetHeader>
+
+                <div className="mt-6 space-y-6 ps-3">
+                  {/* Filtro por Zona */}
+                  <div>
+                    <h3 className="mb-3">Departamentos</h3>
+                    <div className="max-h-64 space-y-3 overflow-y-auto">
+                      {zonas.map((zona) => {
+                        const active = selectedZonas.includes(zona.id)
+                        return (
+                          <div
+                            key={zona.id}
+                            className="flex items-center space-x-2"
+                          >
+                            <Checkbox
+                              id={`zona-${zona.id}`}
+                              checked={active}
+                              onCheckedChange={() => toggleZona(zona.id)}
+                            />
+                            <Label
+                              htmlFor={`zona-${zona.id}`}
+                              className="inline-flex cursor-pointer items-center gap-2 rounded-full px-3 py-1 text-sm"
+                              style={{
+                                backgroundColor: active
+                                  ? 'var(--primary)'
+                                  : 'var(--muted)',
+                                color: active
+                                  ? 'var(--primary-foreground)'
+                                  : 'var(--muted-foreground)',
+                              }}
+                            >
+                              {zona.label}
+                            </Label>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Filtro por Tema */}
+                  <div>
+                    <h3 className="mb-3">Temas de Interés</h3>
+                    <div className="space-y-3">
+                      {temas.map((tema) => {
+                        const active = selectedTemas.includes(tema.id)
+                        return (
+                          <div
+                            key={tema.id}
+                            className="flex items-center space-x-2"
+                          >
+                            <Checkbox
+                              id={`tema-${tema.id}`}
+                              checked={active}
+                              onCheckedChange={() => toggleTema(tema.id)}
+                            />
+                            <Label
+                              htmlFor={`tema-${tema.id}`}
+                              className="inline-flex cursor-pointer items-center gap-2 rounded-full px-3 py-1"
+                              style={{
+                                backgroundColor: active
+                                  ? 'var(--primary)'
+                                  : 'var(--muted)',
+                                color: active
+                                  ? 'var(--primary-foreground)'
+                                  : 'var(--muted-foreground)',
+                              }}
+                            >
+                              <span className="mr-1">{tema.icon}</span>
+                              {tema.label}
+                            </Label>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Limpiar Filtros */}
+                  {activeFiltersCount > 0 && (
+                    <Button
+                      variant="outline"
+                      onClick={clearFilters}
+                      className="w-full"
+                    >
+                      <X className="mr-2 h-4 w-4" />
+                      Limpiar Filtros
+                    </Button>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+
+        {/* Sección 2: Contexto Educativo */}
+        <Alert className="mb-8">
+          <Info className="h-5 w-5" />
+          <AlertTitle className="text-lg font-semibold">
+            ¿Qué es una Plancha Presidencial?
+          </AlertTitle>
+          <AlertDescription className="text-base">
+            Es el equipo completo que postula. En Perú, se compone de un
+            candidato a Presidente y dos candidatos a Vicepresidentes (1ra y 2da
+            vicepresidencia). Al votar por un partido para la presidencia, votas
+            por los tres.
+          </AlertDescription>
+        </Alert>
+
         {/* Contador y Active Filters */}
         <div className="mb-6">
           <div className="mb-3 flex items-center justify-between">
@@ -326,12 +354,14 @@ export function PlanchasPage() {
               candidatos
             </p>
             {activeFiltersCount > 0 && (
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={clearFilters}
-                className="text-sm text-blue-600 hover:text-blue-700"
+                className="text-blue-600 hover:text-blue-700"
               >
                 Limpiar filtros
-              </button>
+              </Button>
             )}
           </div>
 
@@ -344,15 +374,17 @@ export function PlanchasPage() {
                   <Badge
                     key={zonaId}
                     variant="secondary"
-                    className="py-1 pr-2 pl-3"
+                    className="gap-1 py-1 pr-1 pl-3"
                   >
                     {zona?.label}
-                    <button
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => toggleZona(zonaId)}
-                      className="ml-2 hover:text-red-600"
+                      className="h-4 w-4 p-0 hover:bg-transparent hover:text-red-600"
                     >
                       <X className="h-3 w-3" />
-                    </button>
+                    </Button>
                   </Badge>
                 )
               })}
@@ -362,15 +394,17 @@ export function PlanchasPage() {
                   <Badge
                     key={temaId}
                     variant="secondary"
-                    className="py-1 pr-2 pl-3"
+                    className="gap-1 py-1 pr-1 pl-3"
                   >
                     {tema?.icon} {tema?.label}
-                    <button
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => toggleTema(temaId)}
-                      className="ml-2 hover:text-red-600"
+                      className="h-4 w-4 p-0 hover:bg-transparent hover:text-red-600"
                     >
                       <X className="h-3 w-3" />
-                    </button>
+                    </Button>
                   </Badge>
                 )
               })}
@@ -404,77 +438,139 @@ export function PlanchasPage() {
               {/* Mobile: Lista vertical */}
               <div className="space-y-3 lg:hidden">
                 {filteredPlanchas.map((plancha) => (
-                  <button
+                  <Card
                     key={plancha.id}
-                    onClick={() => toggleComparison(plancha.id)}
-                    aria-pressed={selectedForComparison.includes(plancha.id)}
-                    className={`flex w-full items-center justify-between rounded-xl border-2 p-4 transition-all hover:shadow-md ${
+                    className={`relative overflow-hidden border-2 p-0 shadow-sm transition-all ${
                       selectedForComparison.includes(plancha.id)
-                        ? 'border-gray-500 bg-gray-50'
+                        ? 'border-blue-500 bg-blue-50'
                         : 'border-slate-200'
                     }`}
-                    style={{ backgroundColor: 'var(--card)' }}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="relative shrink-0">
-                        <ImageWithFallback
-                          src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop"
-                          alt={plancha.presidente.nombre}
-                          loading="lazy"
-                          className="h-14 w-14 rounded-full object-cover ring-2 ring-slate-200"
+                    {/* Marca de agua */}
+                    <div
+                      className="pointer-events-none absolute inset-0 flex items-center justify-center"
+                      style={{ zIndex: 0 }}
+                      aria-hidden
+                    >
+                      <span
+                        className="text-8xl font-black"
+                        style={{
+                          color: plancha.partido.color,
+                          opacity: 0.06,
+                        }}
+                      >
+                        {plancha.partido?.siglas}
+                      </span>
+                      {plancha.partido?.logo && (
+                        <img
+                          src={
+                            plancha.partido.logo.startsWith('http')
+                              ? plancha.partido.logo
+                              : `/assets/${plancha.partido.logo}`
+                          }
+                          alt={`${plancha.partido?.nombre} logo`}
+                          className="absolute max-h-[50%] max-w-[50%] object-contain"
+                          style={{ opacity: 0.15 }}
+                          onError={(e) => {
+                            ;(
+                              e.currentTarget as HTMLImageElement
+                            ).style.display = 'none'
+                          }}
                         />
-                        <div
-                          className="absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full text-xs text-white"
-                          style={{ backgroundColor: plancha.partido.color }}
-                        >
-                          {plancha.numero}
-                        </div>
-                        {selectedForComparison.includes(plancha.id) && (
-                          <div className="absolute -top-1 -left-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs text-white">
-                            ✓
-                          </div>
-                        )}
-                      </div>
-                      <div className="text-left">
-                        <p className="font-medium text-slate-900">
-                          {plancha.presidente.nombre}
-                        </p>
-                        <p className="text-xs text-slate-600">
-                          Vice: {plancha.vicepresidente1.nombre}
-                        </p>
-                        <p
-                          className="mt-0.5 text-sm"
-                          style={{ color: plancha.partido.color }}
-                        >
-                          {plancha.partido.nombre}{' '}
-                          {plancha?.partido?.nombre?.trim() && (
-                            <>- {plancha.partido.siglas}</>
-                          )}
-                        </p>
-                        <div className="mt-1 flex items-center gap-1">
-                          <MapPin className="h-3 w-3 text-slate-400" />
-                          <span className="text-xs text-slate-500">
-                            {zonas.find((z) => z.id === plancha.zona[0])?.label}
-                          </span>
-                        </div>
-                      </div>
+                      )}
                     </div>
-                  </button>
+
+                    {/* Contenido clickeable */}
+                    <Button
+                      variant="ghost"
+                      onClick={() =>
+                        navigate({
+                          to: '/candidato/$id',
+                          params: { id: String(plancha.id) },
+                        })
+                      }
+                      className="relative z-10 flex h-auto w-full items-center justify-between p-4 text-left hover:bg-slate-50/50"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-14 w-14 ring-2 ring-slate-200">
+                          <AvatarImage
+                            src={plancha.presidente.foto}
+                            alt={plancha.presidente.nombre}
+                          />
+                          <AvatarFallback>
+                            {plancha.presidente.nombre.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="text-left">
+                          <p className="font-medium text-slate-900">
+                            {plancha.presidente.nombre}
+                          </p>
+                          <p className="text-xs text-slate-600">
+                            Vice: {plancha.vicepresidente1.nombre}
+                          </p>
+                          <p
+                            className="mt-0.5 text-sm"
+                            style={{ color: plancha.partido.color }}
+                          >
+                            {plancha.partido.nombre}{' '}
+                            {plancha?.partido?.nombre?.trim() && (
+                              <>- {plancha.partido.siglas}</>
+                            )}
+                          </p>
+                          <div className="mt-1 flex items-center gap-1">
+                            <MapPin className="h-3 w-3 text-slate-400" />
+                            <span className="text-xs text-slate-500">
+                              {
+                                zonas.find((z) => z.id === plancha.zona[0])
+                                  ?.label
+                              }
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Button>
+
+                    <Separator />
+
+                    {/* Checkbox de comparación */}
+                    <CardFooter className="relative z-10 p-4">
+                      <Button
+                        variant={
+                          selectedForComparison.includes(plancha.id)
+                            ? 'default'
+                            : 'secondary'
+                        }
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          toggleComparison(plancha.id)
+                        }}
+                        className="w-full gap-2"
+                      >
+                        <Checkbox
+                          checked={selectedForComparison.includes(plancha.id)}
+                          onCheckedChange={() => {}}
+                          className="pointer-events-none"
+                        />
+                        {selectedForComparison.includes(plancha.id)
+                          ? 'Seleccionado para comparar'
+                          : 'Comparar'}
+                      </Button>
+                    </CardFooter>
+                  </Card>
                 ))}
               </div>
 
               {/* Desktop: Grid de Tarjetas */}
-              <div className="hidden grid-cols-1 gap-6 md:grid-cols-2 lg:grid lg:grid-cols-3 xl:grid-cols-4">
+              <div className="hidden grid-cols-1 gap-6 md:grid-cols-2 lg:grid lg:grid-cols-3">
                 {filteredPlanchas.map((plancha) => {
                   return (
-                    <div
+                    <Card
                       key={plancha.id}
-                      className={`group relative overflow-hidden rounded-2xl border-2 transition-all hover:shadow-xl ${
+                      className={`group relative gap-0 overflow-hidden border-2 p-0 transition-all hover:shadow-xl ${
                         selectedForComparison.includes(plancha.id)
                           ? 'scale-105 border-gray-500 shadow-lg'
                           : 'border-slate-200 hover:border-slate-300'
                       }`}
-                      style={{ backgroundColor: 'var(--card)' }}
                     >
                       {/* Marca de agua: usar logo (imagen) cuando exista, fallback a siglas debajo */}
                       <div
@@ -518,43 +614,43 @@ export function PlanchasPage() {
                         style={{ backgroundColor: plancha.partido.color }}
                       />
 
-                      <div className="p-5">
-                        {/* Header: nombre del partido (la marca de agua grande ya está en el fondo) */}
-                        <div className="relative z-10 mb-4 flex items-center justify-between">
-                          <div className="flex items-center gap-3">
+                      <CardContent className="p-5">
+                        {/* Header: nombre del partido */}
+                        <CardHeader className="relative z-10 mb-4 flex-row items-center justify-between gap-3 p-0">
+                          <div className="flex min-w-0 flex-1 items-center gap-3">
                             <div
-                              className="flex h-10 w-10 items-center justify-center rounded-lg font-semibold text-white"
+                              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg font-semibold text-white"
                               style={{ backgroundColor: plancha.partido.color }}
                             >
                               {plancha.partido?.siglas}
                             </div>
-                            <div>
-                              <p className="text-xs font-medium text-slate-900">
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-xs font-medium text-slate-900">
                                 {plancha.partido?.nombre}
-                                {plancha.partido?.siglas?.trim() && (
-                                  <> - {plancha.partido.siglas}</>
-                                )}
                               </p>
                             </div>
                           </div>
                           {selectedForComparison.includes(plancha.id) && (
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-sm text-white">
+                            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm text-white">
                               ✓
                             </div>
                           )}
-                        </div>
+                        </CardHeader>
 
                         {/* Plancha Completa - Presidente y Vicepresidentes */}
                         <div className="mb-4">
                           {/* Presidente */}
                           <div className="mb-3 flex items-center gap-3">
                             <div className="relative shrink-0">
-                              <ImageWithFallback
-                                src={plancha.presidente.foto}
-                                alt={plancha.presidente.nombre}
-                                loading="lazy"
-                                className="h-16 w-16 rounded-full object-cover ring-2 ring-slate-200"
-                              />
+                              <Avatar className="h-16 w-16 ring-2 ring-slate-200">
+                                <AvatarImage
+                                  src={plancha.presidente.foto}
+                                  alt={plancha.presidente.nombre}
+                                />
+                                <AvatarFallback>
+                                  {plancha.presidente.nombre.charAt(0)}
+                                </AvatarFallback>
+                              </Avatar>
                               <div
                                 className="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold text-white"
                                 style={{
@@ -568,71 +664,64 @@ export function PlanchasPage() {
                               <p className="mb-0.5 text-xs tracking-wide text-slate-500 uppercase">
                                 Presidente
                               </p>
-                              <p className="truncate text-sm font-semibold text-slate-900">
-                                {plancha.presidente.nombre}
+                              <p className="text-sm leading-tight font-semibold text-slate-900">
+                                {plancha.presidente.nombre.split(' ')[0]}
+                              </p>
+                              <p className="text-sm leading-tight font-semibold text-slate-900">
+                                {plancha.presidente.nombre
+                                  .split(' ')
+                                  .slice(1)
+                                  .join(' ')}
                               </p>
                             </div>
                           </div>
 
                           {/* Vicepresidentes */}
                           <div className="flex gap-2">
-                            {/* Vicepresidente 1 */}
-                            <div className="flex flex-1 items-center gap-2 rounded-lg bg-slate-50 p-2">
-                              <div className="relative shrink-0">
-                                <ImageWithFallback
-                                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop"
-                                  alt={plancha.vicepresidente1.nombre}
-                                  loading="lazy"
-                                  className="h-10 w-10 rounded-full object-cover ring-2 ring-white"
-                                />
-                                <div
-                                  className="absolute -right-0.5 -bottom-0.5 flex h-4 w-4 items-center justify-center rounded-full text-xs font-semibold text-white"
-                                  style={{
-                                    backgroundColor: plancha.partido.color,
-                                  }}
-                                >
-                                  1
+                            {[
+                              { vice: plancha.vicepresidente1, numero: 1 },
+                              { vice: plancha.vicepresidente2, numero: 2 },
+                            ].map(({ vice, numero }) => (
+                              <div
+                                key={numero}
+                                className="flex flex-1 items-center gap-2 rounded-lg bg-slate-50 p-2"
+                              >
+                                <div className="relative shrink-0">
+                                  <Avatar className="h-10 w-10 ring-2 ring-white">
+                                    <AvatarImage
+                                      src={vice.foto}
+                                      alt={vice.nombre}
+                                    />
+                                    <AvatarFallback>
+                                      {vice.nombre.charAt(0)}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div
+                                    className="absolute -right-0.5 -bottom-0.5 flex h-4 w-4 items-center justify-center rounded-full text-xs font-semibold text-white"
+                                    style={{
+                                      backgroundColor: plancha.partido.color,
+                                    }}
+                                  >
+                                    {numero}
+                                  </div>
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="text-xs text-slate-500">
+                                    {numero}° Vice
+                                  </p>
+                                  <p className="text-xs leading-tight font-medium text-slate-900">
+                                    {vice.nombre.split(' ')[0]}
+                                  </p>
+                                  <p className="text-xs leading-tight font-medium text-slate-900">
+                                    {vice.nombre.split(' ').slice(1).join(' ')}
+                                  </p>
                                 </div>
                               </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="text-xs text-slate-500">
-                                  1° Vice
-                                </p>
-                                <p className="truncate text-xs font-medium text-slate-900">
-                                  {plancha.vicepresidente1.nombre}
-                                </p>
-                              </div>
-                            </div>
-
-                            {/* Vicepresidente 2 */}
-                            <div className="flex flex-1 items-center gap-2 rounded-lg bg-slate-50 p-2">
-                              <div className="relative shrink-0">
-                                <ImageWithFallback
-                                  src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop"
-                                  alt={plancha.vicepresidente2.nombre}
-                                  loading="lazy"
-                                  className="h-10 w-10 rounded-full object-cover ring-2 ring-white"
-                                />
-                                <div
-                                  className="absolute -right-0.5 -bottom-0.5 flex h-4 w-4 items-center justify-center rounded-full text-xs font-semibold text-white"
-                                  style={{
-                                    backgroundColor: plancha.partido.color,
-                                  }}
-                                >
-                                  2
-                                </div>
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="text-xs text-slate-500">
-                                  2° Vice
-                                </p>
-                                <p className="truncate text-xs font-medium text-slate-900">
-                                  {plancha.vicepresidente2.nombre}
-                                </p>
-                              </div>
-                            </div>
+                            ))}
                           </div>
                         </div>
+
+                        <Separator className="my-4" />
 
                         {/* Partido y Zona */}
                         <div className="mb-4">
@@ -676,39 +765,40 @@ export function PlanchasPage() {
                               ))}
                           </div>
                         </div>
+                      </CardContent>
 
-                        {/* Action buttons */}
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() =>
-                              navigate({
-                                to: '/candidato/$id',
-                                params: { id: String(plancha.id) },
-                              })
-                            }
-                            className="flex-1 rounded-lg bg-slate-100 px-3 py-2 text-xs text-slate-700 transition-colors hover:bg-slate-200"
-                          >
-                            Ver perfil
-                          </button>
-                          <button
-                            onClick={() => toggleComparison(plancha.id)}
-                            aria-pressed={selectedForComparison.includes(
-                              plancha.id
-                            )}
-                            aria-label={`${selectedForComparison.includes(plancha.id) ? 'Quitar' : 'Agregar'} ${plancha.presidente.nombre} de comparación`}
-                            className={`flex-1 rounded-lg px-3 py-2 text-xs transition-colors ${
-                              selectedForComparison.includes(plancha.id)
-                                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-                            }`}
-                          >
-                            {selectedForComparison.includes(plancha.id)
-                              ? 'Seleccionado'
-                              : 'Comparar'}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                      <CardFooter className="flex gap-2 p-5 pt-0">
+                        <Button
+                          variant="secondary"
+                          onClick={() =>
+                            navigate({
+                              to: '/candidato/$id',
+                              params: { id: String(plancha.id) },
+                            })
+                          }
+                          className="flex-1 text-xs"
+                        >
+                          Ver perfil
+                        </Button>
+                        <Button
+                          variant={
+                            selectedForComparison.includes(plancha.id)
+                              ? 'default'
+                              : 'outline'
+                          }
+                          onClick={() => toggleComparison(plancha.id)}
+                          aria-pressed={selectedForComparison.includes(
+                            plancha.id
+                          )}
+                          aria-label={`${selectedForComparison.includes(plancha.id) ? 'Quitar' : 'Agregar'} ${plancha.presidente.nombre} de comparación`}
+                          className="flex-1 text-xs"
+                        >
+                          {selectedForComparison.includes(plancha.id)
+                            ? 'Seleccionado'
+                            : 'Comparar'}
+                        </Button>
+                      </CardFooter>
+                    </Card>
                   )
                 })}
               </div>
@@ -727,17 +817,15 @@ export function PlanchasPage() {
                   {selectedForComparison.slice(0, 3).map((id) => {
                     const plancha = planchas.find((p) => p.id === id)
                     return (
-                      <div
-                        key={id}
-                        className="h-10 w-10 overflow-hidden rounded-full ring-2 ring-white"
-                      >
-                        <ImageWithFallback
-                          src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop"
+                      <Avatar key={id} className="h-10 w-10 ring-2 ring-white">
+                        <AvatarImage
+                          src={plancha?.presidente.foto || ''}
                           alt={plancha?.presidente.nombre || ''}
-                          loading="lazy"
-                          className="h-full w-full object-cover"
                         />
-                      </div>
+                        <AvatarFallback>
+                          {plancha?.presidente.nombre.charAt(0) || '?'}
+                        </AvatarFallback>
+                      </Avatar>
                     )
                   })}
                 </div>
@@ -751,24 +839,25 @@ export function PlanchasPage() {
                 </div>
               </div>
               <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => setSelectedForComparison([])}
-                  className="w-full rounded-xl bg-white/10 px-4 py-2 text-center transition-colors hover:bg-white/20"
+                  className="w-full rounded-xl bg-white/10 px-4 py-2 text-white hover:bg-white/20 hover:text-white"
                 >
                   Limpiar
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() =>
                     navigate({
                       to: '/comparar',
                       search: { selectedIds: selectedForComparison.join(',') },
                     })
                   }
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-white px-6 py-2 font-semibold text-blue-600 transition-colors hover:bg-blue-50 sm:w-auto"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-white px-6 py-2 font-semibold text-blue-600 hover:bg-blue-50 sm:w-auto"
                 >
                   <Users className="h-5 w-5" />
                   Comparar
-                </button>
+                </Button>
               </div>
             </div>
           </div>

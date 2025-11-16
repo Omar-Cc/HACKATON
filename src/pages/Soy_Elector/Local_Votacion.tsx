@@ -1,6 +1,6 @@
 // src/pages/Soy_Elector/Local_Votacion.tsx
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
   MapPin,
@@ -10,7 +10,10 @@ import {
   ArrowLeft,
   ArrowRight,
   ExternalLink,
+  Search,
 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 type Resultado = {
   nombre: string
@@ -23,9 +26,11 @@ type Resultado = {
 
 // --- Componente de Contenido ---
 const ContenidoPagina: React.FC = () => {
+  const [dni, setDni] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [resultado, setResultado] = useState<Resultado | null>(null)
+  const [error, setError] = useState('')
 
-  // ✅ CORRECCIÓN: Eliminada la función no utilizada 'abrirGoogleMaps'
   // Función para abrir Google Maps con la dirección
   const abrirGoogleMapsConDireccion = () => {
     const direccion =
@@ -35,31 +40,124 @@ const ContenidoPagina: React.FC = () => {
     window.open(url, '_blank', 'noopener,noreferrer')
   }
 
-  useEffect(() => {
+  // Validar y buscar DNI
+  const buscarLocalVotacion = () => {
+    setError('')
+
+    // Validar que sea un DNI de 8 dígitos
+    if (dni.length !== 8 || !/^\d{8}$/.test(dni)) {
+      setError('Por favor, ingresa un DNI válido de 8 dígitos')
+      return
+    }
+
+    setIsLoading(true)
+
+    // Simular búsqueda en base de datos
     setTimeout(() => {
+      // Enmascarar DNI (mostrar solo últimos 4 dígitos)
+      const dniEnmascarado = `****${dni.slice(-4)}`
+
       setResultado({
         nombre: 'Juan Alberto Pérez Rodríguez',
-        dni: '****5678',
+        dni: dniEnmascarado,
         local: 'Institución Educativa José María Eguren',
         direccion: 'Av. Los Álamos 245, Barranco',
         mesa: '042536',
         horario: '8:00 AM - 4:00 PM',
       })
+      setIsLoading(false)
     }, 1500)
-  }, [])
+  }
+
+  const handleDniChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '') // Solo números
+    if (value.length <= 8) {
+      setDni(value)
+      setError('')
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && dni.length === 8) {
+      buscarLocalVotacion()
+    }
+  }
 
   return (
     <>
-      {resultado === null && (
+      {/* Formulario de búsqueda por DNI - Se muestra cuando NO hay resultado */}
+      {!resultado && !isLoading && (
+        <div className="mx-auto max-w-md space-y-6">
+          <div className="bg-card rounded-lg border p-8 shadow-lg">
+            <div className="mb-6 text-center">
+              <div className="bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+                <Search className="text-primary h-8 w-8" />
+              </div>
+              <h2 className="text-foreground mb-2 text-2xl font-bold">
+                Consulta tu Local de Votación
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                Ingresa tu número de DNI para conocer tu local de votación y
+                número de mesa
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label
+                  htmlFor="dni"
+                  className="text-foreground mb-2 block text-sm font-medium"
+                >
+                  Número de DNI
+                </label>
+                <Input
+                  id="dni"
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="Ej: 12345678"
+                  value={dni}
+                  onChange={handleDniChange}
+                  onKeyPress={handleKeyPress}
+                  maxLength={8}
+                  className={`text-center text-lg ${error ? 'border-red-500' : ''}`}
+                />
+                {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+              </div>
+
+              <Button
+                onClick={buscarLocalVotacion}
+                disabled={dni.length !== 8}
+                className="w-full"
+                size="lg"
+              >
+                <Search className="mr-2 h-5 w-5" />
+                Buscar mi local
+              </Button>
+            </div>
+
+            <div className="mt-6 rounded-lg bg-blue-50 p-4">
+              <p className="text-sm text-blue-800">
+                <strong>💡 Nota:</strong> Este es un servicio de consulta
+                gratuito. Tu DNI solo se utiliza para buscar tu local de
+                votación.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Loader mientras busca - Se muestra después de dar click en buscar */}
+      {isLoading && (
         <div className="bg-card border-border flex items-center justify-center rounded-lg border p-12 shadow-md">
           <Loader className="text-primary mr-4 animate-spin text-2xl" />
           <p className="text-muted-foreground text-lg">
-            Cargando tu información...
+            Buscando tu información...
           </p>
         </div>
       )}
 
-      {resultado && (
+      {/* Resultados - Se muestran después del loading */}
+      {resultado && !isLoading && (
         <div className="mt-0 space-y-8">
           {/* Encabezado del Elector */}
           <div className="bg-card border-primary/20 overflow-hidden rounded-lg border shadow-xl">

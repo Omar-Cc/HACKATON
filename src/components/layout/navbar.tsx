@@ -83,11 +83,12 @@ export function Navbar() {
                 <img
                   src={LogoPrincipal}
                   alt="Logo Principal"
-                  className="h-40 w-40 object-contain"
+                  className="object-contain"
                 />
               </div>
               <span className="hidden text-xl font-bold text-blue-600 sm:block">
-                TúEliges <span className="text-gray-900">2026</span>
+                TúEliges{' '}
+                <span className="text-gray-900 dark:text-white">2026</span>
               </span>
             </Link>
 

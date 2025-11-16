@@ -1,5 +1,6 @@
 // 1. Importar useState y useEffect
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import gsap from 'gsap'
 import LogoPrincipal from '../assets/LOGO - Principal.png'
 import {
   ArrowRight,
@@ -43,25 +44,119 @@ export default function Principal() {
 
   // Estado para el enlace activo del navbar
   const [activeLink, setActiveLink] = useState('#inicio')
+  const heroRef = useRef<HTMLElement>(null)
+  const hasAnimated = useRef(false)
+
+  // Animación inicial del hero con GSAP
+  useEffect(() => {
+    if (!heroRef.current || hasAnimated.current) return
+    hasAnimated.current = true
+
+    const tl = gsap.timeline()
+
+    // Animar logo
+    tl.from('.hero-logo', {
+      opacity: 0,
+      scale: 0.8,
+      duration: 0.8,
+      ease: 'back.out(1.7)',
+    })
+
+    // Animar palabras del título
+    tl.from(
+      '.hero-title-word',
+      {
+        opacity: 0,
+        y: 30,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: 'power2.out',
+      },
+      '-=0.4'
+    )
+
+    // Animar descripción
+    tl.from(
+      '.hero-description',
+      {
+        opacity: 0,
+        y: 20,
+        duration: 0.6,
+        ease: 'power2.out',
+      },
+      '-=0.3'
+    )
+
+    // Animar CTA
+    tl.from(
+      '.hero-cta',
+      {
+        opacity: 0,
+        y: 20,
+        scale: 0.95,
+        duration: 0.5,
+        ease: 'back.out(1.7)',
+      },
+      '-=0.2'
+    )
+  }, [])
 
   // 🔥 Nueva función INICIO (reinicia animaciones + sube al top)
   const goToInicio = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
-
-    const elements = document.querySelectorAll('.reveal')
-    elements.forEach((el) => el.classList.remove('reveal-show'))
-
     setActiveLink('#inicio')
+
+    // Reiniciar animaciones con GSAP
+    if (heroRef.current) {
+      const tl = gsap.timeline()
+
+      tl.from('.hero-logo', {
+        opacity: 0,
+        scale: 0.8,
+        duration: 0.6,
+        ease: 'back.out(1.7)',
+      })
+
+      tl.from(
+        '.hero-title-word',
+        {
+          opacity: 0,
+          y: 30,
+          duration: 0.5,
+          stagger: 0.06,
+          ease: 'power2.out',
+        },
+        '-=0.3'
+      )
+
+      tl.from(
+        '.hero-description',
+        {
+          opacity: 0,
+          y: 20,
+          duration: 0.5,
+          ease: 'power2.out',
+        },
+        '-=0.2'
+      )
+
+      tl.from(
+        '.hero-cta',
+        {
+          opacity: 0,
+          y: 20,
+          scale: 0.95,
+          duration: 0.4,
+          ease: 'back.out(1.7)',
+        },
+        '-=0.2'
+      )
+    }
   }
 
   // Al cargar la página, obligamos a que vuelva a INICIO
   useEffect(() => {
-    // Solo subimos la página al inicio
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-
-    // Reiniciamos animaciones sin tocar estados
-    const elements = document.querySelectorAll('.reveal')
-    elements.forEach((el) => el.classList.remove('reveal-show'))
+    window.scrollTo({ top: 0, behavior: 'auto' })
   }, [])
 
   // Scroll-spy actualizado con #inicio
@@ -125,33 +220,14 @@ export default function Principal() {
             transform: translateX(0) translateY(0);
           }
 
-          /* Animación palabra por palabra del título principal */
+          /* Palabras del título para GSAP */
           .hero-title-word {
             display: inline-block;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: heroDrop 0.6s ease forwards;
-          }
-
-          .hero-title-word-1 { animation-delay: 0.05s; }
-          .hero-title-word-2 { animation-delay: 0.10s; }
-          .hero-title-word-3 { animation-delay: 0.15s; }
-          .hero-title-word-4 { animation-delay: 0.20s; }
-          .hero-title-word-5 { animation-delay: 0.25s; }
-          .hero-title-word-6 { animation-delay: 0.30s; }
-          .hero-title-word-7 { animation-delay: 0.35s; }
-          .hero-title-word-8 { animation-delay: 0.40s; }
-
-          @keyframes heroDrop {
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
           }
         `}
       </style>
 
-      <div className="font-inter min-h-screen bg-gray-50 font-sans text-gray-900">
+      <div className="font-inter min-h-screen overflow-x-hidden bg-gray-50 font-sans text-gray-900">
         {/* NAVBAR */}
         <header className="sticky top-0 z-50 bg-white/90 shadow-md backdrop-blur-md">
           <nav className="mx-auto max-w-7xl px-5">
@@ -160,9 +236,9 @@ export default function Principal() {
               <button
                 type="button"
                 onClick={goToInicio}
-                className="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-blue-600 focus:outline-none"
+                className="flex cursor-pointer items-center gap-2 text-2xl font-extrabold tracking-tight text-blue-600 focus:outline-none"
               >
-                <span className="rounded-2xl bg-white/90 px-5 py-2 text-lg font-extrabold text-blue-900 shadow-md">
+                <span className="text-lg font-extrabold text-blue-900">
                   TúEliges <span className="text-gray-900">2026</span>
                 </span>
               </button>
@@ -272,20 +348,12 @@ export default function Principal() {
           {/* HERO = INICIO */}
           <section
             id="inicio"
-            className="reveal relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 text-white"
+            ref={heroRef}
+            className="reveal bg-primary text-primary-foreground relative overflow-hidden px-4 sm:px-6"
           >
-            {/* Imagen de fondo */}
-            <div className="pointer-events-none absolute inset-0 select-none">
-              <img
-                src="https:"
-                alt="Persona votando"
-                className="h-full w-full object-cover opacity-15 mix-blend-soft-light"
-              />
-            </div>
-
-            <div className="relative mx-auto max-w-7xl px-6 py-24 text-center">
+            <div className="relative mx-auto max-w-7xl px-4 py-24 text-center sm:px-6">
               {/* Logo */}
-              <div className="mb-8 flex justify-center">
+              <div className="hero-logo mb-8 flex justify-center">
                 <div className="flex items-center justify-center rounded-3xl bg-white p-6 shadow-2xl">
                   <img
                     src={LogoPrincipal}
@@ -297,23 +365,19 @@ export default function Principal() {
 
               {/* Título */}
               <h2 className="text-5xl leading-tight font-extrabold">
-                <span className="hero-title-word hero-title-word-1">La</span>{' '}
-                <span className="hero-title-word hero-title-word-2">
-                  plataforma
-                </span>{' '}
-                <span className="hero-title-word hero-title-word-3">que</span>{' '}
-                <span className="hero-title-word hero-title-word-4">te</span>{' '}
-                <span className="hero-title-word hero-title-word-5">ayuda</span>{' '}
-                <span className="hero-title-word hero-title-word-6">a</span>{' '}
-                <span className="hero-title-word hero-title-word-7 text-yellow-300">
-                  decidir
-                </span>{' '}
-                <span className="hero-title-word hero-title-word-8 text-yellow-300">
+                <span className="hero-title-word">La</span>{' '}
+                <span className="hero-title-word">plataforma</span>{' '}
+                <span className="hero-title-word">que</span>{' '}
+                <span className="hero-title-word">te</span>{' '}
+                <span className="hero-title-word">ayuda</span>{' '}
+                <span className="hero-title-word">a</span>{' '}
+                <span className="hero-title-word text-yellow-300">decidir</span>{' '}
+                <span className="hero-title-word text-yellow-300">
                   mejor TU VOTO!
                 </span>
               </h2>
 
-              <p className="mx-auto mt-5 max-w-3xl text-lg font-medium text-blue-100">
+              <p className="hero-description mx-auto mt-5 max-w-3xl text-lg font-medium text-blue-100">
                 Accede a información verificada, comparador de candidatos, hojas
                 de vida y todo lo esencial para llevar tu experiencia
                 <span className="font-semibold"> al siguiente nivel</span> en el
@@ -321,7 +385,7 @@ export default function Principal() {
               </p>
 
               {/* CTA */}
-              <div className="mt-10 flex justify-center">
+              <div className="hero-cta mt-10 flex justify-center">
                 <Link
                   to="/planchas-presidenciales"
                   className="group inline-flex transform items-center justify-center rounded-xl bg-white px-8 py-4 font-semibold text-blue-700 shadow-lg transition-transform duration-300 hover:scale-105"
@@ -620,13 +684,13 @@ export default function Principal() {
                     recomendaciones clave y pasos para vivir una experiencia
                     rápida y segura.
                   </p>
-                  <a
-                    href="#elector"
+                  <Link
+                    to="/elector/local"
                     className="mt-2 inline-flex items-center text-sm font-bold text-blue-600"
                   >
                     Ver mi local
                     <ArrowRight className="ml-1 h-4 w-4" />
-                  </a>
+                  </Link>
                 </div>
 
                 <div className="transform rounded-2xl bg-white p-8 shadow transition-shadow duration-300 hover:scale-[1.03] hover:shadow-lg">
@@ -645,13 +709,13 @@ export default function Principal() {
                     <span className="font-semibold">rol cívico</span> sin
                     estrés.
                   </p>
-                  <a
-                    href="#miembro"
+                  <Link
+                    to="/miembro-mesa"
                     className="mt-2 inline-flex items-center text-sm font-bold text-green-600"
                   >
                     Acceder a guías
                     <ArrowRight className="ml-1 h-4 w-4" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

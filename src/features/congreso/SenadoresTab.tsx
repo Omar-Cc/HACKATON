@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { Search, Filter, GitCompare } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Combobox } from '@/components/ui/combobox'
@@ -13,24 +13,17 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import type { Candidato } from '@/types/candidatos'
 
 import { SENADORES } from '@/data/elecciones'
 
 export default function SenadoresTab() {
+  const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedParties, setSelectedParties] = useState<string[]>([])
   const [selectedRegions, setSelectedRegions] = useState<string[]>([])
   const [selectedTipo, setSelectedTipo] = useState<string[]>([])
   const [selectedCandidatos, setSelectedCandidatos] = useState<string[]>([])
-  const [showComparison, setShowComparison] = useState(false)
   const MAX_COMPARACION = 3
 
   // Handlers para selección
@@ -294,20 +287,6 @@ export default function SenadoresTab() {
         })}
       </div>
 
-      {/* Estado vacío / mensaje */}
-      <div className="bg-muted/30 rounded-lg border border-dashed p-8 text-center">
-        <p className="text-muted-foreground">
-          Estamos trabajando para traerte la lista completa de senadores. En la
-          versión final podrás:
-        </p>
-        <ul className="text-muted-foreground mt-3 space-y-1 text-sm">
-          <li>✓ Filtrar por partido político, tipo de senador y región</li>
-          <li>✓ Buscar por nombre de candidato</li>
-          <li>✓ Ver el perfil detallado y su historial político</li>
-          <li>✓ Comparar hasta 3 senadores</li>
-        </ul>
-      </div>
-
       {/* Panel flotante de comparación */}
       {selectedCandidatos.length > 0 && (
         <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2">
@@ -329,7 +308,15 @@ export default function SenadoresTab() {
                   <Button
                     size="sm"
                     disabled={selectedCandidatos.length < 2}
-                    onClick={() => setShowComparison(true)}
+                    onClick={() => {
+                      navigate({
+                        to: '/comparar',
+                        search: {
+                          tipo: 'senadores',
+                          selectedIds: selectedCandidatos.join(','),
+                        },
+                      })
+                    }}
                   >
                     Comparar ({selectedCandidatos.length}/{MAX_COMPARACION})
                   </Button>
@@ -339,101 +326,6 @@ export default function SenadoresTab() {
           </Card>
         </div>
       )}
-
-      {/* Modal de comparación */}
-      <Dialog open={showComparison} onOpenChange={setShowComparison}>
-        <DialogContent className="max-h-[90vh] max-w-6xl overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <GitCompare className="text-primary h-6 w-6" />
-              Comparación de Senadores
-            </DialogTitle>
-            <DialogDescription>
-              Compara los perfiles, experiencia y propuestas de los senadores
-              seleccionados
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {selectedCandidatos.map((candidatoId) => {
-              const candidato = SENADORES.find(
-                (c: Candidato) => c.id === candidatoId
-              )
-              if (!candidato) return null
-
-              const partidoColor = candidato.partido.color
-              const partidoShort = candidato.partido.nombreCorto
-
-              return (
-                <Card key={candidato.id} className="relative">
-                  <CardHeader>
-                    <div className="flex items-start gap-3">
-                      <div className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center rounded-full text-xl font-bold">
-                        {candidato.avatar}
-                      </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-xl">
-                          {candidato.nombre}
-                        </CardTitle>
-                        <CardDescription className="mt-1">
-                          {candidato.profesion}
-                        </CardDescription>
-                        <Badge variant="outline" className="mt-2">
-                          {candidato.edad} años
-                        </Badge>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <p className="text-muted-foreground mb-2 text-sm font-semibold">
-                        Partido Político
-                      </p>
-                      <Badge
-                        style={{ backgroundColor: partidoColor, color: '#fff' }}
-                        className="text-sm"
-                      >
-                        {partidoShort}
-                      </Badge>
-                    </div>
-
-                    <div>
-                      <p className="text-muted-foreground mb-2 text-sm font-semibold">
-                        Tipo de Senador
-                      </p>
-                      <p className="text-sm">
-                        {candidato.tipoSenador === 'nacional'
-                          ? 'Lista Nacional'
-                          : `Lista Regional - ${candidato.region}`}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-muted-foreground mb-2 text-sm font-semibold">
-                        Experiencia
-                      </p>
-                      <ul className="space-y-1 text-sm">
-                        {candidato.experiencia.map((exp) => (
-                          <li key={exp} className="flex items-start gap-2">
-                            <span className="text-primary">•</span>
-                            <span>{exp}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <Button variant="outline" className="w-full" asChild>
-                      <Link to="/candidato/$id" params={{ id: candidato.id }}>
-                        Ver perfil completo
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
