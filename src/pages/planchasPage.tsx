@@ -841,7 +841,7 @@ export function PlanchasPage() {
       {/* Floating Action Button - Sticky Bottom */}
       {selectedForComparison.length > 0 && (
         <div className="pointer-events-none fixed right-0 bottom-0 left-0 z-50 bg-linear-to-t from-slate-900 to-transparent p-4">
-          <div className="pointer-events-auto container mx-auto max-w-7xl">
+          <div className="pointer-events-auto container mx-auto w-4/5 max-w-7xl">
             <div className="flex items-center justify-between rounded-2xl bg-blue-600 p-4 text-white shadow-2xl transition-all hover:bg-blue-700">
               <div className="flex items-center gap-3">
                 <div className="-gap-2 sm:-gap-2 flex flex-col items-center sm:flex-row">
@@ -873,7 +873,7 @@ export function PlanchasPage() {
                 <Button
                   variant="ghost"
                   onClick={() => setSelectedForComparison([])}
-                  className="w-full rounded-xl bg-white/10 px-4 py-2 text-white hover:bg-white/20 hover:text-white"
+                  className="w-full rounded-xl bg-white/10 px-4 py-2 text-white hover:bg-white/20 hover:text-white sm:w-auto"
                 >
                   Limpiar
                 </Button>
