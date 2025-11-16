@@ -53,83 +53,67 @@
   --popover: #ffffff; /* Blanco */
   --popover-foreground: #1f2937; /* Gris Oscuro */
   --primary: #1e40af; /* Azul Institucional */
-  --primary-foreground: #ffffff; /* Blanco (para texto sobre azul) */
+  --primary-foreground: #ffffff; /* Blanco */
   --secondary: #dbeafe; /* Azul Claro */
-  --secondary-foreground: #1e40af; /* Azul Institucional (para texto sobre azul claro) */
+  --secondary-foreground: #1e40af; /* Azul Institucional */
   --muted: #f3f4f6; /* Gris Claro */
   --muted-foreground: #6b7280; /* Gris Medio */
   --accent: #dbeafe; /* Azul Claro */
   --accent-foreground: #1e40af; /* Azul Institucional */
   --destructive: #dc2626; /* Rojo ONPE */
   --success: #16a34a; /* Verde Éxito */
-  --border: #dbeafe; /* Azul Claro (para bordes sutiles) */
-  --input: #dbeafe; /* Azul Claro (para fondos de input) */
-  --ring: #1e40af; /* Azul Institucional (para focus ring) */
-
-  /* Puedes ajustar los colores de los charts como prefieras */
-  --chart-1: #1e40af;
-  --chart-2: #6b7280;
-  --chart-3: #dc2626;
-  --chart-4: #16a34a;
-  --chart-5: #dbeafe;
-
-  /* Sidebar (si usas) */
-  --sidebar: #ffffff;
-  --sidebar-foreground: #1f2937;
-  --sidebar-primary: #1e40af;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #dbeafe;
-  --sidebar-accent-foreground: #1e40af;
-  --sidebar-border: #f3f4f6;
-  --sidebar-ring: #1e40af;
+  --border: #e5e7eb; /* Borde gris claro */
+  --input: #ffffff; /* Blanco */
+  --ring: #1e40af; /* Azul Institucional */
+  --chart-1: #1e40af; /* Azul Institucional */
+  --chart-2: #dbeafe; /* Azul Claro */
+  --chart-3: #6b7280; /* Gris Medio */
+  --chart-4: #16a34a; /* Verde Éxito */
+  --chart-5: #dc2626; /* Rojo ONPE */
+  --sidebar: #ffffff; /* Blanco */
+  --sidebar-foreground: #1f2937; /* Gris Oscuro */
+  --sidebar-primary: #1e40af; /* Azul Institucional */
+  --sidebar-primary-foreground: #ffffff; /* Blanco */
+  --sidebar-accent: #dbeafe; /* Azul Claro */
+  --sidebar-accent-foreground: #1e40af; /* Azul Institucional */
+  --sidebar-border: #e5e7eb; /* Borde gris claro */
+  --sidebar-ring: #1e40af; /* Azul Institucional */
 }
 
 /* Modo Oscuro (Dark Mode) - Lógica invertida de tu paleta */
 .dark {
-  --background: #111827; /* Un gris más oscuro que tu "Gris Oscuro" */
-  --foreground: #f3f4f6; /* Gris Claro */
-  --card: #1f2937; /* Gris Oscuro */
-  --card-foreground: #f3f4f6; /* Gris Claro */
+  /* Versión dark mode opcional - puedes ajustar según necesites */
+  --background: #1f2937; /* Gris Oscuro */
+  --foreground: #f9fafb; /* Gris muy claro */
+  --card: #374151; /* Gris más oscuro */
+  --card-foreground: #f9fafb; /* Gris muy claro */
   --popover: #1f2937; /* Gris Oscuro */
   --popover-foreground: #f3f4f6; /* Gris Claro */
-  --primary: #dbeafe; /* Azul Claro (más brillante en dark mode) */
-  --primary-foreground: #1e40af; /* Azul Institucional (texto sobre azul claro) */
-  --secondary: #374151; /* Gris-700 (un gris intermedio) */
-  --secondary-foreground: #dbeafe; /* Azul Claro */
-  --muted: #374151; /* Gris-700 */
-  --muted-foreground: #6b7280; /* Gris Medio */
-  --accent: #374151; /* Gris-700 */
-  --accent-foreground: #dbeafe; /* Azul Claro */
-  --destructive: #dc2626; /* Rojo ONPE (se mantiene brillante) */
-  --success: #16a34a; /* Verde Éxito (se mantiene brillante) */
-  --border: #374151; /* Gris-700 */
-  --input: #374151; /* Gris-700 */
-  --ring: #dbeafe; /* Azul Claro (para focus ring) */
-
-  /* Charts para Dark Mode */
-  --chart-1: #dbeafe;
-  --chart-2: #6b7280;
-  --chart-3: #dc2626;
-  --chart-4: #16a34a;
-  --chart-5: #374151;
-
-  /* Sidebar Dark */
-  --sidebar: #1f2937;
-  --sidebar-foreground: #f3f4f6;
-  --sidebar-primary: #dbeafe;
-  --sidebar-primary-foreground: #1e40af;
-  --sidebar-accent: #374151;
-  --sidebar-accent-foreground: #dbeafe;
-  --sidebar-border: #374151;
-  --sidebar-ring: #dbeafe;
+  --primary: #3b82f6; /* Azul más claro para dark */
+  --primary-foreground: #ffffff; /* Blanco */
+  --secondary: #1e40af; /* Azul Institucional */
+  --secondary-foreground: #ffffff; /* Blanco */
+  --muted: #374151; /* Gris oscuro */
+  --muted-foreground: #9ca3af; /* Gris medio */
+  --accent: #1e40af; /* Azul Institucional */
+  --accent-foreground: #ffffff; /* Blanco */
+  --border: #4b5563; /* Borde gris oscuro */
+  --input: #374151; /* Gris oscuro */
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
+    outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
+    margin: 0; /* ✅ Esto quita el margin del body */
+  }
+  html {
+    margin: 0;
+    padding: 0;
   }
 }
 

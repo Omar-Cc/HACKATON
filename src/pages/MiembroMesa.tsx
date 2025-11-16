@@ -12,6 +12,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from '@/components/ui/accordion'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 
 import {
   AlertDialog,
@@ -52,6 +53,11 @@ export default function MiembroMesa() {
   const CODIGO_ONPE = 'ONPE2026'
   const CODIGO_VOLUNTARIO = 'VOL2026'
 
+  const [hasSeenTutorial, setHasSeenTutorial] = useState(false)
+
+  //Para el cambio de la asistencia
+  const [miembrosData, setMiembrosData] = useState(mesaSimulada)
+
   // Modal
   const [showModal, setShowModal] = useState(false)
   const [modalMessage, setModalMessage] = useState('')
@@ -84,13 +90,23 @@ export default function MiembroMesa() {
   }
 
   useEffect(() => {
-    // No iniciar tutorial si viene por voluntario
+    // Evitar tutorial si viene por voluntario
     if (fromVolunteer) return
 
-    if (isMember && disponible && !showModal) {
-      setTimeout(() => startTour(), 600)
+    // Evitar si ya se mostró antes
+    if (hasSeenTutorial) return
+
+    // Evitar si hay modal abierto
+    if (showModal) return
+
+    // Ejecutar tutorial SOLO cuando todo esté listo
+    if (isMember && disponible) {
+      setTimeout(() => {
+        startTour()
+        setHasSeenTutorial(true) // Marcar como mostrado
+      }, 600)
     }
-  }, [isMember, disponible, showModal, fromVolunteer])
+  }, [isMember, disponible, showModal, fromVolunteer, hasSeenTutorial])
 
   // Validar código asistencia
   const validarCodigoAsistencia = () => {
@@ -248,7 +264,7 @@ export default function MiembroMesa() {
       }`}
     >
       <div
-        className={`${isInValidationScreen ? 'w-full max-w-md' : 'space-y-4'}`}
+        className={`${isInValidationScreen ? 'w-full max-w-md' : 'mx-auto w-full max-w-3xl space-y-4 lg:space-y-8'}`}
       >
         {/* MODAL */}
         <AlertDialog open={showModal} onOpenChange={setShowModal}>
@@ -272,7 +288,7 @@ export default function MiembroMesa() {
 
         {/** VALIDACIÓN */}
         {isInValidationScreen && (
-          <Card className="p-4">
+          <Card className="rounded-lg p-4 shadow-md transition-all lg:rounded-xl lg:p-6 lg:shadow-lg">
             <h2 className="mb-2 text-lg font-bold">
               Validación de Miembro de Mesa
             </h2>
@@ -327,26 +343,43 @@ export default function MiembroMesa() {
           <>
             {/** INFORMACIÓN */}
             {memberInfo && (
-              <Card className="p-4">
-                <h3 className="mb-2 text-lg font-bold">
-                  Información de tu Mesa
-                </h3>
-                <p>
-                  <strong>🧑 Miembro:</strong> {memberInfo.nombre}
-                </p>
-                <p>
-                  <strong>📍 Local:</strong> {memberInfo.local}
-                </p>
-                <p>
-                  <strong>🪑 Mesa:</strong> {memberInfo.mesa}
-                </p>
+              <Card className="flex flex-col gap-3 rounded-lg p-4 shadow-md transition-all lg:rounded-xl lg:p-6 lg:shadow-lg">
+                <div>
+                  <h3 className="mb-2 text-lg font-bold">
+                    Información de tu Mesa
+                  </h3>
+                  <p>
+                    <strong>🧑 Nombre:</strong> {memberInfo.nombre}
+                  </p>
+                  <p>
+                    <strong>📍 Local:</strong> {memberInfo.local}
+                  </p>
+                  <p>
+                    <strong>🪑 Mesa:</strong> {memberInfo.mesa}
+                  </p>
+                </div>
+
+                {/* BOTÓN PARA REINICIAR EL TUTORIAL */}
+                <Button
+                  variant="outline"
+                  className="flex w-full items-center justify-center gap-2 rounded-full border border-blue-500 text-blue-600 shadow-sm transition-all duration-300 hover:bg-blue-50 hover:text-blue-700"
+                  onClick={() => {
+                    setHasSeenTutorial(false) // habilita otra vez
+                    setTimeout(() => startTour(), 300) // pequeño delay para suavidad
+                  }}
+                >
+                  Ver tutorial otra vez
+                </Button>
               </Card>
             )}
 
             {/** ASISTENCIA */}
 
             {!attendanceMarked && (
-              <Card className="p-4" id="attendance-btn">
+              <Card
+                className="rounded-lg p-4 shadow-md transition-all lg:rounded-xl lg:p-6 lg:shadow-lg"
+                id="attendance-btn"
+              >
                 <h3 className="font-semibold">Asistencia</h3>
 
                 {!codigoValidado ? (
@@ -374,7 +407,19 @@ export default function MiembroMesa() {
                       </p>
                     ) : (
                       <Button
-                        onClick={() => setAttendanceMarked(true)}
+                        onClick={() => {
+                          setAttendanceMarked(true)
+
+                          if (role) {
+                            setMiembrosData((prev) => ({
+                              ...prev,
+                              [role]: {
+                                ...prev[role],
+                                presente: true,
+                              },
+                            }))
+                          }
+                        }}
                         disabled={attendanceMarked}
                         className="w-full"
                       >
@@ -390,7 +435,7 @@ export default function MiembroMesa() {
 
             {/** FUNCIONES */}
             {role && (
-              <Card className="p-4">
+              <Card className="rounded-lg p-4 shadow-md transition-all lg:rounded-xl lg:p-6 lg:shadow-lg">
                 <h3 className="mb-4 text-lg font-semibold">
                   Funciones del Rol ({role})
                 </h3>
@@ -420,43 +465,89 @@ export default function MiembroMesa() {
               </Card>
             )}
 
-            {/** MIEMBROS */}
             {/* MIEMBROS DE LA MESA */}
-            <Card className="p-4">
+            <Card className="rounded-lg p-4 shadow-md lg:rounded-xl lg:p-6 lg:shadow-lg">
               <Accordion type="single" collapsible>
-                <AccordionItem value="mesa">
+                <AccordionItem value="mesa-general">
                   <AccordionTrigger className="text-lg font-semibold">
                     Miembros de la mesa
                   </AccordionTrigger>
 
                   <AccordionContent>
-                    <div className="mt-3 space-y-3">
-                      {Object.entries(mesaSimulada).map(([rolKey, data]) => (
-                        <div key={rolKey} className="border-b pb-2">
-                          <p className="font-medium capitalize">
-                            {rolKey} — {data.nombre}
-                          </p>
+                    <Accordion type="multiple" className="mt-3 space-y-2">
+                      {Object.entries(miembrosData).map(([rolKey, data]) => {
+                        const estadoEsPresente = data.presente
 
-                          <div className="mt-1 ml-2 space-y-1 text-sm">
-                            <p>
-                              <strong>🪪 DNI:</strong> {data.dni}
-                            </p>
-                            <p>
-                              <strong>📍 Local:</strong> {data.local}
-                            </p>
-                            <p>
-                              <strong>🪑 Mesa:</strong> {data.mesa}
-                            </p>
-                            <p>
-                              <strong>Estado:</strong>{' '}
-                              <Badge>
-                                {data.presente ? 'Presente' : 'Ausente'}
+                        return (
+                          <AccordionItem key={rolKey} value={rolKey}>
+                            {/* Header con Avatar + Rol + Nombre + Estado */}
+                            <AccordionTrigger className="flex items-center justify-between capitalize">
+                              <div className="flex items-center gap-3">
+                                {/* FOTO DEL MIEMBRO */}
+                                <Avatar className="h-10 w-10">
+                                  <AvatarImage
+                                    src={data.foto}
+                                    alt={data.nombre}
+                                  />
+                                  <AvatarFallback>
+                                    {data.nombre
+                                      .split(' ')
+                                      .map((n) => n[0])
+                                      .join('')
+                                      .slice(0, 2)}
+                                  </AvatarFallback>
+                                </Avatar>
+
+                                <span>
+                                  {rolKey} — {data.nombre}
+                                </span>
+                              </div>
+
+                              {/* ESTADO */}
+                              <Badge
+                                className={
+                                  estadoEsPresente
+                                    ? 'bg-green-600 text-white'
+                                    : 'bg-red-600 text-white'
+                                }
+                              >
+                                {estadoEsPresente ? 'Presente' : 'Ausente'}
                               </Badge>
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                            </AccordionTrigger>
+
+                            {/* Contenido interno */}
+                            <AccordionContent>
+                              <div className="ml-2 space-y-2 text-sm">
+                                <p>
+                                  <strong>🪪 DNI:</strong> {data.dni}
+                                </p>
+
+                                <p>
+                                  <strong>📍 Local:</strong> {data.local}
+                                </p>
+
+                                <p>
+                                  <strong>🪑 Mesa:</strong> {data.mesa}
+                                </p>
+
+                                <p className="flex items-center gap-2">
+                                  <strong>Estado:</strong>
+                                  <Badge
+                                    className={
+                                      estadoEsPresente
+                                        ? 'bg-green-600 hover:bg-green-700'
+                                        : 'bg-red-600 hover:bg-red-700'
+                                    }
+                                  >
+                                    {estadoEsPresente ? 'Presente' : 'Ausente'}
+                                  </Badge>
+                                </p>
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        )
+                      })}
+                    </Accordion>
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -464,7 +555,10 @@ export default function MiembroMesa() {
 
             {/** CHECKLIST */}
             {role && (
-              <Card className="p-4" id="checklist-box">
+              <Card
+                className="rounded-lg p-4 shadow-md transition-all lg:rounded-xl lg:p-6 lg:shadow-lg"
+                id="checklist-box"
+              >
                 <h3 className="font-semibold">
                   Tareas por realizar como ({role})
                 </h3>
@@ -481,6 +575,157 @@ export default function MiembroMesa() {
                 ))}
               </Card>
             )}
+
+            {/* PREGUNTAS FRECUENTES */}
+            <Card className="rounded-lg p-4 shadow-md lg:rounded-xl lg:p-6 lg:shadow-lg">
+              <Accordion type="single" collapsible>
+                <AccordionItem value="faq-general">
+                  <AccordionTrigger className="text-lg font-semibold">
+                    Preguntas Frecuentes (FAQ)
+                  </AccordionTrigger>
+
+                  <AccordionContent>
+                    {/* Acordeones internos */}
+                    <Accordion
+                      type="single"
+                      collapsible
+                      className="mt-4 space-y-2"
+                    >
+                      <AccordionItem value="faq1">
+                        <AccordionTrigger>
+                          ¿Qué hago si un miembro de mesa titular no llega a
+                          tiempo?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          Si un miembro titular no llega antes de la hora
+                          límite, debe ser reemplazado por un suplente. Si no
+                          hay suplentes, se debe convocar a un elector
+                          voluntario con apoyo del coordinador ONPE.
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="faq2">
+                        <AccordionTrigger>
+                          No puedo marcar asistencia, ¿qué hago?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          Verifica que el código ONPE sea correcto. Si el
+                          problema persiste, registra tu asistencia manualmente
+                          con el secretario y comunícalo al coordinador ONPE.
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="faq3">
+                        <AccordionTrigger>
+                          ¿Cómo debo firmar las cédulas?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          Firma en el reverso de cada cédula con lapicero azul
+                          antes de entregarla al elector. Una cédula sin firma
+                          debe ser considerada no válida durante el escrutinio.
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="faq4">
+                        <AccordionTrigger>
+                          ¿Puede votar alguien que perdió su DNI?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          Solo pueden votar con DNI azul, DNI electrónico o DNI
+                          vencido. No se aceptan copias, fotos ni documentos
+                          distintos al DNI.
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="faq5">
+                        <AccordionTrigger>
+                          El elector aparece como “ya votó”, pero dice que no.
+                          ¿Qué hago?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          Registra la incidencia y permite votar como “elector
+                          observado”, siguiendo el procedimiento ONPE.
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="faq6">
+                        <AccordionTrigger>
+                          ¿Qué hago si falta material electoral?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          Debes comunicarte inmediatamente con el coordinador
+                          ONPE. No se deben improvisar materiales no oficiales.
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="faq7">
+                        <AccordionTrigger>
+                          ¿Los adultos mayores, embarazadas o personas con
+                          discapacidad tienen prioridad?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          Sí, tienen derecho a pasar directamente sin hacer
+                          fila. El registro del voto es el mismo.
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="faq8">
+                        <AccordionTrigger>
+                          La cámara secreta está dañada, ¿qué hago?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          Asegura privacidad colocando un panel improvisado.
+                          Nunca permitas que alguien vea el voto.
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="faq9">
+                        <AccordionTrigger>
+                          ¿Qué pasa si el elector marca dos opciones?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          Si marca dos candidatos de la misma elección, el voto
+                          es nulo. Si la intención del voto es clara, puede ser
+                          válido.
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="faq10">
+                        <AccordionTrigger>
+                          ¿Qué hago si alguien graba o causa disturbios?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          Pide que se retire, no confrontes y avisa al
+                          coordinador o a la policía. Está prohibido grabar
+                          dentro del aula.
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="faq11">
+                        <AccordionTrigger>
+                          ¿Qué hago si llega un voluntario sin capacitación?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          El presidente debe asignarle un rol vacío, explicarle
+                          sus tareas y registrarlo.
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="faq12">
+                        <AccordionTrigger>
+                          ¿Cuándo debo usar el Acta de Incidencias?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          Debe llenarse en casos de errores de padrón,
+                          incidentes de seguridad, fallas de material o eventos
+                          relevantes.
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </Card>
 
             {/** APERTURA */}
             <Button
