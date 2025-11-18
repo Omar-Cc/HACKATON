@@ -61,7 +61,7 @@ export default function MiembroMesa() {
   const [modalMessage, setModalMessage] = useState('')
 
   // fecha global como fallback
-  const fechaGeneral = new Date('2025-11-15T07:00:00')
+  const fechaGeneral = new Date('2025-11-28T07:00:00')
   // calcularemos "disponible" después de identificar usuario
   const [disponible, setDisponible] = useState(false)
 
