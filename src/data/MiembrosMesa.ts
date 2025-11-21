@@ -7,6 +7,7 @@ export type MemberInfo = {
   foto?: string
   fechaHabilitada?: string
   horaIngreso?: string
+  fechaNacimiento?: string
 }
 
 export type RoleKey =
@@ -25,6 +26,7 @@ export const mesaSimulada: Record<RoleKey, MemberInfo> = {
     presente: false,
     foto: '/avatars/presidente.jpg',
     fechaHabilitada: '2024-01-01T07:00:00', // habilitado
+    fechaNacimiento: '1990-05-12',
   },
 
   secretario: {
@@ -44,7 +46,7 @@ export const mesaSimulada: Record<RoleKey, MemberInfo> = {
     mesa: '045621',
     presente: false,
     foto: '/avatars/tercero.jpg',
-    // sin fecha → usa fecha general
+    fechaHabilitada: '2024-01-01T07:00:00',
   },
 
   suplente1: {
@@ -54,6 +56,7 @@ export const mesaSimulada: Record<RoleKey, MemberInfo> = {
     mesa: '045621',
     presente: false,
     foto: '/avatars/suplente1.jpg',
+    fechaNacimiento: '2010-05-12',
   },
 
   suplente2: {
@@ -64,4 +67,13 @@ export const mesaSimulada: Record<RoleKey, MemberInfo> = {
     presente: false,
     foto: '/avatars/suplente2.jpg',
   },
+}
+
+export const voluntarioBase: MemberInfo = {
+  nombre: 'Voluntario Invitado',
+  dni: '00000000',
+  local: 'IE 3051 San Marcos',
+  mesa: '045621',
+  presente: false,
+  foto: '/avatars/voluntario.jpg',
 }
