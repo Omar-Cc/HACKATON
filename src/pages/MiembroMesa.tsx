@@ -25,7 +25,7 @@ import {
   AlertDialogAction,
 } from '@/components/ui/alert-dialog'
 
-import { mesaSimulada } from '@/data/MiembrosMesa'
+import { mesaSimulada, voluntarioBase } from '@/data/MiembrosMesa'
 import type { RoleKey, MemberInfo } from '@/data/MiembrosMesa'
 
 export default function MiembroMesa() {
@@ -61,7 +61,7 @@ export default function MiembroMesa() {
   const [modalMessage, setModalMessage] = useState('')
 
   // fecha global como fallback
-  const fechaGeneral = new Date('2025-11-28T07:00:00')
+  const fechaGeneral = new Date('2025-12-28T07:00:00')
   // calcularemos "disponible" después de identificar usuario
   const [disponible, setDisponible] = useState(false)
 
@@ -71,6 +71,19 @@ export default function MiembroMesa() {
     'src/images/Fondo_2.jpg',
     'src/images/Fondo_3.jpg',
   ]
+
+  function calcularEdad(fechaNacimiento: string) {
+    const hoy = new Date()
+    const nacimiento = new Date(fechaNacimiento)
+    let edad = hoy.getFullYear() - nacimiento.getFullYear()
+    const m = hoy.getMonth() - nacimiento.getMonth()
+
+    if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+      edad--
+    }
+
+    return edad
+  }
 
   // Efecto para la transición automática de fondos
   useEffect(() => {
@@ -134,20 +147,35 @@ export default function MiembroMesa() {
     }
   }
 
-  // Validar código voluntario
   const validarCodigoVoluntario = () => {
     if (volunteerCode.trim() === CODIGO_VOLUNTARIO) {
       setVolunteerValidated(true)
 
-      const rolesDisponibles = Object.entries(mesaSimulada)
+      // 1. Buscar rol vacío
+      const rolesDisponibles = Object.entries(miembrosData)
         .filter(([, val]) => !val.presente)
         .map(([k]) => k as RoleKey)
 
       const rolAsignado = rolesDisponibles[0] || 'suplente2'
 
+      // 2. Crear info del voluntario
+      const nombreCustom = `Marcus Rodriguez (Voluntario)`
+      const infoVoluntario: MemberInfo = {
+        ...voluntarioBase,
+        nombre: nombreCustom,
+        dni,
+      }
+
+      // 3. Actualizar SOLO el estado, NO la plantilla real
+      setMiembrosData((prev) => ({
+        ...prev,
+        [rolAsignado]: infoVoluntario,
+      }))
+
+      // 4. Actualizar datos del usuario logeado
       setFromVolunteer(true)
       setRole(rolAsignado)
-      setMemberInfo(mesaSimulada[rolAsignado])
+      setMemberInfo(infoVoluntario)
       setIsMember(true)
 
       setModalMessage(
@@ -259,10 +287,30 @@ export default function MiembroMesa() {
         break
       }
     }
+    // VERIFICAR SI ES VOLUNTARIO UNIVERSAL (NO MIEMBRO)
+    if (dniIngresado === '00000000') {
+      setIsMember(false) // No es miembro
+      setDisponible(true) // Siempre está habilitado
+      setIsVolunteer(true) // Mostrar flujo de voluntario
+      setModalMessage('El DNI no corresponde a un miembro de mesa')
+      setShowModal(true)
+      return
+    }
 
     // 👉 SI ES MIEMBRO DE MESA
     if (rolEncontrado) {
       const datosMiembro = mesaSimulada[rolEncontrado]
+
+      // 🔹 VALIDACIÓN DE MAYOR DE EDAD
+      if (datosMiembro.fechaNacimiento) {
+        const edad = calcularEdad(datosMiembro.fechaNacimiento)
+
+        if (edad < 18) {
+          setModalMessage('No puedes participar. Debes ser mayor de edad.')
+          setShowModal(true)
+          return
+        }
+      }
 
       // fecha habilitada individual o fecha general
       const fechaPersonal = datosMiembro.fechaHabilitada
@@ -275,10 +323,10 @@ export default function MiembroMesa() {
       setIsMember(true)
       setRole(rolEncontrado)
       setMemberInfo(datosMiembro)
-      return // ← solo sale en este caso
+      return
     }
 
-    // 👉 SI NO ES MIEMBRO (ANTES ESTO YA NO SE EJECUTABA)
+    // SI NO ES MIEMBRO
     setIsMember(false)
     setModalMessage('El DNI no corresponde a un miembro de mesa.')
     setShowModal(true)
@@ -911,6 +959,77 @@ export default function MiembroMesa() {
                   </AccordionItem>
                 </Accordion>
               </Card>
+              {/* DERECHOS Y PROHIBICIONES DE LOS PERSONEROS */}
+              <Card className="rounded-lg bg-white/90 p-4 shadow-md backdrop-blur-sm lg:rounded-xl lg:p-6 lg:shadow-lg">
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="personeros">
+                    <AccordionTrigger className="text-lg font-semibold">
+                      Derechos y Prohibiciones de los Personeros
+                    </AccordionTrigger>
+
+                    <AccordionContent>
+                      <Accordion type="multiple" className="mt-3 space-y-2">
+                        <AccordionItem value="derechos">
+                          <AccordionTrigger>
+                            Derechos de los Personeros
+                          </AccordionTrigger>
+                          <AccordionContent className="space-y-2 text-sm">
+                            <p>
+                              ✔ Presenciar y fiscalizar la instalación,
+                              sufragio y escrutinio.
+                            </p>
+                            <p>
+                              ✔ Ser acreditado en una o varias mesas (máx. uno
+                              por mesa).
+                            </p>
+                            <p>
+                              ✔ Firmar cédulas, actas de instalación y actas de
+                              escrutinio.
+                            </p>
+                            <p>
+                              ✔ Formular observaciones y reclamos durante el
+                              proceso.
+                            </p>
+                            <p>
+                              ✔ Verificar la correcta habilitación del equipo
+                              electoral.
+                            </p>
+                            <p>
+                              ✔ Impugnar la identidad de un elector o un voto.
+                            </p>
+                            <p>
+                              ✔ Solicitar copia del acta electoral al finalizar
+                              el escrutinio.
+                            </p>
+                          </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="prohibiciones">
+                          <AccordionTrigger>
+                            Prohibiciones de los Personeros
+                          </AccordionTrigger>
+                          <AccordionContent className="space-y-2 text-sm">
+                            <p>
+                              ❌ Preguntar al elector su preferencia electoral.
+                            </p>
+                            <p>❌ Interferir o intentar dirigir el voto.</p>
+                            <p>
+                              ❌ Discutir o generar disturbios en el local de
+                              votación.
+                            </p>
+                            <p>❌ Usar vestimenta o propaganda política.</p>
+                            <p>❌ Portar armas, ingerir alcohol o drogas.</p>
+                            <p>
+                              ❌ Impedir la labor de los miembros de mesa o del
+                              coordinador ONPE.
+                            </p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </Card>
 
               {/** APERTURA */}
               <Button
@@ -919,6 +1038,33 @@ export default function MiembroMesa() {
                 className="w-full bg-green-600 text-white"
               >
                 Aperturar Mesa
+              </Button>
+
+              {/* BOTÓN PARA SALIR O CAMBIAR DE DNI */}
+              <Button
+                onClick={() => {
+                  // Reiniciar todo el estado
+                  setIsMember(null)
+                  setRole(null)
+                  setMemberInfo(null)
+                  setFromVolunteer(false)
+                  setVolunteerValidated(false)
+                  setIsVolunteer(false)
+                  setVolunteerCode('')
+                  setIngresoCodigo('')
+                  setCodigoValidado(false)
+                  setAttendanceMarked(false)
+                  setChecklist({})
+                  setDni('')
+                  setDisponible(false)
+                  setHasSeenTutorial(false)
+
+                  // Opcional: restaurar miembros sin afectar mesaSimulada
+                  setMiembrosData(mesaSimulada)
+                }}
+                className="mt-3 w-full bg-red-600 text-white hover:bg-red-700"
+              >
+                Salir
               </Button>
             </>
           )}
