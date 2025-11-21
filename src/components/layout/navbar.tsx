@@ -216,8 +216,12 @@ export function Navbar() {
                 >
                   <SheetHeader className="mb-6">
                     <SheetTitle className="dark:text-card-foreground flex items-center gap-2 text-slate-900">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-blue-600 to-purple-600 shadow-lg">
-                        <span className="text-lg text-white">🗳️</span>
+                      <div className="flex h-8 w-8 items-center justify-center">
+                        <img
+                          src={LogoPrincipal}
+                          alt="Logo Principal"
+                          className="object-contain"
+                        />
                       </div>
                       Menú de Navegación
                     </SheetTitle>

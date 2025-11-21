@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
 interface PartidoWatermarkProps {
@@ -17,6 +18,9 @@ export function PartidoWatermark({
   logoOpacity = 0.18,
   siglasOpacity = 0.06,
 }: PartidoWatermarkProps) {
+  // Estado para controlar si la imagen falló al cargar
+  const [imgError, setImgError] = useState(false)
+
   return (
     <div
       className={cn(
@@ -26,8 +30,12 @@ export function PartidoWatermark({
       style={{ zIndex: 0 }}
       aria-hidden="true"
     >
-      {/* Siglas como fallback (siempre debajo) */}
-      {siglas && (
+      {/* 1. LOGICA DE SIGLAS:
+          Se muestran SOLO si:
+          a) No se pasó ningún logo
+          b) O se pasó un logo pero falló al cargar (imgError === true)
+      */}
+      {(!logo || imgError) && siglas && (
         <span
           className="text-9xl font-black"
           style={{
@@ -39,16 +47,17 @@ export function PartidoWatermark({
         </span>
       )}
 
-      {/* Logo grande centrado si existe; si falla, se oculta y se ve la sigla */}
-      {logo && (
+      {/* 2. LOGICA DE LOGO:
+          Se muestra si existe y NO ha dado error.
+          Si da error (onError), cambiamos el estado para ocultar esto y mostrar las siglas.
+      */}
+      {logo && !imgError && (
         <img
           src={logo.startsWith('http') ? logo : `/assets/${logo}`}
           alt=""
           className="absolute max-h-[60%] max-w-[60%] object-contain"
           style={{ opacity: logoOpacity }}
-          onError={(e) => {
-            ;(e.currentTarget as HTMLImageElement).style.display = 'none'
-          }}
+          onError={() => setImgError(true)}
         />
       )}
     </div>

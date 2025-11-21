@@ -13,132 +13,134 @@ import {
 
 function CongresoPage() {
   return (
-    <div className="space-y-8">
-      {/* Hero Section */}
+    <div className="space-y-8 pb-12">
+      {/* Hero Section: Título General y Contexto Bicameralidad */}
       <HeroSection />
 
       <div className="container mx-auto px-4">
-        <Tabs defaultValue="diputados" className="mt-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="diputados">Diputados</TabsTrigger>
-            <TabsTrigger value="senadores">Senadores</TabsTrigger>
-            <TabsTrigger value="parlamento">Parlamento Andino</TabsTrigger>
+        <Tabs defaultValue="diputados" className="mt-6 space-y-8">
+          {/* Navegación de Pestañas */}
+          <TabsList className="bg-muted/50 grid h-auto w-full grid-cols-3 py-2">
+            <TabsTrigger
+              value="diputados"
+              className="py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm sm:text-base"
+            >
+              Diputados
+            </TabsTrigger>
+            <TabsTrigger
+              value="senadores"
+              className="py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm sm:text-base"
+            >
+              Senadores
+            </TabsTrigger>
+            <TabsTrigger
+              value="parlamento"
+              className="py-2 text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm sm:text-base"
+            >
+              P. Andino
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="diputados" id="diputados">
+          {/* --- PESTAÑA DIPUTADOS --- */}
+          <TabsContent value="diputados" className="space-y-6">
+            {/* 1. Contexto Educativo Específico */}
+            <Card className="border-slate-200 bg-slate-50/50">
+              <CardHeader>
+                <CardTitle className="text-xl text-slate-900">
+                  Cámara de Diputados
+                </CardTitle>
+                <CardDescription className="text-slate-600">
+                  Cámara Baja • 130 Miembros
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm text-slate-600">
+                <p>
+                  Los diputados se eligen por{' '}
+                  <strong>distritos electorales múltiples</strong> (regiones).
+                  Sus funciones principales son iniciar el proceso legislativo,
+                  aprobar leyes, interpelar y censurar ministros.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* 2. Herramienta Interactiva (El Filtro Regional) */}
             <DiputadosTab />
           </TabsContent>
 
-          <TabsContent value="senadores" id="senadores">
+          {/* --- PESTAÑA SENADORES --- */}
+          <TabsContent value="senadores" className="space-y-6">
+            {/* 1. Contexto Educativo Específico */}
+            <Card className="border-slate-200 bg-slate-50/50">
+              <CardHeader>
+                <CardTitle className="text-xl text-slate-900">
+                  Cámara de Senadores
+                </CardTitle>
+                <CardDescription className="text-slate-600">
+                  Cámara Alta • 60 Miembros
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm text-slate-600">
+                <p>
+                  La elección es <strong>mixta</strong>: 30 senadores se eligen
+                  a nivel nacional (distrito único) y 30 por circunscripciones
+                  regionales. Su función es revisar leyes y designar altas
+                  autoridades.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* 2. Herramienta Interactiva */}
             <SenadoresTab />
           </TabsContent>
 
-          <TabsContent value="parlamento" id="parlamento">
-            <ParlamentoAndinoTab />
-          </TabsContent>
-        </Tabs>
-
-        {/* Explicación: Qué son los Diputados y contexto de la bicameralidad (2026) */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-semibold">¿Qué son los Diputados?</h2>
-          <p className="text-muted-foreground mt-2">
-            La Cámara de Diputados es la cámara baja del parlamento. Para las
-            elecciones generales de 2026 se restaurará el sistema bicameral en
-            el Perú, por lo que el Congreso estará compuesto por dos cámaras: la
-            Cámara de Diputados (130 miembros) y la Cámara de Senadores (60
-            miembros).
-          </p>
-
-          <div className="mt-4 space-y-3">
-            <Card>
+          {/* --- PESTAÑA PARLAMENTO ANDINO --- */}
+          <TabsContent value="parlamento" className="space-y-6">
+            {/* 1. Contexto Educativo Complejo */}
+            <Card className="border-slate-200 bg-slate-50/50">
               <CardHeader>
-                <CardTitle>Candidaturas a la Cámara de Diputados</CardTitle>
-                <CardDescription>
-                  La cámara baja del parlamento, que tendrá 130 miembros.
+                <CardTitle className="text-xl text-slate-900">
+                  Parlamento Andino
+                </CardTitle>
+                <CardDescription className="text-slate-600">
+                  Representación Internacional • 5 Titulares
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">
-                  Los diputados se eligen por distritos electorales múltiples y
-                  representan a la población de cada región según la
-                  distribución aprobada. Sus funciones incluyen iniciar el
-                  proceso legislativo, aprobar leyes, interpelar y, en ciertos
-                  casos, censurar ministros.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Candidaturas a la Cámara de Senadores</CardTitle>
-                <CardDescription>
-                  La cámara alta del parlamento, que tendrá 60 miembros.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-sm">
-                  La elección de senadores es mixta: existen senadores elegidos
-                  a nivel nacional (por un distrito único nacional) y senadores
-                  elegidos por circunscripciones regionales (representación
-                  regional). En total serán 60 senadores: 30 a nivel nacional y
-                  30 regionales (con asignaciones específicas por región).
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Candidatos al Parlamento Andino</CardTitle>
-                <CardDescription>
-                  Representantes peruanos ante el Parlamento Andino
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <p className="text-muted-foreground text-sm">
-                    Además de las candidaturas para las cámaras nacionales, la
-                    cédula de 2026 incluirá una lista para elegir a los
-                    representantes del Perú ante el Parlamento Andino.
+                <div className="space-y-4 text-sm text-slate-600">
+                  <p>
+                    Representantes del Perú ante el órgano deliberante de la
+                    Comunidad Andina. Se eligen en una lista única nacional.
                   </p>
 
-                  <div className="border-primary/20 border-t pt-4">
-                    <h4 className="mb-2 font-semibold">Autoridades a Elegir</h4>
-                    <ul className="text-muted-foreground space-y-1 text-sm">
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary">•</span>
-                        <span>5 representantes titulares</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary">•</span>
-                        <span>10 representantes suplentes</span>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="border-primary/20 border-t pt-4">
-                    <h4 className="mb-2 font-semibold">Periodo de Gobierno</h4>
-                    <p className="text-muted-foreground mb-2 text-sm font-medium">
-                      2026 – 2031
-                    </p>
-                    <ul className="text-muted-foreground space-y-1 text-sm">
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary">•</span>
-                        <span>Su mandato es irrenunciable</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary">•</span>
-                        <span>
-                          Pueden ser reelegidos de manera inmediata en el mismo
-                          cargo
-                        </span>
-                      </li>
-                    </ul>
+                  {/* Datos Clave en Grid pequeño (Blanco neutro) */}
+                  <div className="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2">
+                    <div className="rounded-lg border border-slate-100 bg-white p-3 shadow-sm">
+                      <h4 className="mb-1 font-semibold text-slate-800">
+                        Composición
+                      </h4>
+                      <ul className="list-inside list-disc space-y-1 text-xs text-slate-600">
+                        <li>5 representantes titulares</li>
+                        <li>10 representantes suplentes</li>
+                      </ul>
+                    </div>
+                    <div className="rounded-lg border border-slate-100 bg-white p-3 shadow-sm">
+                      <h4 className="mb-1 font-semibold text-slate-800">
+                        Periodo 2026-2031
+                      </h4>
+                      <ul className="list-inside list-disc space-y-1 text-xs text-slate-600">
+                        <li>Mandato irrenunciable</li>
+                        <li>Reelección inmediata permitida</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </div>
+
+            {/* 2. Herramienta Interactiva */}
+            <ParlamentoAndinoTab />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )

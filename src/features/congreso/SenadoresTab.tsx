@@ -237,7 +237,7 @@ export default function SenadoresTab() {
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     <Badge variant="outline" className="shrink-0">
-                      #{candidato.id}
+                      #{candidato.numero}
                     </Badge>
                     <Checkbox
                       checked={isSelected}

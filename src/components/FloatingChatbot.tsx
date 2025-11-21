@@ -5,8 +5,8 @@ import React, {
   useRef,
   useEffect,
 } from 'react'
+import { useLocation } from '@tanstack/react-router'
 import {
-  MessageCircle,
   X,
   Bot,
   ArrowLeft,
@@ -54,7 +54,7 @@ const MAIN_MENU_CATEGORIES = [
 ]
 
 // Todas las preguntas frecuentes, separadas por categoría
-const ALL_FAQS: Record<string, PrefabQuestion[]> = {
+export const ALL_FAQS: Record<string, PrefabQuestion[]> = {
   elector_faqs: [
     {
       id: 'e1',
@@ -120,19 +120,25 @@ const ALL_FAQS: Record<string, PrefabQuestion[]> = {
       id: 'b1',
       question: '¿Qué es la bicameralidad?',
       answer:
-        'Significa que el Congreso estará dividido en dos cámaras: la Cámara de Senadores y la Cámara de Diputados, en lugar de una sola.',
+        'Significa que el Congreso volverá a estar dividido en dos cámaras: la Cámara de Senadores (60 miembros) y la Cámara de Diputados (130 miembros), en lugar de tener una sola cámara como hasta ahora.',
     },
     {
       id: 'b2',
       question: '¿Cómo se vota para senadores?',
       answer:
-        'Votarás por un partido para el Senado. Es una lista cerrada a nivel nacional. También podrás usar el voto preferencial si está habilitado.',
+        'Votarás por un partido para el Senado. La elección es a nivel nacional y las listas son cerradas. El voto preferencial podría estar habilitado si la normativa final lo confirma, pero inicialmente se plantea como lista cerrada.',
     },
     {
       id: 'b3',
       question: '¿Y para diputados?',
       answer:
-        'La elección de diputados es por distrito electoral (región). Marcarás por un partido y podrás usar tu voto preferencial para los candidatos de tu región.',
+        'La elección de diputados es por distrito electoral (tu región). Marcarás por un partido y podrás usar tu voto preferencial para uno o dos candidatos de ese partido en tu región.',
+    },
+    {
+      id: 'b4',
+      question: '¿Cuántos congresistas se elegirán en total?',
+      answer:
+        'Se elegirán un total de 190 congresistas: 60 senadores y 130 diputados, además de 5 representantes peruanos ante el Parlamento Andino.',
     },
   ],
 }
@@ -167,32 +173,88 @@ const useChatbot = () => {
   return context
 }
 
-// --- 1. EL BOTÓN FLOTANTE (Sin cambios) ---
+// --- 1. EL BOTÓN FLOTANTE ---
 const ChatbotButton: React.FC = () => {
   const { isChatOpen, toggleChat } = useChatbot()
+  const location = useLocation()
+  const isHomePage = location.pathname === '/'
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState(true)
+
+  // Ocultar el banner después de 10 segundos
+  useEffect(() => {
+    if (isHomePage && showWelcomeBanner) {
+      const timer = setTimeout(() => {
+        setShowWelcomeBanner(false)
+      }, 10000)
+      return () => clearTimeout(timer)
+    }
+  }, [isHomePage, showWelcomeBanner])
 
   return (
-    <button
-      onClick={toggleChat}
-      className={clsx(
-        'bg-primary text-primary-foreground fixed right-6 bottom-6 z-50 flex h-16 w-16 items-center justify-center rounded-full shadow-lg transition-all duration-300 ease-in-out hover:scale-110',
-        isChatOpen && 'scale-0 opacity-0' // Se oculta cuando la ventana está abierta
+    <>
+      {/* Mensaje de bienvenida sobresaliente solo en homepage */}
+      {isHomePage && showWelcomeBanner && !isChatOpen && (
+        <div className="animate-in slide-in-from-right-5 fade-in fixed right-24 bottom-8 z-40 w-56 duration-500 md:right-29 md:bottom-5 md:w-72">
+          <div className="relative rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 p-3 text-white shadow-2xl md:rounded-2xl md:p-4">
+            {/* Flecha apuntando al botón (speech bubble tail) */}
+            <div className="absolute -right-2 bottom-4 h-0 w-0 border-t-8 border-b-8 border-l-12 border-t-transparent border-b-transparent border-l-indigo-600 md:-right-3 md:bottom-6 md:border-t-12 md:border-b-12 md:border-l-16"></div>
+
+            {/* Efecto de brillo */}
+            <div className="absolute inset-0 rounded-xl bg-white/10 backdrop-blur-sm md:rounded-2xl"></div>
+
+            <div className="relative z-10">
+              <div className="mb-1.5 flex items-start gap-1.5 md:mb-2 md:gap-2">
+                <div className="animate-pulse rounded-full bg-white/20 p-1 md:p-1.5">
+                  <Bot className="h-4 w-4 md:h-5 md:w-5" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-bold md:text-base">
+                    ¡Hola! Soy VotoBot
+                  </h4>
+                </div>
+                <button
+                  onClick={() => setShowWelcomeBanner(false)}
+                  className="cursor-pointer rounded-full p-0.5 text-white/70 transition-colors hover:bg-white/20 hover:text-white md:p-1"
+                  aria-label="Cerrar mensaje"
+                >
+                  <X className="h-3 w-3 md:h-3.5 md:w-3.5" />
+                </button>
+              </div>
+              <p className="text-xs leading-relaxed text-white/95 md:text-sm">
+                👋 Estoy aquí para ayudarte con las elecciones 2026.
+                <span className="hidden md:inline">
+                  {' '}
+                  ¡Haz clic en mí para comenzar!
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
       )}
-      aria-label="Abrir chat de ayuda"
-    >
-      <MessageCircle className="h-8 w-8" />
-    </button>
+
+      <button
+        onClick={toggleChat}
+        className={clsx(
+          'bg-primary text-primary-foreground fixed right-6 bottom-6 z-50 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full shadow-lg transition-all duration-300 ease-in-out hover:scale-110',
+          isChatOpen && 'scale-0 opacity-0' // Se oculta cuando la ventana está abierta
+        )}
+        aria-label="Abrir chat de ayuda"
+      >
+        <Bot className="h-8 w-8" />
+      </button>
+    </>
   )
 }
 
 // --- 2. LA VENTANA DEL CHAT (Con lógica de menú) ---
 const ChatWindow: React.FC = () => {
   const { isChatOpen, toggleChat } = useChatbot()
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 0,
       sender: 'bot',
-      text: '¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte?',
+      text: '¡Hola! 👋 Soy VotoBot, tu asistente electoral personal. Estoy aquí para ayudarte a entender todo sobre las elecciones 2026. ¿Listo para aprender a votar? 🗳️',
     },
   ])
   const [isBotTyping, setIsBotTyping] = useState(false)
@@ -218,7 +280,7 @@ const ChatWindow: React.FC = () => {
           {
             id: 0,
             sender: 'bot',
-            text: '¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte?',
+            text: '¡Hola! 👋 Soy VotoBot, tu asistente electoral personal. Estoy aquí para ayudarte a entender todo sobre las elecciones 2026. ¿Listo para aprender a votar? 🗳️',
           },
         ])
       }, 300)
@@ -317,12 +379,15 @@ const ChatWindow: React.FC = () => {
       {/* Header */}
       <header className="border-border bg-card flex items-center justify-between border-b p-4">
         <div className="flex items-center gap-3">
-          <div className="bg-primary text-primary-foreground rounded-full p-2">
+          <div className="bg-primary text-primary-foreground animate-pulse rounded-full p-2">
             <Bot className="h-6 w-6" />
           </div>
-          <h3 className="text-foreground text-lg font-semibold">
-            Asistente Virtual
-          </h3>
+          <div>
+            <h3 className="text-foreground text-lg font-semibold">VotoBot</h3>
+            <p className="text-muted-foreground text-xs">
+              Tu asistente electoral 🗳️
+            </p>
+          </div>
         </div>
         <button
           onClick={toggleChat}

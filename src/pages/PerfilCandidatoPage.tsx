@@ -20,6 +20,7 @@ import { PartidoWatermark } from '@/components/ui/partido-watermark'
 import type { Candidato } from '@/types/candidatos'
 import { getPartidoColor } from '@/data/partidos'
 import { getCandidatoById } from '@/data/elecciones'
+import { ImageWithFallback } from '@/components/imageWithFallback'
 
 // Mock data - En producción vendría del JSON o CMS
 const MOCK_CANDIDATO: Candidato = {
@@ -485,7 +486,7 @@ export default function PerfilCandidatoPage() {
                   >
                     {noticia.imagenUrl && (
                       <div className="bg-muted aspect-video overflow-hidden">
-                        <img
+                        <ImageWithFallback
                           src={noticia.imagenUrl}
                           alt={noticia.titulo}
                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"

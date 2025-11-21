@@ -46,7 +46,7 @@ export default function HeroSection() {
                 XXI
               </h3>
               <Button variant="secondary" asChild>
-                <a href="#cronograma">Ver cronograma electoral</a>
+                <a href="/calendario">Ver cronograma electoral</a>
               </Button>
             </div>
           </div>

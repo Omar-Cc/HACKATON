@@ -18,6 +18,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { PartidoWatermark } from '@/components/ui/partido-watermark'
 import type { Candidato } from '@/types/candidatos'
 import { PARLAMENTO_ANDINO } from '@/data/elecciones'
+import { PARTIDOS_POLITICOS } from '@/data/partidos'
 
 export default function ParlamentoAndinoTab() {
   const navigate = useNavigate()
@@ -53,12 +54,7 @@ export default function ParlamentoAndinoTab() {
     return matchesSearch && matchesParty
   })
 
-  const partidos = [
-    'Alianza para el Progreso',
-    'Renovación Popular',
-    'Fuerza Popular',
-    'Perú Libre',
-  ]
+  const partidos = PARTIDOS_POLITICOS.map((p) => p.nombre)
   const partidosOptions = partidos.map((p) => ({ value: p, label: p }))
 
   return (
@@ -162,7 +158,7 @@ export default function ParlamentoAndinoTab() {
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     <Badge variant="outline" className="shrink-0">
-                      #{candidato.id}
+                      #{candidato.numero}
                     </Badge>
                     <Checkbox
                       checked={isSelected}

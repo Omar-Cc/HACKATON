@@ -342,7 +342,9 @@ export function PlanchasPage() {
               votas por los tres.
             </p>
 
-            <div className="border-primary/20 border-t pt-4">
+            <Separator />
+
+            <div className="">
               <h4 className="mb-2 font-semibold text-slate-900">
                 Autoridades a Elegir
               </h4>
@@ -351,7 +353,9 @@ export function PlanchasPage() {
               </p>
             </div>
 
-            <div className="border-primary/20 border-t pt-4">
+            <Separator />
+
+            <div className="">
               <h4 className="mb-2 font-semibold text-slate-900">
                 Periodo de Gobierno
               </h4>
