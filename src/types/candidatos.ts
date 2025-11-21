@@ -12,7 +12,7 @@ export interface Candidato {
   nombre: string
   profesion: string
   edad: number
-  numero: string
+  numero?: string
   partido: PartidoPolitico
   region?: string // Solo para diputados y senadores regionales
   tipo: TipoCandidato
