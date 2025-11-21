@@ -1,2 +1,3 @@
 #!/bin/sh
-pnpm lint-staged
+# Ejecutar pnpm a través de powershell.exe para compatibilidad con Git Bash y scripts .ps1
+powershell.exe -ExecutionPolicy Bypass -Command "D:\node-v20.19.4\pnpm.ps1 lint-staged"
